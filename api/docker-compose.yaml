@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:14.1
+    container_name: db
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=train-booking
+    ports:
+      - "5432:5432"

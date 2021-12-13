@@ -6,6 +6,6 @@ export class AppController {
 
   @Get('/api')
   get(): string {
-    return '';
+    return 'API IS UP AND WORKING!';
   }
 }

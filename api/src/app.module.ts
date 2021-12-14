@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
 
 @Module({
   // TypeOrm settings comes from ormconfig.json & env variables
@@ -20,7 +19,7 @@ import { AppController } from './app.controller';
       }),
     }),
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [],
 })
 export class AppModule {}

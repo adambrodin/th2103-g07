@@ -13,7 +13,7 @@ export class CustomerEntity {
   lastName: string;
 
   @Column()
-  phoneNumber: number;
+  phoneNumber: string;
 
   @Column()
   email: string;

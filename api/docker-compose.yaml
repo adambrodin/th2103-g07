@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 services:
   db:
@@ -9,4 +9,4 @@ services:
       - POSTGRES_PASSWORD=secret
       - POSTGRES_DB=train-booking
     ports:
-      - "5432:5432"
+      - '5432:5432'

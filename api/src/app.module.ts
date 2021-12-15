@@ -5,7 +5,7 @@ import { BookingController } from './controllers/booking.controller';
 import { BookingService } from './services/booking.service';
 
 @Module({
-  // TypeOrm settings comes from ormconfig.json & env variables
+  // TypeOrm database credentials come from environment variables
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({

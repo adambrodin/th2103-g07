@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Trip } from '@shared/models/trip';
-import { BookTripDto } from '../../../shared/dtos/book-trip.dto';
-import { TripSearchDto } from '../../../shared/dtos/trip-search.dto';
+import { BookTripDto } from '@shared/dtos/book-trip.dto';
+import { TripSearchDto } from '@shared/dtos/trip-search.dto';
 import { ReceiptEntity } from '../entities/receipt.entity';
 
 @Injectable()

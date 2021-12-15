@@ -8,12 +8,7 @@ import {
 } from 'typeorm';
 import { BookingEntity } from './booking.entity';
 import { TrainEntity } from './train.entity';
-
-export enum TicketType {
-  ADULT = 'Adult',
-  STUDENT = 'Student',
-  PENSIONER = 'Pensioner',
-}
+import { TicketType } from '@shared/enums/ticket-type.enum';
 
 @Entity({ name: 'Ticket' })
 export class TicketEntity {

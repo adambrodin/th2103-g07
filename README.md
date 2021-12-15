@@ -15,3 +15,5 @@ inside the root of **/api** to create a brand new docker-container with Postgres
 
 # Setting up projects
 Execute ```npm install``` inside both **/api** & **/client** to install all packages & dependencies neccessary. And ```npm start``` in their respective directories to boot the projects up on your local machine.
+
+Make sure to setup the ```.env``` file to match the **dockerized** database credentials, as seen [here](https://github.com/AdamBrodin/th2103-g07/blob/main/api/.env.example).

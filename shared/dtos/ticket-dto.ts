@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsNumber, Min } from "class-validator";
+import { IsEnum, IsNumber, Min } from "class-validator";
 import { TicketType } from "../enums/ticket-type.enum";
 
 export class TicketDto {

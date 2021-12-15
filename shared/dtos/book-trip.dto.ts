@@ -1,14 +1,8 @@
 import { Type } from "class-transformer";
-import {
-  ArrayNotEmpty,
-  IsEnum,
-  IsNotEmpty,
-  ValidateNested,
-} from "class-validator";
-import { SeatType } from "../enums/seat-type.enum";
+import { ArrayNotEmpty, IsNotEmpty, ValidateNested } from "class-validator";
 import { Customer } from "../models/customer";
+import { Seat } from "../models/seat";
 import { Train } from "../models/train";
-import { TicketDto } from "./ticket-dto";
 
 export class BookTripDto {
   @IsNotEmpty()
@@ -22,11 +16,7 @@ export class BookTripDto {
   train: Train;
 
   @ArrayNotEmpty()
-  @IsEnum(SeatType, { each: true })
-  seats: SeatType[];
-
-  @ArrayNotEmpty()
   @ValidateNested({ each: true })
-  @Type(() => TicketDto)
-  tickets: TicketDto[];
+  @Type(() => Seat)
+  seats: Seat[];
 }

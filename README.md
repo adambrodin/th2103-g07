@@ -14,4 +14,4 @@ Execute ```docker-compose up -d```
 inside the root of **/api** to create a brand new docker-container with PostgresSQL **v14.1.0**.
 
 # Setting up projects
-Execute ```npm install``` inside both **/api** & **/client** to install all packages & dependencies neccessary.
+Execute ```npm install``` inside both **/api** & **/client** to install all packages & dependencies neccessary. And ```npm start``` in their respective directories to boot the projects up on your local machine.

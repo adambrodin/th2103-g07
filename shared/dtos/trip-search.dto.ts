@@ -1,16 +1,16 @@
 import { ArrayNotEmpty, IsNotEmpty, ValidateNested } from "class-validator";
 import { TicketDto } from "./ticket-dto";
 import { Type } from "class-transformer";
-import { TrainDestination } from "../models/train-destination";
+import { TripPoint } from "../models/trip-point";
 
 export class TripSearchDto {
   @IsNotEmpty()
   @ValidateNested()
-  departure: TrainDestination;
+  departure: TripPoint;
 
   @IsNotEmpty()
   @ValidateNested()
-  arrival: TrainDestination;
+  arrival: TripPoint;
 
   @ArrayNotEmpty()
   @ValidateNested({ each: true })

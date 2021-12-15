@@ -1,8 +1,8 @@
 import { Train } from "./train";
-import { TrainDestination } from "./train-destination";
+import { TripPoint } from "./trip-point";
 
 export class Trip {
   train: Train;
-  departure: TrainDestination;
-  arrival: TrainDestination;
+  departure: TripPoint;
+  arrival: TripPoint;
 }

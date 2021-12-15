@@ -5,7 +5,6 @@ import SearchConponent from './ResultComponent';
 import 'rsuite/dist/rsuite.min.css';
 
 function StartPage() {
-  const [returnTrip, setReturnTrip] = useState(false);
   const [adultNum, setAdultNum] = useState(1);
   const [studentNum, setStudentNum] = useState(0);
   const [pensionerNum, setPensionerNum] = useState(0);
@@ -19,6 +18,10 @@ function StartPage() {
       to: event.target[1].value,
       fromDate: event.target[3].value,
       toDate: event.target[4].value,
+      adult: event.target[5].value,
+      student: event.target[6].value,
+      pensioner: event.target[7].value,
+      kids: event.target[8].value,
     };
 
     fetch('POst URL', {
@@ -29,6 +32,16 @@ function StartPage() {
       console.log('sucsess');
       ToggleSearchContainer();
     });
+  }
+
+  function toggleDatePicker() {
+    let x = document.getElementById('returnDate');
+
+    if (x!.style.display === 'inline') {
+      x!.style.display = 'none';
+    } else {
+      x!.style.display = 'inline';
+    }
   }
 
   function ToggleSearchContainer() {
@@ -90,27 +103,22 @@ function StartPage() {
                     type='checkbox'
                     name='returnTrip'
                     id='returnTrip'
-                    onChange={() => setReturnTrip(!returnTrip)}
+                    onChange={() => toggleDatePicker()}
                   />
                 </div>
                 <div id='timeSelectContainer'>
-                  {returnTrip ? (
-                    <>
-                      <DatePicker
-                        format='yyyy-MM-dd HH:mm'
-                        placeholder='Avgångs tid'
-                      />
-                      <DatePicker
-                        format='yyyy-MM-dd HH:mm'
-                        placeholder='Ankomst tid'
-                      />
-                    </>
-                  ) : (
+                  <>
                     <DatePicker
                       format='yyyy-MM-dd HH:mm'
                       placeholder='Avgångs tid'
                     />
-                  )}
+                    <span id='returnDate'>
+                      <DatePicker
+                        format='yyyy-MM-dd HH:mm'
+                        placeholder='Ankomst tid'
+                      />
+                    </span>
+                  </>
                 </div>
                 <div>
                   <label htmlFor=''>Vuxen</label>

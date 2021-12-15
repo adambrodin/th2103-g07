@@ -25,6 +25,14 @@ code {
   margin-right: 1rem !important;
 }
 #searchResults,
-#backButton {
+#backButton,
+#returnDate {
   display: none;
+}
+#continueButton {
+  float: right;
+}
+
+.selectedTicket {
+  background-color: grey;
 }

@@ -1,27 +1,19 @@
-import {
-  ArrayNotEmpty,
-  IsISO8601,
-  IsNotEmpty,
-  ValidateNested,
-} from "class-validator";
+import { ArrayNotEmpty, IsNotEmpty, ValidateNested } from "class-validator";
 import { TicketDto } from "./ticket-dto";
 import { Type } from "class-transformer";
+import { TrainDestination } from "../models/train-destination";
 
 export class TripSearchDto {
   @IsNotEmpty()
-  startDestination!: string;
+  @ValidateNested()
+  departure: TrainDestination;
 
   @IsNotEmpty()
-  endDestination!: string;
+  @ValidateNested()
+  arrival: TrainDestination;
 
   @ArrayNotEmpty()
   @ValidateNested({ each: true })
   @Type(() => TicketDto)
   tickets: TicketDto[];
-
-  @IsISO8601()
-  startDate!: Date;
-
-  @IsISO8601()
-  endDate!: Date;
 }

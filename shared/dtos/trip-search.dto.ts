@@ -6,10 +6,12 @@ import { TripPoint } from "../models/trip-point";
 export class TripSearchDto {
   @IsNotEmpty()
   @ValidateNested()
+  @Type(() => TripPoint)
   departure: TripPoint;
 
   @IsNotEmpty()
   @ValidateNested()
+  @Type(() => TripPoint)
   arrival: TripPoint;
 
   @ArrayNotEmpty()

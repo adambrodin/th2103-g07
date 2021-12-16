@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-
 import "rsuite/dist/rsuite.min.css";
 
 function ResultComponent(returnTrip: any) {

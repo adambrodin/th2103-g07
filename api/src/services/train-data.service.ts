@@ -129,10 +129,6 @@ export class TrainDataService {
         time: parsedStops[parsedStops.length - 1].AdvertisedTimeAtLocation,
       };
 
-      // Remove first element to avoid duplication
-      // Departure element already exists in own variable
-      parsedStops.shift();
-
       // Set the stops to converetd version (with name instead of signature)
       trip.stops = await this.getTrainStopNames(parsedStops, signatures[1]);
 

@@ -7,6 +7,7 @@ export class TrainDataImporter {
   apiUrl = 'https://api.trafikinfo.trafikverket.se/v1/data.json';
   constructor() {}
 
+  _httpService = new HttpService();
   async importStationData() {
     console.log('Importing station data..');
 
@@ -27,7 +28,7 @@ export class TrainDataImporter {
 
     const _httpService = new HttpService();
     firstValueFrom(
-      _httpService.post(this.apiUrl, getStationsQuery, {
+      this._httpService.post(this.apiUrlV1, getStationsQuery, {
         headers: { 'Content-Type': 'text/xml' },
       }),
     ).then(async (res) => {

@@ -155,25 +155,31 @@ export class TrainDataService {
   ): Promise<TripPoint[]> {
     // Convert stop signatures to actual names
     const parsedStops: TripPoint[] = [];
-
     for (const stop of stops) {
-      const fetchedStop = await getRepository(TrainStopEntity).findOne({
-        where: { locationSignature: stop.LocationSignature },
-      });
-
-      if (fetchedStop != null) {
-        const parsedStop = new TripPoint();
-        parsedStop.location = fetchedStop.locationName;
-        parsedStop.time = stop.AdvertisedTimeAtLocation;
-        parsedStops.push(parsedStop);
-      }
-
       // Only fetch relevant stops
       if (stop.LocationSignature == endStationSignature) {
         break;
       }
-    }
 
-    return parsedStops;
+      for (const stop of stops) {
+        const fetchedStop = await getRepository(TrainStopEntity).findOne({
+          where: { locationSignature: stop.LocationSignature },
+        });
+
+        if (fetchedStop != null) {
+          const parsedStop = new TripPoint();
+          parsedStop.location = fetchedStop.locationName;
+          parsedStop.time = stop.AdvertisedTimeAtLocation;
+          parsedStops.push(parsedStop);
+        }
+
+        // Only fetch relevant stops
+        if (stop.LocationSignature == endStationSignature) {
+          break;
+        }
+      }
+
+      return parsedStops;
+    }
   }
 }

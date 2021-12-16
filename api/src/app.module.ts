@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BookingController } from './controllers/booking.controller';
 import { BookingService } from './services/booking.service';
+import { TrainDataService } from './services/train-data.service';
 
 @Module({
   // TypeOrm database credentials come from environment variables
@@ -24,6 +25,6 @@ import { BookingService } from './services/booking.service';
     HttpModule,
   ],
   controllers: [BookingController],
-  providers: [BookingService],
+  providers: [BookingService, TrainDataService],
 })
 export class AppModule {}

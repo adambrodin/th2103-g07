@@ -1,4 +1,4 @@
 export class Train {
-  id: number;
+  id: string;
   name: string;
 }

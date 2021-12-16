@@ -121,7 +121,7 @@ export class TrainDataService {
 
       trip.departure = {
         location: body.departure.location,
-        time: parsedStops[0].AdvertisedTimeAtLocation,
+        time: departure.AdvertisedTimeAtLocation,
       };
 
       trip.arrival = {
@@ -148,6 +148,7 @@ export class TrainDataService {
   ): Promise<TripPoint[]> {
     // Convert stop signatures to actual names
     const parsedStops: TripPoint[] = [];
+
     for (const stop of stops) {
       // Only fetch relevant stops
       if (stop.LocationSignature == endStationSignature) {

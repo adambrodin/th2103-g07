@@ -1,3 +1,4 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -20,6 +21,7 @@ import { BookingService } from './services/booking.service';
         synchronize: true,
       }),
     }),
+    HttpModule,
   ],
   controllers: [BookingController],
   providers: [BookingService],

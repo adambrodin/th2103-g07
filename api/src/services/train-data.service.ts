@@ -118,6 +118,11 @@ export class TrainDataService {
             ? ''
             : departure.ProductInformation[0],
       };
+      // Set the stops to converetd version (with name instead of signature)
+      const stopDetails = await this.getTrainStopDetails(
+        parsedStops,
+        signatures[1],
+      );
 
       trip.departure = {
         location: body.departure.location,
@@ -126,11 +131,13 @@ export class TrainDataService {
 
       trip.arrival = {
         location: body.arrival.location,
-        time: parsedStops[parsedStops.length - 1].AdvertisedTimeAtLocation,
+        time: stopDetails[stopDetails.length - 1].time,
       };
 
-      // Set the stops to converetd version (with name instead of signature)
-      trip.stops = await this.getTrainStopNames(parsedStops, signatures[1]);
+      // Remove the last element (already exists in trip.arrival prop)
+      stopDetails.pop();
+
+      trip.stops = stopDetails;
 
       trips.push(trip);
 
@@ -142,7 +149,7 @@ export class TrainDataService {
     return trips;
   }
 
-  async getTrainStopNames(
+  async getTrainStopDetails(
     stops: TrainTimetableResponse[],
     endStationSignature: string,
   ): Promise<TripPoint[]> {
@@ -150,11 +157,6 @@ export class TrainDataService {
     const parsedStops: TripPoint[] = [];
 
     for (const stop of stops) {
-      // Only fetch relevant stops
-      if (stop.LocationSignature == endStationSignature) {
-        break;
-      }
-
       const fetchedStop = await getRepository(TrainStopEntity).findOne({
         where: { locationSignature: stop.LocationSignature },
       });
@@ -164,6 +166,11 @@ export class TrainDataService {
         parsedStop.location = fetchedStop.locationName;
         parsedStop.time = stop.AdvertisedTimeAtLocation;
         parsedStops.push(parsedStop);
+      }
+
+      // Only fetch relevant stops
+      if (stop.LocationSignature == endStationSignature) {
+        break;
       }
     }
 

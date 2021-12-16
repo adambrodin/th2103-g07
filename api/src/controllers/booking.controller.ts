@@ -27,7 +27,7 @@ export class BookingController {
 
     if (bookingResult?.error != null || bookingResult?.receipt == null) {
       return {
-        response: 'Booking was unable to process successfully.',
+        response: 'Booking was unable to process.',
         error:
           bookingResult?.error == null
             ? 'An unknown error occurred.'

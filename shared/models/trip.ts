@@ -5,4 +5,5 @@ export class Trip {
   train: Train;
   departure: TripPoint;
   arrival: TripPoint;
+  stops: TripPoint[];
 }

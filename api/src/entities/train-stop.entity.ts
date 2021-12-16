@@ -1,19 +1,16 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryColumn } from 'typeorm';
 import { RouteEntity } from './route.entity';
 
 @Entity({ name: 'TrainStop' })
 export class TrainStopEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn()
+  locationSignature: string;
 
   @Column()
-  name: string;
+  locationName: string;
 
   @Column()
-  longitud: string;
-
-  @Column()
-  latitud: string;
+  wgs84Position: string;
 
   @ManyToMany(() => RouteEntity)
   routes: RouteEntity[];

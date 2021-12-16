@@ -25,7 +25,6 @@ export class TrainDataImporter {
     </QUERY>
 </REQUEST>`;
 
-    const _httpService = new HttpService();
     firstValueFrom(
       this._httpService.post(this.apiUrlV1, getStationsQuery, {
         headers: { 'Content-Type': 'text/xml' },
@@ -37,7 +36,7 @@ export class TrainDataImporter {
 
       let stationsAdded = 0;
       for (const station of stationsArray) {
-        const stationEntity = await getRepository(TrainStopEntity).save({
+        await getRepository(TrainStopEntity).save({
           locationName: station['AdvertisedLocationName'],
           locationSignature: station['LocationSignature'],
           wgs84Position: station['Geometry'].WGS84,

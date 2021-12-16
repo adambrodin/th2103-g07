@@ -41,7 +41,7 @@ export class TrainDataService {
 				<EQ name="LocationSignature" value="${fromSignature}" />
 				<EQ name="ToLocation.LocationName" value="${toSignature}"/>
 				<AND>
-					<GT name="AdvertisedTimeAtLocation" value="${date}" />
+					<GTE name="AdvertisedTimeAtLocation" value="${date}" />
 				</AND>
 			</AND>
 		</FILTER>

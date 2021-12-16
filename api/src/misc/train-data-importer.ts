@@ -4,8 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { getRepository } from 'typeorm';
 import { TrainStopEntity } from '../entities/train-stop.entity';
 export class TrainDataImporter {
-  apiUrl = 'https://api.trafikinfo.trafikverket.se/v1/data.json';
-  constructor() {}
+  apiUrlV1 = 'https://api.trafikinfo.trafikverket.se/v1/data.json';
 
   _httpService = new HttpService();
   async importStationData() {

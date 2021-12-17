@@ -20,20 +20,19 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "14.x"
-        working-directory: "./api"
 
       - name: npm install, build, and test
         run: |
           npm install
           npm run build --if-present
           npm run test --if-present
+        working-directory: "./api"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: node-app
           path: .
-        working-directory: "./api"
 
   deploy:
     runs-on: ubuntu-latest

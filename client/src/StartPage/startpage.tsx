@@ -1,7 +1,11 @@
 import { DatePicker } from "rsuite";
 import React, { useState } from "react";
 import SearchConponent from "./ResultComponent";
-
+import { TripSearchDto } from "../../../shared/dtos/trip-search.dto";
+import { TicketType } from "./Enums/ticket-type.enum";
+import dateFormat, { masks } from "dateformat";
+import { TripPoint } from "../../../shared/models/trip-point";
+import moment from "moment";
 import "rsuite/dist/rsuite.min.css";
 
 function StartPage() {
@@ -13,24 +17,46 @@ function StartPage() {
 
   function submitForm(event: any) {
     event.preventDefault();
+    let date = moment(event.target[3].value, moment.ISO_8601);
+    console.log(date);
 
-    let data = {
-      from: event.target[0].value,
-      to: event.target[1].value,
-      fromDate: event.target[3].value,
-      toDate: event.target[4].value,
-      adult: event.target[5].value,
-      student: event.target[6].value,
-      pensioner: event.target[7].value,
-      kids: event.target[8].value,
+    let SearchData: TripSearchDto = {
+      departure: {
+        location: event.target[0].value,
+        time: new Date(event.target[3].value),
+      },
+      arrival: {
+        location: event.target[1].value,
+        time: new Date(event.target[3].value),
+      },
+      tickets: [
+        { type: TicketType.ADULT, amount: parseInt(event.target[5].value) },
+      ],
     };
 
-    fetch("POst URL", {
+    console.log(JSON.stringify(SearchData));
+
+    // let data = {
+    //   from: event.target[0].value,
+    //   to: event.target[1].value,
+    //   fromDate: event.target[3].value,
+    //   toDate: event.target[4].value,
+    //   adult: event.target[5].value,
+    //   student: event.target[6].value,
+    //   pensioner: event.target[7].value,
+    //   kids: event.target[8].value,
+    // };
+
+    fetch("http://127.0.0.1:1337/api/booking/search", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify(SearchData),
     }).then((res) => {
-      console.log("sucsess");
+      console.log(res);
       ToggleSearchContainer();
     });
   }

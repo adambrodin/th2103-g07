@@ -49,7 +49,6 @@ function StartPage() {
 
     fetch("http://127.0.0.1:1337/api/booking/search", {
       method: "POST",
-      mode: "no-cors",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",

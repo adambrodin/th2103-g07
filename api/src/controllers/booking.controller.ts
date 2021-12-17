@@ -28,7 +28,7 @@ export class BookingController {
     }
   }
 
-  @Post('book')
+  @Post('reservation')
   async bookTrip(@Body() body: BookTripDto) {
     const bookingResult = await this._bookingService.bookTrip(body);
 

@@ -13,6 +13,7 @@ jobs:
   build_shared:
     runs-on: ubuntu-latest
     steps:
+      - working-directory: "./shared"
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:

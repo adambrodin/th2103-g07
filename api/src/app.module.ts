@@ -1,9 +1,13 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BookingController } from './controllers/booking.controller';
+import { BookingService } from './services/booking.service';
+import { TrainDataService } from './services/train-data.service';
 
 @Module({
-  // TypeOrm settings comes from ormconfig.json & env variables
+  // TypeOrm database credentials come from environment variables
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
@@ -18,8 +22,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         synchronize: true,
       }),
     }),
+    HttpModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [BookingController],
+  providers: [BookingService, TrainDataService],
 })
 export class AppModule {}

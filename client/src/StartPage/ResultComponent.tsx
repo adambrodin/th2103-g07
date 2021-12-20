@@ -1,9 +1,29 @@
+import React, { useEffect } from "react";
+import moment from "moment";
 import "rsuite/dist/rsuite.min.css";
 
-function ResultComponent(returnTrip: any) {
+function ResultComponent(data: any) {
   let lastSelectedDepartTrip: HTMLElement | null = null;
   let lastSelectedReturnTrip: HTMLElement | null = null;
-
+  useEffect(() => {
+    ToggleSearchContainer();
+  }, []);
+  function ToggleSearchContainer() {
+    let x = document.getElementById("SearchContainer");
+    let y = document.getElementById("searchResults");
+    let z = document.getElementById("backButton");
+    if (x != null && y != null && z != null) {
+      if (x.style.display === "none") {
+        x.style.display = "block";
+        y.style.display = "none";
+        z.style.display = "none";
+      } else {
+        x.style.display = "none";
+        y.style.display = "block";
+        z.style.display = "block";
+      }
+    }
+  }
   let trains = [
     {
       time: "09:00 - 11:00",
@@ -97,12 +117,16 @@ function ResultComponent(returnTrip: any) {
       lastSelectedReturnTrip = currentReturnTrip;
     }
   }
+  console.log(data);
 
   return (
     <div id="searchResults">
       <h2>Utresa</h2>
-      <p>Station1 - station2</p>
-      <p>Datum</p>
+      <p>
+        {data.requestData.departure.location} -{" "}
+        {data.requestData.arrival.location}
+      </p>
+      <p>{moment(data.requestData.departure.time).format("dddd Do MMMM YY")}</p>
       <table id="departTrip" className="table">
         <thead className="thead-dark">
           <tr>
@@ -112,16 +136,23 @@ function ResultComponent(returnTrip: any) {
           </tr>
         </thead>
         <tbody>
-          {trains.map(({ time, changes, price, id }) => (
-            <tr onClick={() => getTicket(id, "")} id={id}>
-              <td>{time}</td>
-              <td>{changes}</td>
-              <td>{price}</td>
+          {data.trips.map((trip: any) => (
+            <tr
+              onClick={() => getTicket(trip.train.id, "")}
+              id={trip.train.id}
+              key={trip.train.id}
+            >
+              <td>
+                {moment(trip.departure.time).format("hh:mm")} -{" "}
+                {moment(trip.arrival.time).format("hh:mm")}
+              </td>
+              <td>0</td>
+              <td>Pris</td>
             </tr>
           ))}
         </tbody>
       </table>
-      {returnTrip ? (
+      {data.returnTrip ? (
         <>
           <h2>Återresa</h2>
           <p>Station1 - station2</p>

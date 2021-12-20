@@ -1,5 +1,5 @@
 import { DatePicker } from "rsuite";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SearchConponent from "./ResultComponent";
 import { TripSearchDto } from "../../../shared/dtos/trip-search.dto";
 import { TicketType } from "./Enums/ticket-type.enum";
@@ -9,18 +9,21 @@ import moment from "moment";
 import "rsuite/dist/rsuite.min.css";
 
 function StartPage() {
+  let objArray: object[] = [];
   const [returnTrip, setReturnTrip] = useState(false);
+  const [requestData, setRequestData] = useState({});
+  const [tripData, setTripData] = useState(objArray);
   const [adultNum, setAdultNum] = useState(1);
   const [studentNum, setStudentNum] = useState(0);
   const [pensionerNum, setPensionerNum] = useState(0);
   const [kidsNum, setKidsNum] = useState(0);
+  const [hide, setHide] = useState(false);
+  let e: object[] = [{ test: "hej" }];
 
   function submitForm(event: any) {
     event.preventDefault();
-    let date = moment(event.target[3].value, moment.ISO_8601);
-    console.log(date);
 
-    let SearchData: TripSearchDto = {
+    let searchData = {
       departure: {
         location: event.target[0].value,
         time: new Date(event.target[3].value),
@@ -33,8 +36,24 @@ function StartPage() {
         { type: TicketType.ADULT, amount: parseInt(event.target[5].value) },
       ],
     };
+    setRequestData({ ...searchData });
 
-    console.log(JSON.stringify(SearchData));
+    fetch("http://127.0.0.1:1337/api/booking/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify(searchData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        e = data.data;
+      })
+      .then(() => {
+        setHide(!hide);
+        setTripData(tripData.concat(e));
+      });
 
     // let data = {
     //   from: event.target[0].value,
@@ -46,19 +65,9 @@ function StartPage() {
     //   pensioner: event.target[7].value,
     //   kids: event.target[8].value,
     // };
-
-    fetch("http://127.0.0.1:1337/api/booking/search", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(SearchData),
-    }).then((res) => {
-      console.log(res);
-      ToggleSearchContainer();
-    });
   }
+
+  async function testaMigINte(event: any) {}
 
   function toggleDatePicker() {
     setReturnTrip(!returnTrip);
@@ -208,7 +217,15 @@ function StartPage() {
       >
         Tillbaka
       </button>
-      <SearchConponent returnTrip={returnTrip} />
+      {tripData.length > 0 ? (
+        <SearchConponent
+          returnTrip={returnTrip}
+          trips={tripData}
+          requestData={requestData}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

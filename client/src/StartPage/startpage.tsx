@@ -34,7 +34,7 @@ function StartPage() {
     };
     setRequestData({ ...searchData });
 
-    fetch("http://127.0.0.1:1337/api/booking/search", {
+    fetch((process.env.REACT_APP_API_URL as string) + "/booking/search", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

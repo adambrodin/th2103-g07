@@ -1,38 +1,66 @@
 import { DatePicker } from "rsuite";
 import React, { useState } from "react";
 import SearchConponent from "./ResultComponent";
-
+import { TicketType } from "./Enums/ticket-type.enum";
 import "rsuite/dist/rsuite.min.css";
 
 function StartPage() {
+  let objArray: object[] = [];
   const [returnTrip, setReturnTrip] = useState(false);
+  const [requestData, setRequestData] = useState({});
+  const [tripData, setTripData] = useState(objArray);
   const [adultNum, setAdultNum] = useState(1);
   const [studentNum, setStudentNum] = useState(0);
   const [pensionerNum, setPensionerNum] = useState(0);
   const [kidsNum, setKidsNum] = useState(0);
+  const [hide, setHide] = useState(false);
+  let e: object[] = [{ test: "hej" }];
 
   function submitForm(event: any) {
     event.preventDefault();
 
-    let data = {
-      from: event.target[0].value,
-      to: event.target[1].value,
-      fromDate: event.target[3].value,
-      toDate: event.target[4].value,
-      adult: event.target[5].value,
-      student: event.target[6].value,
-      pensioner: event.target[7].value,
-      kids: event.target[8].value,
+    let searchData = {
+      departure: {
+        location: event.target[0].value,
+        time: new Date(event.target[3].value),
+      },
+      arrival: {
+        location: event.target[1].value,
+        time: new Date(event.target[3].value),
+      },
+      tickets: [
+        { type: TicketType.ADULT, amount: parseInt(event.target[5].value) },
+      ],
     };
+    setRequestData({ ...searchData });
 
-    fetch("POst URL", {
+    fetch((process.env.REACT_APP_API_URL as string) + "/booking/search", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    }).then((res) => {
-      console.log("sucsess");
-      ToggleSearchContainer();
-    });
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify(searchData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        e = data.data;
+      })
+      .then(() => {
+        setHide(!hide);
+        setTripData(tripData.concat(e));
+      });
+
+    // let data = {
+    //   from: event.target[0].value,
+    //   to: event.target[1].value,
+    //   fromDate: event.target[3].value,
+    //   toDate: event.target[4].value,
+    //   adult: event.target[5].value,
+    //   student: event.target[6].value,
+    //   pensioner: event.target[7].value,
+    //   kids: event.target[8].value,
+    // };
   }
 
   function toggleDatePicker() {
@@ -183,7 +211,15 @@ function StartPage() {
       >
         Tillbaka
       </button>
-      <SearchConponent returnTrip={returnTrip} />
+      {tripData.length > 0 ? (
+        <SearchConponent
+          returnTrip={returnTrip}
+          trips={tripData}
+          requestData={requestData}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

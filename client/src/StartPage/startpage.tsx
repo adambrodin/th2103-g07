@@ -1,11 +1,7 @@
 import { DatePicker } from "rsuite";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import SearchConponent from "./ResultComponent";
-import { TripSearchDto } from "../../../shared/dtos/trip-search.dto";
 import { TicketType } from "./Enums/ticket-type.enum";
-import dateFormat, { masks } from "dateformat";
-import { TripPoint } from "../../../shared/models/trip-point";
-import moment from "moment";
 import "rsuite/dist/rsuite.min.css";
 
 function StartPage() {
@@ -66,8 +62,6 @@ function StartPage() {
     //   kids: event.target[8].value,
     // };
   }
-
-  async function testaMigINte(event: any) {}
 
   function toggleDatePicker() {
     setReturnTrip(!returnTrip);

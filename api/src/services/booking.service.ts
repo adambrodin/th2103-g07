@@ -37,6 +37,43 @@ export class BookingService {
     return { trips: fetchedTrips };
   }
 
+  async getAvailableReturnTrips(
+    body: TripSearchDto,
+  ): Promise<{ error?: string; trips?: any }> {
+    const signatures: string[] = [];
+
+    if (body.ReturnDeparture != null && body.ReturnArrival != null) {
+      // Verify that locations are valid TrainStops
+      for (const location of [
+        body.ReturnDeparture.location,
+        body.ReturnArrival.location,
+      ]) {
+        const fetchedSignature =
+          await this._trainDataService.getLocationSignature(location);
+        if (fetchedSignature == null) {
+          return { error: `Location '${location}' could not be found.` };
+        }
+
+        signatures.push(fetchedSignature);
+      }
+
+      const fetchedReturnTrips = await this._trainDataService.getAvailableTrips(
+        body,
+        signatures,
+      );
+
+      if (fetchedReturnTrips.length <= 0) {
+        return { error: 'No available trips were found.' };
+      }
+
+      return { trips: fetchedReturnTrips };
+    } else {
+      return {
+        trips: [],
+      };
+    }
+  }
+
   async bookTrip(
     body: BookTripDto,
   ): Promise<{ error?: string; receipt?: ReceiptEntity }> {

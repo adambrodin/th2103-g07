@@ -10,6 +10,8 @@ export class BookingController {
   @Post('search')
   async searchAvailableTrips(@Body() body: TripSearchDto) {
     const fetchedTrips = await this._bookingService.getAvailableTrips(body);
+    const fetchedReturnTrips =
+      await this._bookingService.getAvailableReturnTrips(body);
 
     if (fetchedTrips?.error != null) {
       return {
@@ -18,10 +20,20 @@ export class BookingController {
       };
     }
 
-    if (fetchedTrips.trips.length > 0) {
+    if (fetchedTrips.trips.length > 0 && fetchedReturnTrips.trips.length > 0) {
       return {
         response: 'Trips have been fetched successfully.',
-        data: fetchedTrips.trips,
+        data: {
+          OutboundTrip: fetchedTrips.trips,
+          ReturnTrip: fetchedReturnTrips.trips,
+        },
+      };
+    } else if (fetchedTrips.trips.length > 0) {
+      return {
+        response: 'Trips have been fetched successfully.',
+        data: {
+          OutboundTrip: fetchedTrips.trips,
+        },
       };
     } else {
       return { response: 'No trips were found for the given criteria.' };

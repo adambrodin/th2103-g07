@@ -36,7 +36,7 @@ function ResultComponent(returnTrip: any) {
       id: "5",
     },
   ];
-
+  
   let trains2 = [
     {
       time: "09:00 - 11:00",
@@ -140,8 +140,9 @@ function ResultComponent(returnTrip: any) {
                   <td>{time}</td>
                   <td>{changes}</td>
                   <td>{price}</td>
-                </tr>
-              ))}
+                </tr>   
+                   
+              ))        }
             </tbody>
           </table>
         </>

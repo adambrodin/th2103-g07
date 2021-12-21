@@ -1,5 +1,19 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import StartPage from './StartPage/startpage';
+import Payment from './PaymentPage/Payment';
+
 function App() {
-  return <h1>Train Booking System - Group 7</h1>;
+  return (
+    <>
+      {/* <StartPage /> */}
+      <Router>
+        <Routes>
+          <Route path='/' element={<StartPage />} />
+          <Route path='/payment' element={<Payment />} />
+        </Routes>
+      </Router>
+    </>
+  );
 }
 
 export default App;

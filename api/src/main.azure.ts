@@ -5,6 +5,7 @@ import { verifyTrainData } from './main';
 
 export async function createApp(): Promise<INestApplication> {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
 

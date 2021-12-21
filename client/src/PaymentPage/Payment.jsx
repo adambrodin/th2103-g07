@@ -47,24 +47,24 @@ function Payment() {
 
   // Data to save booking to db, not done
   function addBooking() {
-    let data = {
-      customer: {
-        firstName: context.firstname,
-        lastName: context.lastname,
-        email: context.email,
-        phoneNumber: context.phone,
-      },
-      train: {
-        id: '1',
-        name: 'X2000',
-      },
-      seats: [
-        {
-          seat: 'Regular',
-          ticket: 'Adult',
-        },
-      ],
-    };
+    // let data = {
+    //   customer: {
+    //     firstName: context.firstname,
+    //     lastName: context.lastname,
+    //     email: context.email,
+    //     phoneNumber: context.phone,
+    //   },
+    //   train: {
+    //     id: '1',
+    //     name: 'X2000',
+    //   },
+    //   seats: [
+    //     {
+    //       seat: 'Regular',
+    //       ticket: 'Adult',
+    //     },
+    //   ],
+    // };
   }
 
   return (

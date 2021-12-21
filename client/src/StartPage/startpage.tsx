@@ -22,6 +22,7 @@ function StartPage() {
 
   useEffect(() => {
     fetchAvailableStations();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function submitForm(event: any) {

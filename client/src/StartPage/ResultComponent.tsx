@@ -5,9 +5,10 @@ import "rsuite/dist/rsuite.min.css";
 function ResultComponent(data: any) {
   let lastSelectedDepartTrip: HTMLElement | null = null;
   let lastSelectedReturnTrip: HTMLElement | null = null;
-  useEffect(() => {
-    ToggleSearchContainer();
-  }, []);
+  // useEffect(() => {
+  //   ToggleSearchContainer();
+  // }, []);
+
   function ToggleSearchContainer() {
     let x = document.getElementById("SearchContainer");
     let y = document.getElementById("searchResults");
@@ -24,39 +25,6 @@ function ResultComponent(data: any) {
       }
     }
   }
-
-  let trains2 = [
-    {
-      time: "09:00 - 11:00",
-      changes: "0",
-      price: "200:-",
-      id: "11",
-    },
-    {
-      time: "12:00 - 17:00",
-      changes: "1",
-      price: "350:-",
-      id: "22",
-    },
-    {
-      time: "14:00 - 16:00",
-      changes: "0",
-      price: "400:-",
-      id: "33",
-    },
-    {
-      time: "18:00 - 21:00",
-      changes: "0",
-      price: "500:-",
-      id: "44",
-    },
-    {
-      time: "22:00 - 06:00",
-      changes: "2",
-      price: "800:-",
-      id: "55",
-    },
-  ];
 
   function getTicket(DepartId: string, returnId: string) {
     // Get train object from id
@@ -85,7 +53,6 @@ function ResultComponent(data: any) {
       lastSelectedReturnTrip = currentReturnTrip;
     }
   }
-  console.log(data);
 
   return (
     <div id="searchResults">
@@ -94,7 +61,7 @@ function ResultComponent(data: any) {
         {data.requestData.departure.location} -{" "}
         {data.requestData.arrival.location}
       </p>
-      <p>{moment(data.requestData.departure.time).format("dddd Do MMMM YY")}</p>
+      <p>{moment(data.requestData.departure.time).format("Do MMMM YYYY")}</p>
       <table id="departTrip" className="table">
         <thead className="thead-dark">
           <tr>
@@ -104,7 +71,7 @@ function ResultComponent(data: any) {
           </tr>
         </thead>
         <tbody>
-          {data.trips.map((trip: any) => (
+          {data.trips[0].outboundTrip.map((trip: any) => (
             <tr
               onClick={() => getTicket(trip.train.id, "")}
               id={trip.train.id}
@@ -123,8 +90,15 @@ function ResultComponent(data: any) {
       {data.returnTrip ? (
         <>
           <h2>Återresa</h2>
-          <p>Station1 - station2</p>
-          <p>Datum</p>
+          <p>
+            {data.requestData.returnDeparture.location} -{" "}
+            {data.requestData.returnArrival.location}
+          </p>
+          <p>
+            {moment(data.requestData.returnDeparture.time).format(
+              "Do MMMM YYYY"
+            )}
+          </p>
           <table id="returnTrip" className="table">
             <thead className="thead-dark">
               <tr>
@@ -134,11 +108,18 @@ function ResultComponent(data: any) {
               </tr>
             </thead>
             <tbody>
-              {trains2.map(({ time, changes, price, id }) => (
-                <tr onClick={() => getTicket("", id)} id={id}>
-                  <td>{time}</td>
-                  <td>{changes}</td>
-                  <td>{price}</td>
+              {data.trips[0].returnTrip.map((trip: any) => (
+                <tr
+                  onClick={() => getTicket(trip.train.id, "")}
+                  id={trip.train.id}
+                  key={trip.train.id}
+                >
+                  <td>
+                    {moment(trip.departure.time).format("hh:mm")} -{" "}
+                    {moment(trip.arrival.time).format("hh:mm")}
+                  </td>
+                  <td>0</td>
+                  <td>Pris</td>
                 </tr>
               ))}
             </tbody>

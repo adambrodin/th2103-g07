@@ -24,15 +24,15 @@ export class BookingController {
       return {
         response: 'Trips have been fetched successfully.',
         data: {
-          OutboundTrip: fetchedTrips.trips,
-          ReturnTrip: fetchedReturnTrips.trips,
+          outboundTrip: fetchedTrips.trips,
+          returnTrip: fetchedReturnTrips.trips,
         },
       };
     } else if (fetchedTrips.trips.length > 0) {
       return {
         response: 'Trips have been fetched successfully.',
         data: {
-          OutboundTrip: fetchedTrips.trips,
+          outboundTrip: fetchedTrips.trips,
         },
       };
     } else {

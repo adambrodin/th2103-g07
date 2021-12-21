@@ -22,12 +22,12 @@ export class TripSearchDto {
   @IsOptional()
   @ValidateNested()
   @Type(() => TripPoint)
-  ReturnDeparture?: TripPoint;
+  returnDeparture?: TripPoint;
 
   @IsOptional()
   @ValidateNested()
   @Type(() => TripPoint)
-  ReturnArrival?: TripPoint;
+  returnArrival?: TripPoint;
 
   @ArrayNotEmpty()
   @ValidateNested({ each: true })

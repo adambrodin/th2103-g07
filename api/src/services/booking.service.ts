@@ -42,11 +42,11 @@ export class BookingService {
   ): Promise<{ error?: string; trips?: any }> {
     const signatures: string[] = [];
 
-    if (body.ReturnDeparture != null && body.ReturnArrival != null) {
+    if (body.returnDeparture != null && body.returnArrival != null) {
       // Verify that locations are valid TrainStops
       for (const location of [
-        body.ReturnDeparture.location,
-        body.ReturnArrival.location,
+        body.returnDeparture.location,
+        body.returnArrival.location,
       ]) {
         const fetchedSignature =
           await this._trainDataService.getLocationSignature(location);

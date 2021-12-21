@@ -22,17 +22,45 @@ function StartPage() {
       ? "https://train-booking-function-app.azurewebsites.net/api"
       : (process.env.REACT_APP_API_URL as string);
 
-  let e: object[] = [{ test: "hej" }];
+  let requestAnswer: object[] = [{}];
 
   useEffect(() => {
     fetchAvailableStations();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
+
+  useEffect(() => {
+    ToggleSearchContainer();
+  }, [tripData]);
 
   function submitForm(event: any) {
     event.preventDefault();
+    //event.target[8].value för att få värdet om det är återresa eller inte
 
     const adultTicketAmount = parseInt(event.target[11].value);
+    const studentTicketAmount = parseInt(event.target[12].value);
+    const pensionerTicketAmount = parseInt(event.target[13].value);
+    const kidsTicketAmount = parseInt(event.target[14].value);
+    let allTickets: object[] = [];
+
+    if (!isNaN(adultTicketAmount) && adultTicketAmount > 0) {
+      allTickets.push({ type: TicketType.ADULT, amount: adultTicketAmount });
+    }
+    if (!isNaN(studentTicketAmount) && studentTicketAmount > 0) {
+      allTickets.push({
+        type: TicketType.STUDENT,
+        amount: studentTicketAmount,
+      });
+    }
+    if (!isNaN(pensionerTicketAmount) && pensionerTicketAmount > 0) {
+      allTickets.push({
+        type: TicketType.SENIOR,
+        amount: pensionerTicketAmount,
+      });
+    }
+    if (!isNaN(kidsTicketAmount) && kidsTicketAmount > 0) {
+      allTickets.push({ type: TicketType.CHILD, amount: kidsTicketAmount });
+    }
+
     let searchData = {
       departure: {
         location: event.target[0].value,
@@ -40,9 +68,17 @@ function StartPage() {
       },
       arrival: {
         location: event.target[4].value,
+        time: new Date(event.target[9].value),
+      },
+      returnDeparture: {
+        location: event.target[4].value,
         time: new Date(event.target[10].value),
       },
-      tickets: [{ type: TicketType.ADULT, amount: adultTicketAmount }],
+      returnArrival: {
+        location: event.target[0].value,
+        time: new Date(event.target[10].value),
+      },
+      tickets: allTickets,
     };
     setRequestData({ ...searchData });
 
@@ -56,11 +92,11 @@ function StartPage() {
     })
       .then((res) => res.json())
       .then((data) => {
-        e = data.data;
+        requestAnswer = data.data;
       })
       .then(() => {
         setHide(!hide);
-        setTripData(tripData.concat(e));
+        setTripData(tripData.concat(requestAnswer));
       });
   }
 

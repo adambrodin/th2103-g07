@@ -17,6 +17,10 @@ function StartPage() {
   const [kidsNum, setKidsNum] = useState(0);
   const [hide, setHide] = useState(false);
   const [stations, setStations] = useState([""]);
+  const API_URL =
+    process.env.NODE_ENV === "production"
+      ? "https://train-booking-function-app.azurewebsites.net/api"
+      : (process.env.REACT_APP_API_URL as string);
 
   let e: object[] = [{ test: "hej" }];
 
@@ -42,7 +46,7 @@ function StartPage() {
     };
     setRequestData({ ...searchData });
 
-    fetch((process.env.REACT_APP_API_URL as string) + "/booking/search", {
+    fetch(API_URL + "/booking/search", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -89,7 +93,7 @@ function StartPage() {
   }
 
   function fetchAvailableStations() {
-    fetch((process.env.REACT_APP_API_URL as string) + "/station", {
+    fetch(API_URL + "/station", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

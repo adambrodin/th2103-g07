@@ -14,6 +14,14 @@ export class TripSearchDto {
   @Type(() => TripPoint)
   arrival: TripPoint;
 
+  @ValidateNested()
+  @Type(() => TripPoint)
+  ReturnDeparture: TripPoint;
+
+  @ValidateNested()
+  @Type(() => TripPoint)
+  ReturnArrival: TripPoint;
+
   @ArrayNotEmpty()
   @ValidateNested({ each: true })
   @Type(() => TicketDto)

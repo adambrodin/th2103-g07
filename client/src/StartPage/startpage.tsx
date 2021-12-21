@@ -1,8 +1,10 @@
 import { DatePicker } from "rsuite";
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import SearchConponent from "./ResultComponent";
 import { TicketType } from "./Enums/ticket-type.enum";
 import "rsuite/dist/rsuite.min.css";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 function StartPage() {
   let objArray: object[] = [];
@@ -14,23 +16,28 @@ function StartPage() {
   const [pensionerNum, setPensionerNum] = useState(0);
   const [kidsNum, setKidsNum] = useState(0);
   const [hide, setHide] = useState(false);
+  const [stations, setStations] = useState([""]);
+
   let e: object[] = [{ test: "hej" }];
+
+  useEffect(() => {
+    fetchAvailableStations();
+  }, []);
 
   function submitForm(event: any) {
     event.preventDefault();
 
+    const adultTicketAmount = parseInt(event.target[11].value);
     let searchData = {
       departure: {
         location: event.target[0].value,
-        time: new Date(event.target[3].value),
+        time: new Date(event.target[9].value),
       },
       arrival: {
-        location: event.target[1].value,
-        time: new Date(event.target[3].value),
+        location: event.target[4].value,
+        time: new Date(event.target[10].value),
       },
-      tickets: [
-        { type: TicketType.ADULT, amount: parseInt(event.target[5].value) },
-      ],
+      tickets: [{ type: TicketType.ADULT, amount: adultTicketAmount }],
     };
     setRequestData({ ...searchData });
 
@@ -50,17 +57,6 @@ function StartPage() {
         setHide(!hide);
         setTripData(tripData.concat(e));
       });
-
-    // let data = {
-    //   from: event.target[0].value,
-    //   to: event.target[1].value,
-    //   fromDate: event.target[3].value,
-    //   toDate: event.target[4].value,
-    //   adult: event.target[5].value,
-    //   student: event.target[6].value,
-    //   pensioner: event.target[7].value,
-    //   kids: event.target[8].value,
-    // };
   }
 
   function toggleDatePicker() {
@@ -91,6 +87,25 @@ function StartPage() {
     }
   }
 
+  function fetchAvailableStations() {
+    fetch((process.env.REACT_APP_API_URL as string) + "/station", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const stationNames: string[] = [];
+        for (let station of data) {
+          stationNames.push(station.locationName);
+        }
+
+        setStations(stations.concat(stationNames));
+      });
+  }
+
   return (
     <div className="container text-center">
       <div className="row">
@@ -106,18 +121,32 @@ function StartPage() {
                   <label className="input-group-text" htmlFor="fromDestination">
                     Från
                   </label>
-                  <input
-                    id="fromDestination"
-                    className="form-control"
-                    type="text"
+                  <Autocomplete
+                    options={stations}
+                    style={{ width: 300 }}
+                    renderInput={(params) => (
+                      <TextField
+                        className="fromDestination"
+                        {...params}
+                        label="Sök efter stationer"
+                        variant="outlined"
+                      />
+                    )}
                   />
                   <label className="input-group-text" htmlFor="toDestination">
                     Till
                   </label>
-                  <input
-                    id="toDestination"
-                    className="form-control"
-                    type="text"
+                  <Autocomplete
+                    options={stations}
+                    style={{ width: 300 }}
+                    renderInput={(params) => (
+                      <TextField
+                        className="toDestination"
+                        {...params}
+                        label="Sök efter stationer"
+                        variant="outlined"
+                      />
+                    )}
                   />
                 </div>
               </div>

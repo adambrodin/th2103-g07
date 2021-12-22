@@ -58,7 +58,7 @@ export class BookingController {
 
     return {
       response: 'Trip has been booked successfully.',
-      data: bookingResult.receipt,
+      data: { receipt: bookingResult.receipt },
     };
   }
 }

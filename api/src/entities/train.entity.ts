@@ -13,7 +13,7 @@ import { TrainStopEntity } from './train-stop.entity';
 @Entity({ name: 'Train' })
 export class TrainEntity {
   @PrimaryColumn()
-  id: string;
+  trainId: string;
 
   @Column()
   model: string;

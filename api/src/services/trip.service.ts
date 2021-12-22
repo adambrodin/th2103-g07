@@ -55,6 +55,7 @@ export class TripService {
 
         const trip = new Trip();
         trip.departure = {
+          id: departure.id,
           location: departure.fromStation.locationName,
           time: departure.date,
         };
@@ -66,6 +67,7 @@ export class TripService {
             departure.toStation.locationSignature
           ) {
             trip.arrival = {
+              id: stop.id,
               location: stop.currentStation.locationName,
               time: stop.date,
             };
@@ -73,6 +75,7 @@ export class TripService {
           }
 
           tripStops.push({
+            id: stop.id,
             location: stop.currentStation.locationName,
             time: stop.date,
           });

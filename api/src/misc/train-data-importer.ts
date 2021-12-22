@@ -53,9 +53,6 @@ export class TrainDataImporter {
     console.log(`Successfully saved ${stationsAdded} stations to database.`);
   }
 
-  // LOOP THROUGH ALL STATIONS AND SEARCH FOR TRIP TOWARDS EVERY OTHER STATION
-  // E.G GOTHENBURG -> (ALL STATIONS EXCEPT GOTHENBURG)
-
   async importTrips() {
     console.log('Importing trips..');
 
@@ -81,7 +78,7 @@ export class TrainDataImporter {
         if (train == null) {
           train = await trainRepo.save({
             id: action.AdvertisedTrainIdent,
-            model:
+            name:
               action.ProductInformation == null
                 ? ''
                 : action.ProductInformation[0],

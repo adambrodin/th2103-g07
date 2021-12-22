@@ -2,9 +2,11 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { TicketEntity } from './ticket.entity';
 import { TrainStationEntity } from './train-station.entity';
 import { TrainEntity } from './train.entity';
 
@@ -30,6 +32,9 @@ export class TrainStopEntity {
 
   @ManyToOne(() => TrainEntity, (entity) => entity.stops)
   train: TrainEntity;
+
+  @ManyToMany(() => TicketEntity, (entity) => entity.stops)
+  tickets: TicketEntity[];
 
   @Column()
   date: Date;

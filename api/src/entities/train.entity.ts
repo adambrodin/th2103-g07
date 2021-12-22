@@ -1,13 +1,5 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToMany,
-  OneToMany,
-  PrimaryColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm';
 import { SeatEntity } from './seat.entity';
-import { TicketEntity } from './ticket.entity';
 import { TrainStopEntity } from './train-stop.entity';
 
 @Entity({ name: 'Train' })
@@ -16,18 +8,13 @@ export class TrainEntity {
   trainId: string;
 
   @Column()
-  model: string;
+  name: string;
 
-  @OneToMany(() => SeatEntity, (entity) => entity.train, { nullable: true })
+  @OneToMany(() => SeatEntity, (entity) => entity.train)
   @JoinColumn({ name: 'Train_Seats' })
   seats: SeatEntity[];
 
-  @ManyToMany(() => TicketEntity, { nullable: true })
-  tickets: TicketEntity[];
-
-  @OneToMany(() => TrainStopEntity, (entity) => entity.train, {
-    nullable: true,
-  })
+  @OneToMany(() => TrainStopEntity, (entity) => entity.train)
   @JoinColumn({ name: 'Train_Stops' })
   stops: TrainStopEntity[];
 }

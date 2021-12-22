@@ -1,30 +1,21 @@
-import React, {createContext, useState} from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import StartPage from './StartPage/startpage';
+import Payment from './PaymentPage/Payment';
 import AdditionalChoicesPage from './AdditionalChoicesPage/AdditionalChoicesPage'
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Link
-} from 'react-router-dom';
 
 function App() {
-
-  return(
-  <div className="App">
-      <h1>Train Booking System - Group 7</h1>;
-  <Router>
-    <Routes>
-      <Route path="/" element={<StartPage/>}>
-        <Route path="tillval" element={<AdditionalChoicesPage/>}></Route>
-        {/* Example of nested routing
-          <Route path="booking" element={<BookingPage/>}></Route>
-          */}
-      </Route>
-    </Routes>
-  </Router>
-
-</div>)
+  return (
+    <>
+      {/* <StartPage /> */}
+      <Router>
+        <Routes>
+          <Route path='/' element={<StartPage />} />
+          <Route path='/payment' element={<Payment />} />
+          <Route path='/additional-choices' element={<AdditionalChoicesPage/>}></Route>
+        </Routes>
+      </Router>
+    </>
+  );
 }
 
 export default App;

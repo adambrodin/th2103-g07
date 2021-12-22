@@ -7,6 +7,7 @@ import { TrainDataImporter } from './misc/train-data-importer';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   app.setGlobalPrefix('api'); // GLOBAL ROUTE, CONTROLLERS ALWAYS START WITH /API/<CONTROLLER ROUTE>
   app.useGlobalPipes(new ValidationPipe());
 

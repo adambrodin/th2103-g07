@@ -1,38 +1,67 @@
 import { DatePicker } from "rsuite";
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import SearchConponent from "./ResultComponent";
-
+import { TicketType } from "./Enums/ticket-type.enum";
 import "rsuite/dist/rsuite.min.css";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 function StartPage() {
+  let objArray: object[] = [];
   const [returnTrip, setReturnTrip] = useState(false);
+  const [requestData, setRequestData] = useState({});
+  const [tripData, setTripData] = useState(objArray);
   const [adultNum, setAdultNum] = useState(1);
   const [studentNum, setStudentNum] = useState(0);
   const [pensionerNum, setPensionerNum] = useState(0);
   const [kidsNum, setKidsNum] = useState(0);
+  const [hide, setHide] = useState(false);
+  const [stations, setStations] = useState([""]);
+  const API_URL =
+    process.env.NODE_ENV === "production"
+      ? "https://train-booking-function-app.azurewebsites.net/api"
+      : (process.env.REACT_APP_API_URL as string);
+
+  let e: object[] = [{ test: "hej" }];
+
+  useEffect(() => {
+    fetchAvailableStations();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function submitForm(event: any) {
     event.preventDefault();
 
-    let data = {
-      from: event.target[0].value,
-      to: event.target[1].value,
-      fromDate: event.target[3].value,
-      toDate: event.target[4].value,
-      adult: event.target[5].value,
-      student: event.target[6].value,
-      pensioner: event.target[7].value,
-      kids: event.target[8].value,
+    const adultTicketAmount = parseInt(event.target[11].value);
+    let searchData = {
+      departure: {
+        location: event.target[0].value,
+        time: new Date(event.target[9].value),
+      },
+      arrival: {
+        location: event.target[4].value,
+        time: new Date(event.target[10].value),
+      },
+      tickets: [{ type: TicketType.ADULT, amount: adultTicketAmount }],
     };
+    setRequestData({ ...searchData });
 
-    fetch("POst URL", {
+    fetch(API_URL + "/booking/search", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    }).then((res) => {
-      console.log("sucsess");
-      ToggleSearchContainer();
-    });
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify(searchData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        e = data.data;
+      })
+      .then(() => {
+        setHide(!hide);
+        setTripData(tripData.concat(e));
+      });
   }
 
   function toggleDatePicker() {
@@ -63,6 +92,25 @@ function StartPage() {
     }
   }
 
+  function fetchAvailableStations() {
+    fetch(API_URL + "/station", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const stationNames: string[] = [];
+        for (let station of data) {
+          stationNames.push(station.locationName);
+        }
+
+        setStations(stations.concat(stationNames));
+      });
+  }
+
   return (
     <div className="container text-center">
       <div className="row">
@@ -78,18 +126,32 @@ function StartPage() {
                   <label className="input-group-text" htmlFor="fromDestination">
                     Från
                   </label>
-                  <input
-                    id="fromDestination"
-                    className="form-control"
-                    type="text"
+                  <Autocomplete
+                    options={stations}
+                    style={{ width: 300 }}
+                    renderInput={(params) => (
+                      <TextField
+                        className="fromDestination"
+                        {...params}
+                        label="Sök efter stationer"
+                        variant="outlined"
+                      />
+                    )}
                   />
                   <label className="input-group-text" htmlFor="toDestination">
                     Till
                   </label>
-                  <input
-                    id="toDestination"
-                    className="form-control"
-                    type="text"
+                  <Autocomplete
+                    options={stations}
+                    style={{ width: 300 }}
+                    renderInput={(params) => (
+                      <TextField
+                        className="toDestination"
+                        {...params}
+                        label="Sök efter stationer"
+                        variant="outlined"
+                      />
+                    )}
                   />
                 </div>
               </div>
@@ -183,7 +245,15 @@ function StartPage() {
       >
         Tillbaka
       </button>
-      <SearchConponent returnTrip={returnTrip} />
+      {tripData.length > 0 ? (
+        <SearchConponent
+          returnTrip={returnTrip}
+          trips={tripData}
+          requestData={requestData}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

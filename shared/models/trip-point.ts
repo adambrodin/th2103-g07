@@ -4,6 +4,6 @@ export class TripPoint {
   @IsString()
   location: string;
 
-  @IsISO8601()
+  // @IsISO8601()
   time: Date;
 }

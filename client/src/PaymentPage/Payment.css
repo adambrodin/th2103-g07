@@ -1,0 +1,46 @@
+label {
+  display: flex;
+  flex-direction: column-reverse;
+}
+label > span {
+  transition: all 0.2s;
+  transform-origin: top left;
+}
+label > input[placeholder=' ']:not(:focus):placeholder-shown + span {
+  transform: translateY(1em) scale(1.25);
+  pointer-events: none;
+  opacity: 0.5;
+}
+.form-row {
+  width: 50rem;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1em;
+}
+.customer-form {
+  margin-bottom: 3rem;
+}
+.customer-container {
+  display: flex;
+}
+
+.customer-container input {
+  margin-right: 2rem;
+  height: 3em;
+  width: 20em;
+}
+.customer-container span {
+  font-size: 20px;
+}
+.summary-container {
+  display: flex;
+  justify-content: end;
+  margin-right: 5em;
+}
+
+.btn-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  margin-right: 5em;
+}

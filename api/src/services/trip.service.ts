@@ -33,7 +33,6 @@ export class TripService {
       .leftJoinAndSelect('departure.fromStation', 'fromStation')
       .leftJoinAndSelect('departure.toStation', 'toStation')
       .leftJoinAndSelect('departure.train', 'train')
-      .andWhere('train.trainId < :id', { id: 90000 })
       .andWhere('departure.fromStation is not null')
       .andWhere('departure.toStation is not null')
       .limit(this.maxTripsToFetch)

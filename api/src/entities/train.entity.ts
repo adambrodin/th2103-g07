@@ -2,31 +2,32 @@ import {
   Column,
   Entity,
   JoinColumn,
-  JoinTable,
   ManyToMany,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from 'typeorm';
-import { RouteEntity } from './route.entity';
 import { SeatEntity } from './seat.entity';
 import { TicketEntity } from './ticket.entity';
+import { TrainStopEntity } from './train-stop.entity';
 
 @Entity({ name: 'Train' })
 export class TrainEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn()
+  id: string;
 
   @Column()
   model: string;
 
-  @ManyToMany(() => RouteEntity)
-  @JoinTable({ name: 'Train_Routes' })
-  route: RouteEntity;
-
-  @OneToMany(() => SeatEntity, (entity) => entity.train)
+  @OneToMany(() => SeatEntity, (entity) => entity.train, { nullable: true })
   @JoinColumn({ name: 'Train_Seats' })
   seats: SeatEntity[];
 
-  @ManyToMany(() => TicketEntity)
+  @ManyToMany(() => TicketEntity, { nullable: true })
   tickets: TicketEntity[];
+
+  @OneToMany(() => TrainStopEntity, (entity) => entity.train, {
+    nullable: true,
+  })
+  @JoinColumn({ name: 'Train_Stops' })
+  stops: TrainStopEntity[];
 }

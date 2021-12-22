@@ -49,7 +49,24 @@ export class BookingService {
   ): Promise<{ error?: string; receipt?: ReceiptEntity }> {
     try {
     } catch (err: any) {
-      return { error: err.detailed };
+  async fetchCustomer(customerDetails: Customer): Promise<CustomerEntity> {
+    const customerRepo = getRepository(CustomerEntity);
+    let customer = await customerRepo.findOne({
+      where: {
+        email: customerDetails.email,
+        phoneNumber: customerDetails.phoneNumber,
+      },
+    });
+
+    if (customer == null) {
+      customer = await customerRepo.save({
+        firstName: customerDetails.firstName,
+        lastName: customerDetails.lastName,
+        phoneNumber: customerDetails.phoneNumber,
+        email: customerDetails.email,
+      });
     }
+
+    return customer;
   }
 }

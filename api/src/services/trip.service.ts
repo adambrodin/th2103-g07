@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { getRepository } from 'typeorm';
-import { TripSearchDto } from '@shared/dtos/trip-search.dto';
 import { Trip } from '@shared/models/trip';
 import { TrainStopEntity } from '../entities/train-stop.entity';
 import { TripPoint } from '../../../shared/models/trip-point';
@@ -10,13 +9,13 @@ export class TripService {
   // Maximum amount of trips to retrieve and return in controller
   maxTripsToFetch = 10;
 
-  async getAvailableTrips(body: TripSearchDto, signatures: string[]) {
+  async getAvailableTrips(body: TripPoint[], signatures: string[]) {
     const stopRepo = getRepository(TrainStopEntity);
 
     // Trips where you don't have to switch trains in order to reach the final destination
     const departures = await stopRepo
       .createQueryBuilder('departure')
-      .where('departure.date >= :date', { date: body.departure.time })
+      .where('departure.date >= :date', { date: body[0].time })
       .andWhere('departure.activityType = :type', {
         type: 'Avgang',
       })

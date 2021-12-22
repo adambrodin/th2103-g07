@@ -9,30 +9,32 @@ export class BookingController {
 
   @Post('search')
   async searchAvailableTrips(@Body() body: TripSearchDto) {
-    const fetchedTrips = await this._bookingService.getAvailableTrips(body);
-    const fetchedReturnTrips =
-      await this._bookingService.getAvailableReturnTrips(body);
+    const outboundTrips = await this._bookingService.getAvailableTrips([
+      body.departure,
+      body.arrival,
+    ]);
 
-    if (fetchedTrips?.error != null) {
+    let returnTrips;
+    if (body.returnDeparture != null && body.returnArrival != null) {
+      returnTrips = await this._bookingService.getAvailableTrips([
+        body.returnDeparture,
+        body.returnArrival,
+      ]);
+    }
+
+    if (outboundTrips?.error != null || returnTrips?.error != null) {
       return {
         response: 'An error occurred whilst fetching available trips.',
-        error: fetchedTrips?.error,
+        error: [outboundTrips?.error, returnTrips?.error],
       };
     }
 
-    if (fetchedTrips.trips.length > 0 && fetchedReturnTrips.trips.length > 0) {
+    if (outboundTrips.trips.length > 0) {
       return {
         response: 'Trips have been fetched successfully.',
         data: {
-          OutboundTrip: fetchedTrips.trips,
-          ReturnTrip: fetchedReturnTrips.trips,
-        },
-      };
-    } else if (fetchedTrips.trips.length > 0) {
-      return {
-        response: 'Trips have been fetched successfully.',
-        data: {
-          OutboundTrip: fetchedTrips.trips,
+          OutboundTrips: outboundTrips.trips,
+          ReturnTrips: returnTrips?.trips,
         },
       };
     } else {

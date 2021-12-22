@@ -1,23 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { Trip } from '@shared/models/trip';
 import { BookTripDto } from '@shared/dtos/book-trip.dto';
 import { TripSearchDto } from '@shared/dtos/trip-search.dto';
 import { ReceiptEntity } from '../entities/receipt.entity';
-import { TrainDataService } from './train-data.service';
+import { StationService } from './station.service';
+import { TripService } from './trip.service';
+import { Trip } from '@shared/models/trip';
+import { TripPoint } from '../../../shared/models/trip-point';
 
 @Injectable()
 export class BookingService {
-  constructor(private readonly _trainDataService: TrainDataService) {}
+  constructor(
+    private readonly _stationService: StationService,
+    private readonly _tripService: TripService,
+  ) {}
 
   async getAvailableTrips(
-    body: TripSearchDto,
-  ): Promise<{ error?: string; trips?: any }> {
+    body: TripPoint[],
+  ): Promise<{ error?: string; trips?: Trip[] }> {
     const signatures: string[] = [];
 
     // Verify that locations are valid TrainStops
-    for (const location of [body.departure.location, body.arrival.location]) {
-      const fetchedSignature =
-        await this._trainDataService.getLocationSignature(location);
+    for (const location of [body[0].location, body[1].location]) {
+      const fetchedSignature = await this._stationService.getLocationSignature(
+        location,
+      );
+
       if (fetchedSignature == null) {
         return { error: `Location '${location}' could not be found.` };
       }
@@ -25,7 +32,7 @@ export class BookingService {
       signatures.push(fetchedSignature);
     }
 
-    const fetchedTrips = await this._trainDataService.getAvailableTrips(
+    const fetchedTrips = await this._tripService.getAvailableTrips(
       body,
       signatures,
     );
@@ -35,43 +42,6 @@ export class BookingService {
     }
 
     return { trips: fetchedTrips };
-  }
-
-  async getAvailableReturnTrips(
-    body: TripSearchDto,
-  ): Promise<{ error?: string; trips?: any }> {
-    const signatures: string[] = [];
-
-    if (body.ReturnDeparture != null && body.ReturnArrival != null) {
-      // Verify that locations are valid TrainStops
-      for (const location of [
-        body.ReturnDeparture.location,
-        body.ReturnArrival.location,
-      ]) {
-        const fetchedSignature =
-          await this._trainDataService.getLocationSignature(location);
-        if (fetchedSignature == null) {
-          return { error: `Location '${location}' could not be found.` };
-        }
-
-        signatures.push(fetchedSignature);
-      }
-
-      const fetchedReturnTrips = await this._trainDataService.getAvailableTrips(
-        body,
-        signatures,
-      );
-
-      if (fetchedReturnTrips.length <= 0) {
-        return { error: 'No available trips were found.' };
-      }
-
-      return { trips: fetchedReturnTrips };
-    } else {
-      return {
-        trips: [],
-      };
-    }
   }
 
   async bookTrip(

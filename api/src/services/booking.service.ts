@@ -12,6 +12,7 @@ import { TrainStopEntity } from '../entities/train-stop.entity';
 import { BookingEntity } from '../entities/booking.entity';
 import { TicketEntity } from '../entities/ticket.entity';
 import { TrainEntity } from '../entities/train.entity';
+import { TicketPriceEntity } from '../entities/ticket-price.entity';
 
 @Injectable()
 export class BookingService {
@@ -77,18 +78,32 @@ export class BookingService {
         .getOne();
 
       const booking = await bookingRepo.save({ customer: customer });
+      const tickets: TicketEntity[] = [];
       for (const seat of body.seats) {
-        await ticketRepo.save({
+        const ticketPrice = await getRepository(TicketPriceEntity).findOne({
+          where: { ticketClass: seat.ticketClassType },
+        });
+
+        const ticket = await ticketRepo.save({
+          price: ticketPrice.price,
+          classType: seat.ticketClassType,
           booking: booking,
           stops: bookingStops,
           train: train,
           type: seat.ticket,
         });
+
+        tickets.push(ticket);
+      }
+
+      let receiptTotalPrice = 0;
+      for (const ticket of tickets) {
+        receiptTotalPrice += ticket.price;
       }
 
       const savedReceipt = await receiptRepo.save({
         booking: booking,
-        totalPrice: 100,
+        totalPrice: receiptTotalPrice,
       });
 
       const receipt = await receiptRepo

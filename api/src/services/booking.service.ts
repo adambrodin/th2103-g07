@@ -97,6 +97,7 @@ export class BookingService {
         .leftJoinAndSelect('receipt.booking', 'booking')
         .leftJoinAndSelect('booking.tickets', 'ticket')
         .leftJoinAndSelect('ticket.stops', 'stop')
+        .orderBy('stop.date')
         .leftJoinAndSelect('stop.train', 'train')
         .getOne();
 

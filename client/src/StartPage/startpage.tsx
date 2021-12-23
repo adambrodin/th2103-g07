@@ -22,8 +22,6 @@ function StartPage() {
       ? "https://train-booking-function-app.azurewebsites.net/api"
       : (process.env.REACT_APP_API_URL as string);
 
-  let requestAnswer: object[] = [{}];
-
   useEffect(() => {
     fetchAvailableStations();
     // eslint-disable-next-line react-hooks/exhaustive-deps

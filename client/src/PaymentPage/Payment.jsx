@@ -22,10 +22,11 @@ function Payment() {
       formArray.push(
         <form className='customer-form'>
           <h3>Resenär {i + 1}</h3>
-          <div className='form-row'>
+          <div className='c-form-row'>
             <label htmlFor=''>
               <input
                 type='text'
+                required
                 onChange={(e) => setCustomer({ firstname: e.target.value })}
               />
               <span>Förnamn</span>
@@ -33,6 +34,7 @@ function Payment() {
             <label htmlFor=''>
               <input
                 type='text'
+                required
                 onChange={(e) =>
                   setCustomer({ ...customer, lastname: e.target.value })
                 }
@@ -65,6 +67,7 @@ function Payment() {
     //     },
     //   ],
     // };
+    alert('Redirect');
   }
 
   return (
@@ -86,10 +89,11 @@ function Payment() {
         <div className='information-container'>
           <form className='customer-form'>
             <h3>Resenär</h3>
-            <div className='form-row'>
+            <div className='c-form-row'>
               <label htmlFor=''>
                 <input
                   type='text'
+                  required
                   onChange={(e) =>
                     updateContext({
                       firstname: e.target.value,
@@ -101,6 +105,7 @@ function Payment() {
               <label htmlFor=''>
                 <input
                   type='text'
+                  required
                   onChange={(e) =>
                     updateContext({
                       lastname: e.target.value,
@@ -110,10 +115,11 @@ function Payment() {
                 <span>Efternamn</span>
               </label>
             </div>
-            <div className='form-row'>
+            <div className='c-form-row'>
               <label htmlFor=''>
                 <input
                   type='email'
+                  required
                   onChange={(e) =>
                     updateContext({
                       email: e.target.value,
@@ -125,6 +131,7 @@ function Payment() {
               <label htmlFor=''>
                 <input
                   type='tel'
+                  required
                   pattern='[0-9]{10}'
                   onChange={(e) =>
                     updateContext({
@@ -135,6 +142,8 @@ function Payment() {
                 <span>Mobilnummer</span>
               </label>
             </div>
+            {/* Remove input after testing */}
+            <input type='submit' />
           </form>
           {formArray}
         </div>

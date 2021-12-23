@@ -14,7 +14,7 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: "center",
   color: theme.palette.text.secondary,
 }));
-const tempSilentCoachPriceFactor:number = 1.5;
+const tempSilentCoachPriceFactor:number = 0.5;
 
 const AdditionalChoicesPage = () => {
   const [context, updateContext] = useContext(BookingContext);
@@ -29,7 +29,7 @@ const AdditionalChoicesPage = () => {
     {
       id: "1",
       name: "Tyst vagn",
-      price: (context.price * tempSilentCoachPriceFactor),
+      price: (context.price + context.price * tempSilentCoachPriceFactor),
     },
   ];
 
@@ -39,7 +39,9 @@ const AdditionalChoicesPage = () => {
   };
 
   useEffect(() => {
-    console.log(price);
+    updateContext({
+      additionalCosts:price
+    });
   }, [price]);
 /*
   New choices should be added to stack *element*

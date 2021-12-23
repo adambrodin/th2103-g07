@@ -13,6 +13,7 @@ function BookingContextProvider(props) {
     },
     tickets: [{ type: 'Adult', amount: 3 }],
     price: 495,
+    additionalCosts: 0,
   });
 
   function updateContext(values) {

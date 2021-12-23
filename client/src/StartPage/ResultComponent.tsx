@@ -6,6 +6,7 @@ function ResultComponent(data: any) {
   let lastSelectedReturnTrip: HTMLElement | null = null;
   const ticketPrices: number = getTicketPrices();
   let lastSelectedTripId: string = "";
+  let lastSelectedReturnTripId: string = "";
 
   function getTicketPrices(): number {
     let ticketsPirce: number = 0;
@@ -67,7 +68,30 @@ function ResultComponent(data: any) {
       let esh: any = document.getElementById(lastSelectedTripId);
       esh.checked = false;
     }
+
     lastSelectedTripId = e.target.id;
+  }
+  function toggleReturnRadio(e: any) {
+    const Id = e.target.id.split("-");
+    console.log(document.getElementById("ReturnSecondClass-" + Id[1]));
+    console.log(document.getElementById("ReturnFirstClass-" + Id[1]));
+
+    if (e.target.id !== "ReturnSecondClass-" + Id[1]) {
+      let esh: any = document.getElementById("ReturnSecondClass-" + Id[1]);
+      esh.checked = false;
+    } else if (e.target.id !== "ReturnFirstClass-" + Id[1]) {
+      let esh: any = document.getElementById("ReturnFirstClass-" + Id[1]);
+      esh.checked = false;
+    }
+    if (
+      lastSelectedReturnTripId !== e.target.id &&
+      lastSelectedReturnTripId !== ""
+    ) {
+      let esh: any = document.getElementById(lastSelectedReturnTripId);
+      esh.checked = false;
+    }
+
+    lastSelectedReturnTripId = e.target.id;
   }
 
   return (
@@ -87,40 +111,53 @@ function ResultComponent(data: any) {
           </tr>
         </thead>
         <tbody>
-          {data.trips[0].outboundTrip.map((trip: any) => (
-            <tr
-              onClick={() => getTicket(trip.train.id, "")}
-              id={trip.train.id}
-              key={trip.train.id}
-            >
-              <td>
-                {moment(trip.departure.time).format("hh:mm")} -{" "}
-                {moment(trip.arrival.time).format("hh:mm")}
-              </td>
-              <td>
-                <label htmlFor={"FirstClass-" + trip.train.id}>
-                  {ticketPrices * 2 + " kr"}
-                </label>
-                <input
-                  type="radio"
-                  name={"FirstClass-" + trip.train.id}
-                  id={"FirstClass-" + trip.train.id}
-                  onChange={(e) => toggleRadio(e)}
-                />
-              </td>
-              <td>
-                <label htmlFor={"SecondClass-" + trip.train.id}>
-                  {ticketPrices + " kr"}
-                </label>
-                <input
-                  type="radio"
-                  name={"SecondClass-" + trip.train.id}
-                  id={"SecondClass-" + trip.train.id}
-                  onChange={(e) => toggleRadio(e)}
-                />
-              </td>
-            </tr>
-          ))}
+          {data.trips[0].outboundTrip.map((trip: any) => {
+            return (
+              <tr
+                onClick={() => getTicket(trip.train.id, "")}
+                id={trip.train.id}
+                key={trip.train.id}
+              >
+                <td>
+                  {moment(trip.departure.time).format("hh:mm")} -{" "}
+                  {moment(trip.arrival.time).format("hh:mm")}
+                  <p>
+                    restid
+                    {" " +
+                      moment
+                        .duration(
+                          moment(trip.departure.time).diff(
+                            moment(trip.arrival.time)
+                          )
+                        )
+                        .humanize()}
+                  </p>
+                </td>
+                <td>
+                  <label htmlFor={"FirstClass-" + trip.train.id}>
+                    {ticketPrices * 2 + " kr"}
+                  </label>
+                  <input
+                    type="radio"
+                    name={"FirstClass-" + trip.train.id}
+                    id={"FirstClass-" + trip.train.id}
+                    onChange={(e) => toggleRadio(e)}
+                  />
+                </td>
+                <td>
+                  <label htmlFor={"SecondClass-" + trip.train.id}>
+                    {ticketPrices + " kr"}
+                  </label>
+                  <input
+                    type="radio"
+                    name={"SecondClass-" + trip.train.id}
+                    id={"SecondClass-" + trip.train.id}
+                    onChange={(e) => toggleRadio(e)}
+                  />
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
       {data.returnTrip ? (
@@ -139,8 +176,8 @@ function ResultComponent(data: any) {
             <thead className="thead-dark">
               <tr>
                 <th>Tid</th>
-                <th>Byten</th>
-                <th>Pris</th>
+                <th>1 klass</th>
+                <th>2 klass</th>
               </tr>
             </thead>
             <tbody>
@@ -153,9 +190,40 @@ function ResultComponent(data: any) {
                   <td>
                     {moment(trip.departure.time).format("hh:mm")} -{" "}
                     {moment(trip.arrival.time).format("hh:mm")}
+                    <p>
+                      restid
+                      {" " +
+                        moment
+                          .duration(
+                            moment(trip.departure.time).diff(
+                              moment(trip.arrival.time)
+                            )
+                          )
+                          .humanize()}
+                    </p>
                   </td>
-                  <td>0</td>
-                  <td>Pris</td>
+                  <td>
+                    <label htmlFor={"FirstClass-" + trip.train.id}>
+                      {ticketPrices * 2 + " kr"}
+                    </label>
+                    <input
+                      type="radio"
+                      name={"FirstClass-" + trip.train.id}
+                      id={"ReturnFirstClass-" + trip.train.id}
+                      onChange={(e) => toggleReturnRadio(e)}
+                    />
+                  </td>
+                  <td>
+                    <label htmlFor={"FirstClass-" + trip.train.id}>
+                      {ticketPrices + " kr"}
+                    </label>
+                    <input
+                      type="radio"
+                      name={"SecondClass-" + trip.train.id}
+                      id={"ReturnSecondClass-" + trip.train.id}
+                      onChange={(e) => toggleReturnRadio(e)}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>

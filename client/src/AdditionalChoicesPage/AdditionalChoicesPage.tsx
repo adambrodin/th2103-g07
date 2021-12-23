@@ -1,44 +1,78 @@
-import React, { useState } from "react";
-import Stack from '@mui/material/Stack';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-//import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import {Link} from 'react-router-dom';
+import { BookingContext } from '../Contexts/BookingContext';
+import Stack from "@mui/material/Stack";
+import Paper from "@mui/material/Paper";
+import { styled } from "@mui/material/styles";
 
 import "rsuite/dist/rsuite.min.css";
+import ChoachPickerComponent from "./CoachPickerComponent";
+
+const Item = styled(Paper)(({ theme }) => ({
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
+const tempSilentCoachPriceFactor:number = 1.5;
+
 const AdditionalChoicesPage = () => {
+  const [context, updateContext] = useContext(BookingContext);
+  const [basePrice, setBasePrice] = useState(context.price);
+  const [price, setPrice] = useState(basePrice)
+  let options = [
+    {
+      id: "0",
+      name: "Vanlig vagn",
+      price: context.price,
+    },
+    {
+      id: "1",
+      name: "Tyst vagn",
+      price: (context.price * tempSilentCoachPriceFactor),
+    },
+  ];
 
-    const [alignment, setAlignment] = React.useState('left');
-    const handleAlignment = (event, newAlignment) => {
-        if (newAlignment !== null) {
-          setAlignment(newAlignment);
-        }
-      };
-    return (
+  function coachHandler(toggledCoachId:string){
+    const coach = options.find(({id})=>id==toggledCoachId);
+    if(coach)setPrice(coach.price);
+  };
+
+  useEffect(() => {
+    console.log(price);
+  }, [price]);
+/*
+  New choices should be added to stack *element*
+*/
+  return (
     <div>
-     <ToggleButtonGroup
-     color='success'
-        value={alignment}
-        exclusive
-        onChange={handleAlignment}
-        aria-label="text alignment"
-      >
-        <ToggleButton value="left" aria-label="left aligned">
-            Tyst vagn <br />
-            4212 SEK
-        </ToggleButton>
-
-        <ToggleButton value="right" aria-label="right aligned">
-        Vanlig vagn <br />
-            134 SEK
-        </ToggleButton>
-      </ToggleButtonGroup>
+      <Link to="/">
+      <button id="back-to-results-btn" className="btn btn-secondary" >
+        Tillbaka
+      </button>
+      </Link>
+      <div>
+        <Stack spacing={2}>
+          <Item>
+            <ChoachPickerComponent
+              options={options}
+              handler={coachHandler}
+              />
+          </Item>
+        </Stack>
+      </div>
+      
       <div className="col">
-        <button id="continueToPaymentButton" className="btn btn-success float-right">
+      <Link to="/payment">
+        <button
+          id="continue-to-payment-btn"
+          className="btn btn-success float-right"
+        >
           Fortsätt
         </button>
+        </Link>
       </div>
     </div>
-        );
-    };
-    export default AdditionalChoicesPage
-
+  );
+};
+export default AdditionalChoicesPage;

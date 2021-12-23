@@ -32,7 +32,9 @@ code {
 #continueButton {
   float: right;
 }
-
+#continue-to-payment-btn {
+  float: right;
+}
 .selectedTicket {
   background-color: grey;
 }

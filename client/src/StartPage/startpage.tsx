@@ -93,11 +93,14 @@ function StartPage() {
     })
       .then((res) => res.json())
       .then((data) => {
-        requestAnswer = data.data;
-      })
-      .then(() => {
-        setHide(!hide);
-        setTripData(tripData.concat(requestAnswer));
+        if (data.data !== undefined) {
+          setTripData(tripData.concat(data.data));
+          setHide(!hide);
+        } else {
+          alert(
+            "Det finns inga tillgängliga resor mellan dem stationerna som söktes på. Vänligen gör en ny sökning."
+          );
+        }
       });
   }
 

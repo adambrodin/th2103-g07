@@ -72,12 +72,12 @@ export class TrainDataImporter {
 
       for (const action of timetable) {
         let train = await trainRepo.findOne({
-          where: { id: action.AdvertisedTrainIdent },
+          where: { trainId: action.AdvertisedTrainIdent },
         });
 
         if (train == null) {
           train = await trainRepo.save({
-            id: action.AdvertisedTrainIdent,
+            trainId: action.AdvertisedTrainIdent,
             name:
               action.ProductInformation == null
                 ? ''

@@ -2,12 +2,18 @@ import { HttpService } from '@nestjs/axios';
 import { env } from 'process';
 import { firstValueFrom } from 'rxjs';
 import { getRepository } from 'typeorm';
+import { TicketClassType } from '../../../shared/enums/ticket-class-type.enum';
+import { TicketPriceEntity } from '../entities/ticket-price.entity';
 import { TrainStationEntity } from '../entities/train-station.entity';
 import { TrainStopEntity } from '../entities/train-stop.entity';
 import { TrainEntity } from '../entities/train.entity';
 import { TrafikverketService } from '../services/trafikverket.service';
 
 export class TrainDataImporter {
+  ticketPrices: { [key: string]: number } = {
+    FIRST_CLASS: 1000,
+    SECOND_CLASS: 500,
+  };
   constructor(private readonly _httpService: HttpService) {}
 
   apiUrlV1 = 'https://api.trafikinfo.trafikverket.se/v1/data.json';
@@ -116,6 +122,19 @@ export class TrainDataImporter {
     console.log(`Successfully saved ${availableStops} stops to database.`);
   }
 
+  async importTicketPrices() {
+    const ticketPriceRepo = getRepository(TicketPriceEntity);
+    console.log(Object.entries(this.ticketPrices));
+
+    for (const [key, value] of Object.entries(this.ticketPrices)) {
+      const savedPrice = await ticketPriceRepo.save({
+        ticketClass: TicketClassType[key],
+        price: value,
+      });
+      console.log('Saved ticket price: ', savedPrice);
+    }
+  }
+
   async importTrainData() {
     const trainStations = await getRepository(TrainStationEntity).count();
     // Import data about stations (name, position, locationSignature etc)
@@ -128,6 +147,11 @@ export class TrainDataImporter {
     // Import data about train trips (arrivals/departures etc)
     if (trainStops <= 0) {
       await this.importTrips();
+    }
+
+    const ticketPrices = await getRepository(TicketPriceEntity).count();
+    if (ticketPrices <= 0) {
+      await this.importTicketPrices();
     }
   }
 }

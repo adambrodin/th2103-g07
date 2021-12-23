@@ -11,6 +11,7 @@ export async function createApp(): Promise<INestApplication> {
   app.useGlobalPipes(new ValidationPipe());
 
   const _httpService = new HttpService();
+
   // Import/populate the database if needed
   const dataImporter = new TrainDataImporter(_httpService);
   await dataImporter.importTrainData();

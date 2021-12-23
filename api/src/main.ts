@@ -11,11 +11,12 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const _httpService = new HttpService();
+
   // Import/populate the database if needed
   const dataImporter = new TrainDataImporter(_httpService);
   await dataImporter.importTrainData();
 
-  await app.listen(1337);
+  await app.listen(process.env.API_PORT ?? 1337);
 }
 
 bootstrap();

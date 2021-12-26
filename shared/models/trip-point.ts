@@ -1,9 +1,13 @@
-import { IsISO8601, IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 export class TripPoint {
+  @IsOptional()
+  @IsNumber()
+  id?: number;
+
   @IsNotEmpty()
   @IsString()
   location: string;
 
-  // @IsISO8601()
-  time: Date;
+  @IsOptional()
+  time?: Date;
 }

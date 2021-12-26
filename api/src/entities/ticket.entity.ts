@@ -7,8 +7,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BookingEntity } from './booking.entity';
-import { TrainEntity } from './train.entity';
 import { TicketType } from '@shared/enums/ticket-type.enum';
+import { TrainStopEntity } from './train-stop.entity';
+import { TicketClassType } from '../../../shared/enums/ticket-class-type.enum';
 
 @Entity({ name: 'Ticket' })
 export class TicketEntity {
@@ -21,9 +22,16 @@ export class TicketEntity {
   @Column({ type: 'enum', enum: TicketType, default: TicketType.ADULT })
   type: TicketType;
 
-  @ManyToMany(() => TrainEntity, (entity) => entity.tickets)
-  @JoinTable({ name: 'Ticket_Trains' })
-  train: TrainEntity;
+  @Column({
+    type: 'enum',
+    enum: TicketClassType,
+    default: TicketClassType.SECOND_CLASS,
+  })
+  classType: TicketClassType;
+
+  @ManyToMany(() => TrainStopEntity, (entity) => entity.tickets)
+  @JoinTable({ name: 'Ticket_Stops' })
+  stops: TrainStopEntity[];
 
   @ManyToOne(() => BookingEntity, (entity) => entity.tickets)
   booking: BookingEntity;

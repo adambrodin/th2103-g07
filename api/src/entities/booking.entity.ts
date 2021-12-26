@@ -16,7 +16,7 @@ export class BookingEntity {
   id: number;
 
   @ManyToOne(() => CustomerEntity)
-  @JoinColumn({ name: 'Booking_Customers' })
+  @JoinColumn({ name: 'Booking_Customer' })
   customer: CustomerEntity;
 
   @OneToMany(() => TicketEntity, (entity) => entity.booking)
@@ -24,6 +24,5 @@ export class BookingEntity {
   tickets: TicketEntity[];
 
   @OneToOne(() => ReceiptEntity)
-  @JoinColumn({ name: 'Booking_Receipts' })
   receipt: ReceiptEntity;
 }

@@ -28,7 +28,7 @@ export class BookingController {
         error: [outboundTrips?.error, returnTrips?.error],
       };
     }
-
+    
     if (outboundTrips.trips.length > 0) {
       return {
         response: 'Trips have been fetched successfully.',

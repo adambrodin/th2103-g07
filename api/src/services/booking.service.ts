@@ -60,7 +60,6 @@ export class BookingService {
       const stopRepo = getRepository(TrainStopEntity);
       const bookingRepo = getRepository(BookingEntity);
       const customer = await this.fetchCustomer(body.customer);
-
       const bookingStops: TrainStopEntity[] = [];
       for (const stopId of body.trainStops) {
         const bookingStop = await stopRepo.findOne({ where: { id: stopId } });

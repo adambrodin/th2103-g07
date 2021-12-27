@@ -5,11 +5,14 @@ export class TrainLocation {
 }
 
 export class TrainTimetableResponse {
+  ActivityType?: string;
   AdvertisedTimeAtLocation?: Date;
-
-  // Currently location signature, e.g 'G' for Göteborg
-  LocationSignature?: string;
+  AdvertisedTrainIdent?: string;
+  FromLocation?: TrainLocation[];
+  ToLocation?: TrainLocation[];
 
   // Returns basic train data, mostly name, e.g 'SJ Snabbtåg'
   ProductInformation?: string[];
+
+  LocationSignature?: string;
 }

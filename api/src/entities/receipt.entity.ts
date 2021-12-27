@@ -1,4 +1,11 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { BookingEntity } from './booking.entity';
 
 @Entity({ name: 'Receipt' })
@@ -6,12 +13,13 @@ export class ReceiptEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @UpdateDateColumn()
   date: Date;
 
   @Column()
   totalPrice: number;
 
   @OneToOne(() => BookingEntity)
+  @JoinColumn({ name: 'Receipt_Booking' })
   booking: BookingEntity;
 }

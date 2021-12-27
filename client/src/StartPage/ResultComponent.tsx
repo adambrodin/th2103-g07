@@ -111,7 +111,7 @@ function ResultComponent(data: any) {
           </tr>
         </thead>
         <tbody>
-          {data.trips[0].outboundTrip.map((trip: any) => {
+          {data.trips[0].OutboundTrips.map((trip: any) => {
             return (
               <tr
                 onClick={() => getTicket(trip.train.id, "")}
@@ -181,7 +181,7 @@ function ResultComponent(data: any) {
               </tr>
             </thead>
             <tbody>
-              {data.trips[0].returnTrip.map((trip: any) => (
+              {data.trips[0].ReturnTrips.map((trip: any) => (
                 <tr
                   onClick={() => getTicket(trip.train.id, "")}
                   id={trip.train.id}

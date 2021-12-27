@@ -1,0 +1,30 @@
+nav {
+  background-color: rgb(22, 22, 22);
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  margin: 0 7em;
+}
+.nav-links {
+  display: flex;
+  flex-direction: row;
+}
+.nav-links a {
+  margin: 0 1rem;
+  text-decoration: none;
+  color: white;
+  font-size: larger;
+  font-weight: 600;
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+
+.nav-logo img {
+  height: 50px;
+  margin: 1em;
+  margin-right: 5em;
+}

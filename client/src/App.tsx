@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import StartPage from './StartPage/startpage';
 import Payment from './PaymentPage/Payment';
+import AdditionalChoicesPage from './AdditionalChoicesPage/AdditionalChoicesPage'
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Routes>
           <Route path='/' element={<StartPage />} />
           <Route path='/payment' element={<Payment />} />
+          <Route path='/additional-choices' element={<AdditionalChoicesPage/>}></Route>
         </Routes>
       </Router>
     </>

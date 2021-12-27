@@ -1,23 +1,25 @@
-import moment from "moment";
-import "rsuite/dist/rsuite.min.css";
+import moment from 'moment';
+import 'rsuite/dist/rsuite.min.css';
+import { useNavigate } from 'react-router-dom';
 
 function ResultComponent(data: any) {
+  let nav = useNavigate();
   let lastSelectedDepartTrip: HTMLElement | null = null;
   let lastSelectedReturnTrip: HTMLElement | null = null;
   const ticketPrices: number = getTicketPrices();
-  let lastSelectedTripId: string = "";
-  let lastSelectedReturnTripId: string = "";
+  let lastSelectedTripId: string = '';
+  let lastSelectedReturnTripId: string = '';
 
   function getTicketPrices(): number {
     let ticketsPirce: number = 0;
     data.requestData.tickets.forEach((ticket) => {
-      if (ticket.type === "Adult") {
+      if (ticket.type === 'Adult') {
         ticketsPirce = 500 * ticket.amount;
-      } else if (ticket.type === "Student") {
+      } else if (ticket.type === 'Student') {
         ticketsPirce = ticketsPirce + 200 * ticket.amount;
-      } else if (ticket.type === "Senior") {
+      } else if (ticket.type === 'Senior') {
         ticketsPirce = ticketsPirce + 200 * ticket.amount;
-      } else if (ticket.type === "Child") {
+      } else if (ticket.type === 'Child') {
         ticketsPirce = ticketsPirce + 100 * ticket.amount;
       }
     });
@@ -33,17 +35,17 @@ function ResultComponent(data: any) {
     }
 
     if (lastSelectedDepartTrip != null && currentDepartTrip != null) {
-      lastSelectedDepartTrip.classList.remove("selectedTicket");
+      lastSelectedDepartTrip.classList.remove('selectedTicket');
     }
     if (lastSelectedReturnTrip != null && currentReturnTrip != null) {
-      lastSelectedReturnTrip.classList.remove("selectedTicket");
+      lastSelectedReturnTrip.classList.remove('selectedTicket');
     }
 
     if (currentDepartTrip != null) {
-      currentDepartTrip.classList.add("selectedTicket");
+      currentDepartTrip.classList.add('selectedTicket');
     }
     if (currentReturnTrip != null) {
-      currentReturnTrip.classList.add("selectedTicket");
+      currentReturnTrip.classList.add('selectedTicket');
     }
 
     if (currentDepartTrip != null) {
@@ -55,16 +57,16 @@ function ResultComponent(data: any) {
   }
 
   function toggleRadio(e: any) {
-    const Id = e.target.id.split("-");
+    const Id = e.target.id.split('-');
 
-    if (e.target.id !== "SecondClass-" + Id[1]) {
-      let esh: any = document.getElementById("SecondClass-" + Id[1]);
+    if (e.target.id !== 'SecondClass-' + Id[1]) {
+      let esh: any = document.getElementById('SecondClass-' + Id[1]);
       esh.checked = false;
-    } else if (e.target.id !== "FirstClass-" + Id[1]) {
-      let esh: any = document.getElementById("FirstClass-" + Id[1]);
+    } else if (e.target.id !== 'FirstClass-' + Id[1]) {
+      let esh: any = document.getElementById('FirstClass-' + Id[1]);
       esh.checked = false;
     }
-    if (lastSelectedTripId !== e.target.id && lastSelectedTripId !== "") {
+    if (lastSelectedTripId !== e.target.id && lastSelectedTripId !== '') {
       let esh: any = document.getElementById(lastSelectedTripId);
       esh.checked = false;
     }
@@ -72,20 +74,20 @@ function ResultComponent(data: any) {
     lastSelectedTripId = e.target.id;
   }
   function toggleReturnRadio(e: any) {
-    const Id = e.target.id.split("-");
-    console.log(document.getElementById("ReturnSecondClass-" + Id[1]));
-    console.log(document.getElementById("ReturnFirstClass-" + Id[1]));
+    const Id = e.target.id.split('-');
+    console.log(document.getElementById('ReturnSecondClass-' + Id[1]));
+    console.log(document.getElementById('ReturnFirstClass-' + Id[1]));
 
-    if (e.target.id !== "ReturnSecondClass-" + Id[1]) {
-      let esh: any = document.getElementById("ReturnSecondClass-" + Id[1]);
+    if (e.target.id !== 'ReturnSecondClass-' + Id[1]) {
+      let esh: any = document.getElementById('ReturnSecondClass-' + Id[1]);
       esh.checked = false;
-    } else if (e.target.id !== "ReturnFirstClass-" + Id[1]) {
-      let esh: any = document.getElementById("ReturnFirstClass-" + Id[1]);
+    } else if (e.target.id !== 'ReturnFirstClass-' + Id[1]) {
+      let esh: any = document.getElementById('ReturnFirstClass-' + Id[1]);
       esh.checked = false;
     }
     if (
       lastSelectedReturnTripId !== e.target.id &&
-      lastSelectedReturnTripId !== ""
+      lastSelectedReturnTripId !== ''
     ) {
       let esh: any = document.getElementById(lastSelectedReturnTripId);
       esh.checked = false;
@@ -94,16 +96,20 @@ function ResultComponent(data: any) {
     lastSelectedReturnTripId = e.target.id;
   }
 
+  function nextPage() {
+    nav('/additional-choices');
+  }
+
   return (
-    <div id="searchResults">
+    <div id='searchResults'>
       <h2>Utresa</h2>
       <p>
-        {data.requestData.departure.location} -{" "}
+        {data.requestData.departure.location} -{' '}
         {data.requestData.arrival.location}
       </p>
-      <p>{moment(data.requestData.departure.time).format("Do MMMM YYYY")}</p>
-      <table id="departTrip" className="table">
-        <thead className="thead-dark">
+      <p>{moment(data.requestData.departure.time).format('Do MMMM YYYY')}</p>
+      <table id='departTrip' className='table'>
+        <thead className='thead-dark'>
           <tr>
             <th>Tid</th>
             <th>1 klass</th>
@@ -114,16 +120,15 @@ function ResultComponent(data: any) {
           {data.trips[0].OutboundTrips.map((trip: any) => {
             return (
               <tr
-                onClick={() => getTicket(trip.train.id, "")}
+                onClick={() => getTicket(trip.train.id, '')}
                 id={trip.train.id}
-                key={trip.train.id}
-              >
+                key={trip.train.id}>
                 <td>
-                  {moment(trip.departure.time).format("hh:mm")} -{" "}
-                  {moment(trip.arrival.time).format("hh:mm")}
+                  {moment(trip.departure.time).format('hh:mm')} -{' '}
+                  {moment(trip.arrival.time).format('hh:mm')}
                   <p>
                     restid
-                    {" " +
+                    {' ' +
                       moment
                         .duration(
                           moment(trip.departure.time).diff(
@@ -134,24 +139,24 @@ function ResultComponent(data: any) {
                   </p>
                 </td>
                 <td>
-                  <label htmlFor={"FirstClass-" + trip.train.id}>
-                    {ticketPrices * 2 + " kr"}
+                  <label htmlFor={'FirstClass-' + trip.train.id}>
+                    {ticketPrices * 2 + ' kr'}
                   </label>
                   <input
-                    type="radio"
-                    name={"FirstClass-" + trip.train.id}
-                    id={"FirstClass-" + trip.train.id}
+                    type='radio'
+                    name={'FirstClass-' + trip.train.id}
+                    id={'FirstClass-' + trip.train.id}
                     onChange={(e) => toggleRadio(e)}
                   />
                 </td>
                 <td>
-                  <label htmlFor={"SecondClass-" + trip.train.id}>
-                    {ticketPrices + " kr"}
+                  <label htmlFor={'SecondClass-' + trip.train.id}>
+                    {ticketPrices + ' kr'}
                   </label>
                   <input
-                    type="radio"
-                    name={"SecondClass-" + trip.train.id}
-                    id={"SecondClass-" + trip.train.id}
+                    type='radio'
+                    name={'SecondClass-' + trip.train.id}
+                    id={'SecondClass-' + trip.train.id}
                     onChange={(e) => toggleRadio(e)}
                   />
                 </td>
@@ -164,16 +169,16 @@ function ResultComponent(data: any) {
         <>
           <h2>Återresa</h2>
           <p>
-            {data.requestData.returnDeparture.location} -{" "}
+            {data.requestData.returnDeparture.location} -{' '}
             {data.requestData.returnArrival.location}
           </p>
           <p>
             {moment(data.requestData.returnDeparture.time).format(
-              "Do MMMM YYYY"
+              'Do MMMM YYYY'
             )}
           </p>
-          <table id="returnTrip" className="table">
-            <thead className="thead-dark">
+          <table id='returnTrip' className='table'>
+            <thead className='thead-dark'>
               <tr>
                 <th>Tid</th>
                 <th>1 klass</th>
@@ -183,16 +188,15 @@ function ResultComponent(data: any) {
             <tbody>
               {data.trips[0].ReturnTrips.map((trip: any) => (
                 <tr
-                  onClick={() => getTicket(trip.train.id, "")}
+                  onClick={() => getTicket(trip.train.id, '')}
                   id={trip.train.id}
-                  key={trip.train.id}
-                >
+                  key={trip.train.id}>
                   <td>
-                    {moment(trip.departure.time).format("hh:mm")} -{" "}
-                    {moment(trip.arrival.time).format("hh:mm")}
+                    {moment(trip.departure.time).format('hh:mm')} -{' '}
+                    {moment(trip.arrival.time).format('hh:mm')}
                     <p>
                       restid
-                      {" " +
+                      {' ' +
                         moment
                           .duration(
                             moment(trip.departure.time).diff(
@@ -203,24 +207,24 @@ function ResultComponent(data: any) {
                     </p>
                   </td>
                   <td>
-                    <label htmlFor={"FirstClass-" + trip.train.id}>
-                      {ticketPrices * 2 + " kr"}
+                    <label htmlFor={'FirstClass-' + trip.train.id}>
+                      {ticketPrices * 2 + ' kr'}
                     </label>
                     <input
-                      type="radio"
-                      name={"FirstClass-" + trip.train.id}
-                      id={"ReturnFirstClass-" + trip.train.id}
+                      type='radio'
+                      name={'FirstClass-' + trip.train.id}
+                      id={'ReturnFirstClass-' + trip.train.id}
                       onChange={(e) => toggleReturnRadio(e)}
                     />
                   </td>
                   <td>
-                    <label htmlFor={"FirstClass-" + trip.train.id}>
-                      {ticketPrices + " kr"}
+                    <label htmlFor={'FirstClass-' + trip.train.id}>
+                      {ticketPrices + ' kr'}
                     </label>
                     <input
-                      type="radio"
-                      name={"SecondClass-" + trip.train.id}
-                      id={"ReturnSecondClass-" + trip.train.id}
+                      type='radio'
+                      name={'SecondClass-' + trip.train.id}
+                      id={'ReturnSecondClass-' + trip.train.id}
                       onChange={(e) => toggleReturnRadio(e)}
                     />
                   </td>
@@ -232,8 +236,11 @@ function ResultComponent(data: any) {
       ) : (
         <></>
       )}
-      <div className="col">
-        <button id="continueButton" className="btn btn-success float-right">
+      <div className='col'>
+        <button
+          id='continueButton'
+          className='btn btn-success float-right'
+          onClick={nextPage}>
           Fortsätt
         </button>
       </div>

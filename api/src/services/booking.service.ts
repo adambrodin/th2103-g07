@@ -141,4 +141,28 @@ export class BookingService {
 
     return customer;
   }
+
+  async getBookedTrip(
+    body: BookingDto,
+  ): Promise<{ error?: string; trip?: BookingEntity }> {
+    const bookedTrip = await getRepository(BookingEntity)
+      .createQueryBuilder('booking')
+      .where('booking.id = :id', { id: body.bookingId })
+      .leftJoin('booking.customer', 'customer')
+      .andWhere('customer.email = :email', { email: body.email })
+      .leftJoinAndSelect('booking.departure', 'departure')
+      .leftJoinAndSelect('departure.currentStation', 'departureStation')
+      .leftJoinAndSelect('booking.arrival', 'arrival')
+      .leftJoinAndSelect('arrival.currentStation', 'arrivalStation')
+      .leftJoinAndSelect('booking.tickets', 'tickets')
+      .getOne();
+
+    if (bookedTrip == null) {
+      return {
+        error: `Trip with id '${body.bookingId}' belonging to '${body.email}' could not be found.`,
+      };
+    }
+
+    return { trip: bookedTrip };
+  }
 }

@@ -2,6 +2,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { BookingService } from '../services/booking.service';
 import { TripSearchDto } from '@shared/dtos/trip-search.dto';
 import { BookTripDto } from '@shared/dtos/book-trip.dto';
+import { BookingDto } from '@shared/dtos/booking.dto';
 
 @Controller('booking')
 export class BookingController {
@@ -28,7 +29,7 @@ export class BookingController {
         error: [outboundTrips?.error, returnTrips?.error],
       };
     }
-    
+
     if (outboundTrips.trips.length > 0) {
       return {
         response: 'Trips have been fetched successfully.',
@@ -59,6 +60,26 @@ export class BookingController {
     return {
       response: 'Trip has been booked successfully.',
       data: { receipt: bookingResult.receipt },
+    };
+  }
+
+  @Post()
+  async getBookedTrip(@Body() body: BookingDto) {
+    const bookedTrip = await this._bookingService.getBookedTrip(body);
+
+    if (bookedTrip?.error != null || bookedTrip?.trip == null) {
+      return {
+        response: 'Booking could not be found.',
+        error:
+          bookedTrip?.error == null
+            ? 'An unknown error occurred.'
+            : bookedTrip?.error,
+      };
+    }
+
+    return {
+      response: 'Booking has been fetched successfully.',
+      data: { booking: bookedTrip.trip },
     };
   }
 }

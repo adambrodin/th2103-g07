@@ -13,6 +13,7 @@ import { BookingEntity } from '../entities/booking.entity';
 import { TicketEntity } from '../entities/ticket.entity';
 import { TrainEntity } from '../entities/train.entity';
 import { TicketPriceEntity } from '../entities/ticket-price.entity';
+import { BookingDto } from '../../../shared/dtos/booking.dto';
 
 @Injectable()
 export class BookingService {
@@ -62,7 +63,12 @@ export class BookingService {
       const customer = await this.fetchCustomer(body.customer);
       const bookingStops: TrainStopEntity[] = [];
       for (const stopId of body.trainStops) {
-        const bookingStop = await stopRepo.findOne({ where: { id: stopId } });
+        const bookingStop = await stopRepo
+          .createQueryBuilder('stop')
+          .where('stop.id = :id', { id: stopId })
+          .leftJoinAndSelect('stop.fromStation', 'fromStation')
+          .leftJoinAndSelect('stop.toStation', 'toStation')
+          .getOne();
         if (bookingStop == null) {
           return { error: `TrainStop with id '${stopId}' could not be found.` };
         }
@@ -76,7 +82,11 @@ export class BookingService {
         .where('stop.id = :id', { id: bookingStops[0].id })
         .getOne();
 
-      const booking = await bookingRepo.save({ customer: customer });
+      const booking = await bookingRepo.save({
+        customer: customer,
+        departure: bookingStops[0],
+        arrival: bookingStops[bookingStops.length - 1],
+      });
       const tickets: TicketEntity[] = [];
       for (const seat of body.seats) {
         const ticketPrice = await getRepository(TicketPriceEntity).findOne({

@@ -82,4 +82,24 @@ export class BookingController {
       data: { booking: bookedTrip.trip },
     };
   }
+
+  @Post('cancel')
+  async cancelBooking(@Body() body: BookingDto) {
+    const cancelRes = await this._bookingService.cancelBooking(body);
+
+    if (cancelRes?.error != null || cancelRes?.booking == null) {
+      return {
+        response: 'Booking could not be canceled.',
+        error:
+          cancelRes?.error == null
+            ? 'An unknown error occurred.'
+            : cancelRes?.error,
+      };
+    }
+
+    return {
+      response: 'Booking has been canceled successfully.',
+      data: { canceledBooking: cancelRes.booking },
+    };
+  }
 }

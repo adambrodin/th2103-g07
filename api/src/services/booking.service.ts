@@ -155,7 +155,36 @@ export class BookingService {
   async getBookedTrip(
     body: BookingDto,
   ): Promise<{ error?: string; trip?: BookingEntity }> {
-    const bookedTrip = await getRepository(BookingEntity)
+    const bookedTrip = await this.getExistingBooking(body);
+    if (bookedTrip == null) {
+      return {
+        error: `Trip with id '${body.bookingId}' belonging to '${body.email}' could not be found.`,
+      };
+    }
+
+    return { trip: bookedTrip };
+  }
+
+  async cancelBooking(
+    body: BookingDto,
+  ): Promise<{ error?: string; booking?: BookingEntity }> {
+    const bookedTrip = await this.getExistingBooking(body);
+
+    if (bookedTrip == null) {
+      return {
+        error: `Boooking with id '${body.bookingId}' belonging to '${body.email}' could not be found.`,
+      };
+    }
+
+    const deletedBooking = await getRepository(BookingEntity).remove(
+      bookedTrip,
+    );
+
+    return { booking: deletedBooking };
+  }
+
+  async getExistingBooking(body: BookingDto): Promise<BookingEntity> {
+    return await getRepository(BookingEntity)
       .createQueryBuilder('booking')
       .where('booking.id = :id', { id: body.bookingId })
       .leftJoin('booking.customer', 'customer')
@@ -166,13 +195,5 @@ export class BookingService {
       .leftJoinAndSelect('arrival.currentStation', 'arrivalStation')
       .leftJoinAndSelect('booking.tickets', 'tickets')
       .getOne();
-
-    if (bookedTrip == null) {
-      return {
-        error: `Trip with id '${body.bookingId}' belonging to '${body.email}' could not be found.`,
-      };
-    }
-
-    return { trip: bookedTrip };
   }
 }

@@ -33,6 +33,8 @@ export class TicketEntity {
   @JoinTable({ name: 'Ticket_Stops' })
   stops: TrainStopEntity[];
 
-  @ManyToOne(() => BookingEntity, (entity) => entity.tickets)
+  @ManyToOne(() => BookingEntity, (entity) => entity.tickets, {
+    onDelete: 'CASCADE',
+  })
   booking: BookingEntity;
 }

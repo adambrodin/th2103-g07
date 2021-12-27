@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { BookingContext } from "../Contexts/BookingContext";
 import Stack from "@mui/material/Stack";
@@ -18,7 +18,7 @@ const tempSilentCoachPriceFactor: number = 0.2; //todo should be gotten from tab
 const tempAnimalCoachPriceFactor: number = 0.5; //todo should be gotten from table behind api
 
 const AdditionalChoicesPage = () => {
-  const [context, updateContext] = useContext(BookingContext);
+  const [context] = useContext(BookingContext);
  // const [price, setPrice] = useState(context.price);
   let options = [
     {
@@ -39,7 +39,7 @@ const AdditionalChoicesPage = () => {
   ];
 
   function coachHandler(toggledCoachId: string) {
-    const coach = options.find(({ id }) => id === toggledCoachId);
+   // const coach = options.find(({ id }) => id === toggledCoachId);
     //if (coach) setPrice(coach.price);
   }
 

@@ -19,7 +19,7 @@ const tempAnimalCoachPriceFactor: number = 0.5; //todo should be gotten from tab
 
 const AdditionalChoicesPage = () => {
   const [context, updateContext] = useContext(BookingContext);
-  const [price, setPrice] = useState(context.price);
+ // const [price, setPrice] = useState(context.price);
   let options = [
     {
       id: "0",
@@ -40,28 +40,31 @@ const AdditionalChoicesPage = () => {
 
   function coachHandler(toggledCoachId: string) {
     const coach = options.find(({ id }) => id === toggledCoachId);
-    if (coach) setPrice(coach.price);
+    //if (coach) setPrice(coach.price);
   }
 
-  useEffect(() => {
+  /*useEffect(() => {
     updateContext({
       additionalCosts: price,
     });
-  }, [price]);
+  }, [price]);*/
   /*
-  New choices should be added to stack *element*
+  New choices should be added as stack item
   */
   return (
     <div>
+      <div className='container text-center'>
+        <h1>Tillval</h1>
+      </div>
       <Link to="/">
         <button id="back-to-results-btn" className="btn btn-secondary">
           Tillbaka
         </button>
       </Link>
-      <div>
+      <div className="container" id="additional-choices-list">
         <Stack spacing={2}>
           <Item>
-            <h3>Vilken typ av vagn vill du åka med</h3>
+            <h4>Välj typ av vagn:</h4>
             <ChoachPickerComponent options={options} handler={coachHandler} />
           </Item>
         </Stack>

@@ -38,3 +38,7 @@ code {
 .selectedTicket {
   background-color: grey;
 }
+#additional-choices-list{
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+}

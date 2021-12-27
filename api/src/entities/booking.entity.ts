@@ -12,8 +12,8 @@ import { TicketEntity } from './ticket.entity';
 
 @Entity({ name: 'Booking' })
 export class BookingEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(() => CustomerEntity)
   @JoinColumn({ name: 'Booking_Customer' })

@@ -16,7 +16,6 @@ function Navbar() {
           </div>
           <div className='nav-links'>
             <Link to='/'>Startsida</Link>
-            {/* Add link to my bookings here */}
             <Link to='/my-bookings'>Mina bokningar</Link>
           </div>
         </div>

@@ -1,6 +1,6 @@
-import React, { useState, useContext, useEffect } from "react";
-import {Link} from 'react-router-dom';
-import { BookingContext } from '../Contexts/BookingContext';
+import { useState, useContext, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { BookingContext } from "../Contexts/BookingContext";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
@@ -14,12 +14,12 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: "center",
   color: theme.palette.text.secondary,
 }));
-const tempSilentCoachPriceFactor:number = 0.5;
+const tempSilentCoachPriceFactor: number = 0.2; //todo should be gotten from table behind api
+const tempAnimalCoachPriceFactor: number = 0.5; //todo should be gotten from table behind api
 
 const AdditionalChoicesPage = () => {
   const [context, updateContext] = useContext(BookingContext);
-  const [basePrice, setBasePrice] = useState(context.price);
-  const [price, setPrice] = useState(basePrice)
+  const [price, setPrice] = useState(context.price);
   let options = [
     {
       id: "0",
@@ -29,49 +29,52 @@ const AdditionalChoicesPage = () => {
     {
       id: "1",
       name: "Tyst vagn",
-      price: (context.price + context.price * tempSilentCoachPriceFactor),
+      price: context.price + context.price * tempSilentCoachPriceFactor,
+    },
+    {
+      id: "2",
+      name: "Djurvagn",
+      price: context.price + context.price * tempAnimalCoachPriceFactor,
     },
   ];
 
-  function coachHandler(toggledCoachId:string){
-    const coach = options.find(({id})=>id==toggledCoachId);
-    if(coach)setPrice(coach.price);
-  };
+  function coachHandler(toggledCoachId: string) {
+    const coach = options.find(({ id }) => id === toggledCoachId);
+    if (coach) setPrice(coach.price);
+  }
 
   useEffect(() => {
     updateContext({
-      additionalCosts:price
+      additionalCosts: price,
     });
   }, [price]);
-/*
+  /*
   New choices should be added to stack *element*
-*/
+  */
   return (
     <div>
       <Link to="/">
-      <button id="back-to-results-btn" className="btn btn-secondary" >
-        Tillbaka
-      </button>
+        <button id="back-to-results-btn" className="btn btn-secondary">
+          Tillbaka
+        </button>
       </Link>
       <div>
         <Stack spacing={2}>
           <Item>
-            <ChoachPickerComponent
-              options={options}
-              handler={coachHandler}
-              />
+            <h3>Vilken typ av vagn vill du åka med</h3>
+            <ChoachPickerComponent options={options} handler={coachHandler} />
           </Item>
         </Stack>
       </div>
-      
+
       <div className="col">
-      <Link to="/payment">
-        <button
-          id="continue-to-payment-btn"
-          className="btn btn-success float-right"
-        >
-          Fortsätt
-        </button>
+        <Link to="/payment">
+          <button
+            id="continue-to-payment-btn"
+            className="btn btn-success float-right"
+          >
+            Fortsätt
+          </button>
         </Link>
       </div>
     </div>

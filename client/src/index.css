@@ -42,3 +42,17 @@ code {
   padding-top: 2vh;
   padding-bottom: 2vh;
 }
+
+#delete-booking-btn{
+  background-color: firebrick;
+}
+.booking-container{
+  width:  fit-content;
+}
+
+#text-field-booking-reference-input{
+
+}
+.email-textfield-container{
+
+}

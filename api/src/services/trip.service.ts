@@ -54,6 +54,10 @@ export class TripService {
           .getMany();
 
         const trip = new Trip();
+        trip.train = {
+          id: departure.train.trainId,
+          name: departure.train.name,
+        };
         trip.departure = {
           id: departure.id,
           location: departure.fromStation.locationName,

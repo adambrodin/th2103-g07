@@ -1,9 +1,12 @@
 import moment from 'moment';
 import 'rsuite/dist/rsuite.min.css';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { BookingContext } from '../Contexts/BookingContext';
 
-function ResultComponent(data: any) {
+function ResultComponent() {
   let nav = useNavigate();
+  const [bookingContext, updateContext] = useContext(BookingContext);
   let lastSelectedDepartTrip: HTMLElement | null = null;
   let lastSelectedReturnTrip: HTMLElement | null = null;
   const ticketPrices: number = getTicketPrices();
@@ -12,7 +15,7 @@ function ResultComponent(data: any) {
 
   function getTicketPrices(): number {
     let ticketsPirce: number = 0;
-    data.requestData.tickets.forEach((ticket) => {
+    bookingContext.searchData.tickets.forEach((ticket) => {
       if (ticket.type === 'Adult') {
         ticketsPirce = 500 * ticket.amount;
       } else if (ticket.type === 'Student') {
@@ -101,99 +104,36 @@ function ResultComponent(data: any) {
   }
 
   return (
-    <div id='searchResults'>
-      <h2>Utresa</h2>
-      <p>
-        {data.requestData.departure.location} -{' '}
-        {data.requestData.arrival.location}
-      </p>
-      <p>{moment(data.requestData.departure.time).format('Do MMMM YYYY')}</p>
-      <table id='departTrip' className='table'>
-        <thead className='thead-dark'>
-          <tr>
-            <th>Tid</th>
-            <th>1 klass</th>
-            <th>2 klass</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.trips[0].OutboundTrips.map((trip: any) => {
-            return (
-              <tr
-                onClick={() => getTicket(trip.train.id, '')}
-                id={trip.train.id}
-                key={trip.train.id}>
-                <td>
-                  {moment(trip.departure.time).format('hh:mm')} -{' '}
-                  {moment(trip.arrival.time).format('hh:mm')}
-                  <p>
-                    restid
-                    {' ' +
-                      moment
-                        .duration(
-                          moment(trip.departure.time).diff(
-                            moment(trip.arrival.time)
-                          )
-                        )
-                        .humanize()}
-                  </p>
-                </td>
-                <td>
-                  <label htmlFor={'FirstClass-' + trip.train.id}>
-                    {ticketPrices * 2 + ' kr'}
-                  </label>
-                  <input
-                    type='radio'
-                    name={'FirstClass-' + trip.train.id}
-                    id={'FirstClass-' + trip.train.id}
-                    onChange={(e) => toggleRadio(e)}
-                  />
-                </td>
-                <td>
-                  <label htmlFor={'SecondClass-' + trip.train.id}>
-                    {ticketPrices + ' kr'}
-                  </label>
-                  <input
-                    type='radio'
-                    name={'SecondClass-' + trip.train.id}
-                    id={'SecondClass-' + trip.train.id}
-                    onChange={(e) => toggleRadio(e)}
-                  />
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      {data.returnTrip ? (
-        <>
-          <h2>Återresa</h2>
-          <p>
-            {data.requestData.returnDeparture.location} -{' '}
-            {data.requestData.returnArrival.location}
-          </p>
-          <p>
-            {moment(data.requestData.returnDeparture.time).format(
-              'Do MMMM YYYY'
-            )}
-          </p>
-          <table id='returnTrip' className='table'>
-            <thead className='thead-dark'>
-              <tr>
-                <th>Tid</th>
-                <th>1 klass</th>
-                <th>2 klass</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.trips[0].ReturnTrips.map((trip: any) => (
+    <div className='container text-center'>
+      <div id='searchResults'>
+        <h2>Utresa</h2>
+        <p>
+          {bookingContext.searchData.departure.location} -{' '}
+          {bookingContext.searchData.arrival.location}
+        </p>
+        <p>
+          {moment(bookingContext.searchData.departure.time).format(
+            'Do MMMM YYYY'
+          )}
+        </p>
+        <table id='departTrip' className='table'>
+          <thead className='thead-dark'>
+            <tr>
+              <th>Tid</th>
+              <th>1 klass</th>
+              <th>2 klass</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bookingContext.dbData.OutboundTrips.map((trip: any) => {
+              return (
                 <tr
                   onClick={() => getTicket(trip.train.id, '')}
                   id={trip.train.id}
                   key={trip.train.id}>
                   <td>
-                    {moment(trip.departure.time).format('hh:mm')} -{' '}
-                    {moment(trip.arrival.time).format('hh:mm')}
+                    {moment(trip.departure.time).format('HH:mm')} -{' '}
+                    {moment(trip.arrival.time).format('HH:mm')}
                     <p>
                       restid
                       {' ' +
@@ -213,36 +153,105 @@ function ResultComponent(data: any) {
                     <input
                       type='radio'
                       name={'FirstClass-' + trip.train.id}
-                      id={'ReturnFirstClass-' + trip.train.id}
-                      onChange={(e) => toggleReturnRadio(e)}
+                      id={'FirstClass-' + trip.train.id}
+                      onChange={(e) => toggleRadio(e)}
                     />
                   </td>
                   <td>
-                    <label htmlFor={'FirstClass-' + trip.train.id}>
+                    <label htmlFor={'SecondClass-' + trip.train.id}>
                       {ticketPrices + ' kr'}
                     </label>
                     <input
                       type='radio'
                       name={'SecondClass-' + trip.train.id}
-                      id={'ReturnSecondClass-' + trip.train.id}
-                      onChange={(e) => toggleReturnRadio(e)}
+                      id={'SecondClass-' + trip.train.id}
+                      onChange={(e) => toggleRadio(e)}
                     />
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
-      ) : (
-        <></>
-      )}
-      <div className='col'>
-        <button
-          id='continueButton'
-          className='btn btn-success float-right'
-          onClick={nextPage}>
-          Fortsätt
-        </button>
+              );
+            })}
+          </tbody>
+        </table>
+        {bookingContext.searchData.returnTrip ? (
+          <>
+            <h2>Återresa</h2>
+            <p>
+              {bookingContext.searchData.returnDeparture.location} -{' '}
+              {bookingContext.searchData.returnArrival.location}
+            </p>
+            <p>
+              {moment(bookingContext.searchData.returnDeparture.time).format(
+                'Do MMMM YYYY'
+              )}
+            </p>
+            <table id='returnTrip' className='table'>
+              <thead className='thead-dark'>
+                <tr>
+                  <th>Tid</th>
+                  <th>1 klass</th>
+                  <th>2 klass</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bookingContext.dbData.ReturnTrips.map((trip: any) => (
+                  <tr
+                    onClick={() => getTicket(trip.train.id, '')}
+                    id={trip.train.id}
+                    key={trip.train.id}>
+                    <td>
+                      {moment(trip.departure.time).format('hh:mm')} -{' '}
+                      {moment(trip.arrival.time).format('hh:mm')}
+                      <p>
+                        restid
+                        {' ' +
+                          moment
+                            .duration(
+                              moment(trip.departure.time).diff(
+                                moment(trip.arrival.time)
+                              )
+                            )
+                            .humanize()}
+                      </p>
+                    </td>
+                    <td>
+                      <label htmlFor={'FirstClass-' + trip.train.id}>
+                        {ticketPrices * 2 + ' kr'}
+                      </label>
+                      <input
+                        type='radio'
+                        name={'FirstClass-' + trip.train.id}
+                        id={'ReturnFirstClass-' + trip.train.id}
+                        onChange={(e) => toggleReturnRadio(e)}
+                      />
+                    </td>
+                    <td>
+                      <label htmlFor={'FirstClass-' + trip.train.id}>
+                        {ticketPrices + ' kr'}
+                      </label>
+                      <input
+                        type='radio'
+                        name={'SecondClass-' + trip.train.id}
+                        id={'ReturnSecondClass-' + trip.train.id}
+                        onChange={(e) => toggleReturnRadio(e)}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        ) : (
+          <></>
+        )}
+        <div className='col'>
+          <button
+            id='continueButton'
+            className='btn btn-success float-right'
+            onClick={nextPage}>
+            Fortsätt
+          </button>
+        </div>
       </div>
     </div>
   );

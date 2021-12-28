@@ -1,115 +1,41 @@
-import { DatePicker } from 'rsuite';
-import { useState, useEffect } from 'react';
-import SearchConponent from './ResultComponent';
-import { TicketType } from './Enums/ticket-type.enum';
+import { useState, useEffect, useContext } from 'react';
+import { TicketType } from '../Enums/ticket-type.enum';
 import 'rsuite/dist/rsuite.min.css';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import { BookingContext } from '../Contexts/BookingContext';
+import { useNavigate } from 'react-router-dom';
 
 function StartPage() {
-  let objArray: object[] = [];
   const [returnTrip, setReturnTrip] = useState(false);
-  const [requestData, setRequestData] = useState({});
-  const [tripData, setTripData] = useState(objArray);
-  const [adultNum, setAdultNum] = useState(1);
-  const [studentNum, setStudentNum] = useState(0);
-  const [pensionerNum, setPensionerNum] = useState(0);
-  const [kidsNum, setKidsNum] = useState(0);
-  const [hide, setHide] = useState(false);
   const [stations, setStations] = useState(['']);
+  const [bookingContext, updateContext] = useContext(BookingContext);
+  let nav = useNavigate();
+
   const API_URL =
     process.env.NODE_ENV === 'production'
       ? 'https://train-booking-function-app.azurewebsites.net/api'
       : (process.env.REACT_APP_API_URL as string);
+
   useEffect(() => {
     fetchAvailableStations();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    ToggleSearchContainer();
-  }, [tripData]);
-
-  function submitForm(event: any) {
-    event.preventDefault();
-    //event.target[8].value för att få värdet om det är återresa eller inte
-
-    const adultTicketAmount = parseInt(event.target[11].value);
-    const studentTicketAmount = parseInt(event.target[12].value);
-    const pensionerTicketAmount = parseInt(event.target[13].value);
-    const kidsTicketAmount = parseInt(event.target[14].value);
-    let allTickets: object[] = [];
-
-    if (!isNaN(adultTicketAmount) && adultTicketAmount > 0) {
-      allTickets.push({ type: TicketType.ADULT, amount: adultTicketAmount });
-    }
-    if (!isNaN(studentTicketAmount) && studentTicketAmount > 0) {
-      allTickets.push({
-        type: TicketType.STUDENT,
-        amount: studentTicketAmount,
-      });
-    }
-    if (!isNaN(pensionerTicketAmount) && pensionerTicketAmount > 0) {
-      allTickets.push({
-        type: TicketType.SENIOR,
-        amount: pensionerTicketAmount,
-      });
-    }
-    if (!isNaN(kidsTicketAmount) && kidsTicketAmount > 0) {
-      allTickets.push({ type: TicketType.CHILD, amount: kidsTicketAmount });
-    }
-
-    let searchData;
-
-    if (returnTrip) {
-      searchData = {
-        departure: {
-          location: event.target[0].value,
-          time: new Date(event.target[9].value),
-        },
-        arrival: {
-          location: event.target[4].value,
-          time: new Date(event.target[9].value),
-        },
-        returnDeparture: {
-          location: event.target[4].value,
-          time: new Date(event.target[10].value),
-        },
-        returnArrival: {
-          location: event.target[0].value,
-          time: new Date(event.target[10].value),
-        },
-        tickets: allTickets,
-      };
-    } else {
-      searchData = {
-        departure: {
-          location: event.target[0].value,
-          time: new Date(event.target[9].value),
-        },
-        arrival: {
-          location: event.target[4].value,
-          time: new Date(event.target[9].value),
-        },
-        tickets: allTickets,
-      };
-    }
-
-    setRequestData({ ...searchData });
-
+  function getResults() {
     fetch(API_URL + '/booking/search', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
-      body: JSON.stringify(searchData),
+      body: JSON.stringify(bookingContext.searchData),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.data !== undefined) {
-          setTripData(tripData.concat(data.data));
-          setHide(!hide);
+          updateContext({ dbData: data.data });
+          nav('/results');
         } else {
           alert(
             'Det finns inga tillgängliga resor mellan dem stationerna som söktes på. Vänligen gör en ny sökning.'
@@ -126,23 +52,6 @@ function StartPage() {
       x!.style.display = 'none';
     } else {
       x!.style.display = 'inline';
-    }
-  }
-
-  function ToggleSearchContainer() {
-    let x = document.getElementById('SearchContainer');
-    let y = document.getElementById('searchResults');
-    let z = document.getElementById('backButton');
-    if (x != null && y != null && z != null) {
-      if (x.style.display === 'none') {
-        x.style.display = 'block';
-        y.style.display = 'none';
-        z.style.display = 'none';
-      } else {
-        x.style.display = 'none';
-        y.style.display = 'block';
-        z.style.display = 'block';
-      }
     }
   }
 
@@ -173,7 +82,7 @@ function StartPage() {
       <div id='SearchContainer' className='row mt-5'>
         <h2>Hej, Vart vill du resa?</h2>
         <div className='justify-content-center'>
-          <form action='post' onSubmit={(event) => submitForm(event)}>
+          <form>
             <div className='form-row'>
               <div className='form-group col-md-8 mx-auto'>
                 <div id='startForm' className='input-group'>
@@ -183,6 +92,33 @@ function StartPage() {
                   <Autocomplete
                     options={stations}
                     style={{ width: 300 }}
+                    onChange={(e) => {
+                      if (!returnTrip) {
+                        updateContext({
+                          searchData: {
+                            ...bookingContext.searchData,
+                            departure: {
+                              location: (e.target as HTMLInputElement)
+                                .innerHTML,
+                            },
+                          },
+                        });
+                      } else {
+                        updateContext({
+                          searchData: {
+                            ...bookingContext.searchData,
+                            departure: {
+                              location: (e.target as HTMLInputElement)
+                                .innerHTML,
+                            },
+                            returnArrival: {
+                              location: (e.target as HTMLInputElement)
+                                .innerHTML,
+                            },
+                          },
+                        });
+                      }
+                    }}
                     renderInput={(params) => (
                       <TextField
                         className='fromDestination'
@@ -198,6 +134,33 @@ function StartPage() {
                   <Autocomplete
                     options={stations}
                     style={{ width: 300 }}
+                    onChange={(e) => {
+                      if (!returnTrip) {
+                        updateContext({
+                          searchData: {
+                            ...bookingContext.searchData,
+                            arrival: {
+                              location: (e.target as HTMLInputElement)
+                                .innerHTML,
+                            },
+                          },
+                        });
+                      } else {
+                        updateContext({
+                          searchData: {
+                            ...bookingContext.searchData,
+                            arrival: {
+                              location: (e.target as HTMLInputElement)
+                                .innerHTML,
+                            },
+                            returnDeparture: {
+                              location: (e.target as HTMLInputElement)
+                                .innerHTML,
+                            },
+                          },
+                        });
+                      }
+                    }}
                     renderInput={(params) => (
                       <TextField
                         className='toDestination'
@@ -226,16 +189,44 @@ function StartPage() {
                 </div>
                 <div id='timeSelectContainer'>
                   <>
-                    <DatePicker
-                      format='yyyy-MM-dd HH:mm'
-                      placeholder='Avgångs tid'
-                    />
-                    <span id='returnDate'>
-                      <DatePicker
-                        format='yyyy-MM-dd HH:mm'
-                        placeholder='Ankomst tid'
-                      />
-                    </span>
+                    <input
+                      type='datetime-local'
+                      id='start'
+                      name='trip-start'
+                      min='2018-01-01'
+                      max='2023-12-31'
+                      onChange={(e) =>
+                        updateContext({
+                          searchData: {
+                            ...bookingContext.searchData,
+                            departure: {
+                              ...bookingContext.searchData.departure,
+                              time: (e.target as HTMLInputElement).value,
+                            },
+                          },
+                        })
+                      }></input>
+                    <input
+                      type='datetime-local'
+                      id='returnDate'
+                      name='trip-start'
+                      min='2018-01-01'
+                      max='2023-12-31'
+                      onChange={(e) =>
+                        updateContext({
+                          searchData: {
+                            ...bookingContext.searchData,
+                            returnDeparture: {
+                              ...bookingContext.searchData.arrival,
+                              time: (e.target as HTMLInputElement).value,
+                            },
+                            returnArrival: {
+                              ...bookingContext.searchData.departure,
+                            },
+                            returnTrip: returnTrip,
+                          },
+                        })
+                      }></input>
                   </>
                 </div>
                 <div>
@@ -245,8 +236,19 @@ function StartPage() {
                     name=''
                     id='adultTickets'
                     min='0'
-                    value={adultNum}
-                    onChange={(e: any) => setAdultNum(e.target.value)}
+                    onChange={(e: any) =>
+                      updateContext({
+                        searchData: {
+                          ...bookingContext.searchData,
+                          tickets: [
+                            {
+                              type: TicketType.ADULT,
+                              amount: parseInt(e.target.value),
+                            },
+                          ],
+                        },
+                      })
+                    }
                   />
                 </div>
                 <div>
@@ -256,8 +258,20 @@ function StartPage() {
                     name=''
                     id='studentTickets'
                     min='0'
-                    value={studentNum}
-                    onChange={(e: any) => setStudentNum(e.target.value)}
+                    onChange={(e: any) =>
+                      updateContext({
+                        searchData: {
+                          ...bookingContext.searchData,
+                          tickets: [
+                            ...bookingContext.searchData.tickets,
+                            {
+                              type: TicketType.STUDENT,
+                              amount: parseInt(e.target.value),
+                            },
+                          ],
+                        },
+                      })
+                    }
                   />
                 </div>
                 <div>
@@ -267,8 +281,20 @@ function StartPage() {
                     name=''
                     id='pensionerTickets'
                     min='0'
-                    value={pensionerNum}
-                    onChange={(e: any) => setPensionerNum(e.target.value)}
+                    onChange={(e: any) =>
+                      updateContext({
+                        searchData: {
+                          ...bookingContext.searchData,
+                          tickets: [
+                            ...bookingContext.searchData.tickets,
+                            {
+                              type: TicketType.SENIOR,
+                              amount: parseInt(e.target.value),
+                            },
+                          ],
+                        },
+                      })
+                    }
                   />
                 </div>
                 <div>
@@ -278,35 +304,28 @@ function StartPage() {
                     name=''
                     id='kidsTicket'
                     min='0'
-                    value={kidsNum}
-                    onChange={(e: any) => setKidsNum(e.target.value)}
+                    onChange={(e: any) =>
+                      updateContext({
+                        searchData: {
+                          ...bookingContext.searchData,
+                          tickets: [
+                            ...bookingContext.searchData.tickets,
+                            {
+                              type: TicketType.CHILD,
+                              amount: parseInt(e.target.value),
+                            },
+                          ],
+                        },
+                      })
+                    }
                   />
                 </div>
-                <input
-                  className='btn btn-success mt-2'
-                  type='submit'
-                  value='Sök'
-                />
               </div>
             </div>
           </form>
         </div>
       </div>
-      <button
-        className='btn btn-secondary'
-        onClick={() => ToggleSearchContainer()}
-        id='backButton'>
-        Tillbaka
-      </button>
-      {tripData.length > 0 ? (
-        <SearchConponent
-          returnTrip={returnTrip}
-          trips={tripData}
-          requestData={requestData}
-        />
-      ) : (
-        <></>
-      )}
+      <button onClick={() => getResults()}>Fortsätt</button>
     </div>
   );
 }

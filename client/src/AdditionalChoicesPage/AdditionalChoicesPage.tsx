@@ -62,7 +62,7 @@ const AdditionalChoicesPage = () => {
       <div className='container text-center'>
         <h1>Tillval</h1>
       </div>
-      <Link to='/'>
+      <Link to='/results'>
         <button id='back-to-results-btn' className='btn btn-secondary'>
           Tillbaka
         </button>

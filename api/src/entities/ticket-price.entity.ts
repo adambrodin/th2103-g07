@@ -1,14 +1,11 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
-import { TicketClassType } from '../../../shared/enums/ticket-class-type.enum';
+import { TicketType } from '../../../shared/enums/ticket-type.enum';
 
 @Entity({ name: 'TicketPrice' })
 export class TicketPriceEntity {
-  @PrimaryColumn({
-    type: 'enum',
-    enum: TicketClassType,
-  })
-  ticketClass: TicketClassType;
+  @PrimaryColumn({ type: 'enum', enum: TicketType })
+  ticketType: TicketType;
 
-  @Column()
-  price: number;
+  @Column({ type: 'double precision' })
+  priceMultiplier: number;
 }

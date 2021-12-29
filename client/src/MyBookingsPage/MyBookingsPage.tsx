@@ -1,10 +1,6 @@
-import * as React from "react";
-import { useState, useEffect } from "react";
-
+import { useState } from "react";
 import BookingComponent from "./BookingComponent";
-
 import Card from "@mui/material/Card";
-
 import SearchBookingComponent from "./SearchBookingComponent";
 import Booking from "./Booking";
 
@@ -18,15 +14,16 @@ const MyBookingsPage = () => {
   const [showBooking, setShowBooking] = useState(false);
   //const [successfulDelete, setSuccessfulDelete] = useState(false);
   const [, setSearchFailed] = useState(false);
-  const [searchMessage, setSearchMessage] = useState("");
+  const [statusMessage, setStatusMessage] = useState("");
 
   function searchForBooking(email: string, bookingId: string) {
     if (email && bookingId) {
       setShowBooking(true);
       setSearchFailed(false);
+      setStatusMessage("");
     }else{
       setSearchFailed(true);
-      setSearchMessage("Ingen bokning som matchar din sökning kunde hittas. ")
+      setStatusMessage("Ingen bokning som matchar din sökning kunde hittas. ");
       //no result found
   };
     
@@ -34,7 +31,7 @@ const MyBookingsPage = () => {
   function deleteBooking(booking:Booking) {
     setShowBooking(false);
     //todo check if completed
-    setSearchMessage("Bokningen har tagits bort. ")
+    setStatusMessage("Bokningen har tagits bort. ")
   }
   return (
     <div className="container text-center">
@@ -44,7 +41,7 @@ const MyBookingsPage = () => {
       ></SearchBookingComponent>
       {showBooking && (
         <div className="container booking-container">
-          <Card sx={{ minWidth: 300, width: 500 }}>
+          <Card variant="outlined" sx={{ minWidth: 260, width: 400}}>
             <BookingComponent
               booking={bookingExample}
               deleteFunction={deleteBooking}
@@ -52,8 +49,7 @@ const MyBookingsPage = () => {
           </Card>
         </div>
       )}
-      {searchMessage.length>0 && <h4>{searchMessage}</h4>}
-   
+      {statusMessage.length>0 && <h4>{statusMessage}</h4>}
     </div>
   );
 };

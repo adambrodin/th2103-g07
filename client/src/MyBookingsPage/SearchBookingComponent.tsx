@@ -1,10 +1,9 @@
-import * as React from "react";
 import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
 interface Props {
-  searchFuntion: (email:string, bookingId:string) => void;
+  searchFuntion: (email: string, bookingId: string) => void;
 }
 
 const SearchBookingComponent = ({ searchFuntion }: Props) => {
@@ -17,36 +16,43 @@ const SearchBookingComponent = ({ searchFuntion }: Props) => {
   const [searchReady, setSearchReady] = useState(false);
 
   useEffect(() => {
-    if(!searchReady) return;
-    if(!emailError && !bookingIdError){
-      searchFuntion(email, bookingId);}
-      setSearchReady(false);
-  },[searchReady, emailError, bookingIdError, searchFuntion, email, bookingId]);
+    if (!searchReady) return;
+    if (!emailError && !bookingIdError) {
+      searchFuntion(email, bookingId);
+    }
+    setSearchReady(false);
+  }, [
+    searchReady,
+    emailError,
+    bookingIdError,
+    searchFuntion,
+    email,
+    bookingId,
+  ]);
 
   function validateBookingId(id: string) {
-      if(id.length > 1){ 
-        setBookingIdError(false);
-        setBookingIdErrorMessage("")
-      }
-      else {
-        setBookingIdError(true);
-        setBookingIdErrorMessage("Incorrect entry. ")
-      }
+    if (id.length > 1) {
+      setBookingIdError(false);
+      setBookingIdErrorMessage("");
+    } else {
+      setBookingIdError(true);
+      setBookingIdErrorMessage("Incorrect entry. ");
+    }
   }
-   function validateEmail(emailToValidate: string){
+  function validateEmail(emailToValidate: string) {
     const emailRegex = /\S+@\S+/;
-    if(String(emailToValidate).toLowerCase().match(emailRegex) ){
-      setEmailError(false);  
-      setEmailErrorMessage("")
-    }else{
+    if (String(emailToValidate).toLowerCase().match(emailRegex)) {
+      setEmailError(false);
+      setEmailErrorMessage("");
+    } else {
       setEmailError(true);
       setEmailErrorMessage("Incorrect entry. ");
     }
   }
- function search() {
+  function search() {
     validateBookingId(bookingId);
     validateEmail(email);
-  setSearchReady(true);
+    setSearchReady(true);
   }
 
   return (
@@ -61,7 +67,7 @@ const SearchBookingComponent = ({ searchFuntion }: Props) => {
       <Box
         component="form"
         sx={{
-          "& .MuiTextField-root": { m: 1, width: "40ch" },
+          "& .MuiTextField-root": { m: 1, width: "32ch" },
         }}
         noValidate
         autoComplete="off"

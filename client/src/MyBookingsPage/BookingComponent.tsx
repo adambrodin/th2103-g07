@@ -1,7 +1,5 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import Booking from "./Booking";
 
@@ -9,7 +7,6 @@ interface Props {
   deleteFunction: (booking:Booking) => void;
   booking:Booking;
 }
-// const ChoachPickerComponent = ({ options, handler }: CoachOptions) => {
 const BookingComponent = ({deleteFunction, booking}: Props) => {
   return (
     <Box sx={{ bgcolor: "background.paper" }}>

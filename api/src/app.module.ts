@@ -8,6 +8,7 @@ import { TrafikverketService } from './services/trafikverket.service';
 import { StationController } from './controllers/station.controller';
 import { StationService } from './services/station.service';
 import { TripService } from './services/trip.service';
+import { PriceService } from './services/price.service';
 
 @Module({
   // TypeOrm database credentials come from environment variables
@@ -28,6 +29,12 @@ import { TripService } from './services/trip.service';
     HttpModule,
   ],
   controllers: [BookingController, StationController],
-  providers: [BookingService, TrafikverketService, StationService, TripService],
+  providers: [
+    BookingService,
+    TrafikverketService,
+    StationService,
+    TripService,
+    PriceService,
+  ],
 })
 export class AppModule {}

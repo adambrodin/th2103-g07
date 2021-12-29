@@ -1,21 +1,48 @@
 import { Injectable } from '@nestjs/common';
 import { getRepository } from 'typeorm';
-import { Trip } from '@shared/models/trip';
+import { PriceResult, TripResponse } from '@shared/models/trip-response';
 import { TrainStopEntity } from '../entities/train-stop.entity';
-import { TripPoint } from '../../../shared/models/trip-point';
+import { TripPoint } from '@shared/models/trip-point';
+import { TripSearchDto } from '@shared/dtos/requests/trip-search-request.dto';
+import { StationService } from './station.service';
+import { PriceService } from './price.service';
+import { SeatType } from '@shared/enums/seat-type.enum';
 
 @Injectable()
 export class TripService {
+  constructor(
+    private readonly _stationService: StationService,
+    private readonly _priceService: PriceService,
+  ) {}
+
   // Maximum amount of trips to retrieve and return in controller
   maxTripsToFetch = 10;
 
-  async getAvailableTrips(body: TripPoint[], signatures: string[]) {
+  async getAvailableTrips(
+    body: TripSearchDto,
+  ): Promise<{ error?: string; trips?: TripResponse[] }> {
+    const tripPoints = [body.departure, body.arrival];
     const stopRepo = getRepository(TrainStopEntity);
+
+    const signatures: string[] = [];
+
+    // Verify that locations are valid TrainStops
+    for (const location of [tripPoints[0].location, tripPoints[1].location]) {
+      const fetchedSignature = await this._stationService.getLocationSignature(
+        location,
+      );
+
+      if (fetchedSignature == null) {
+        return { error: `Location '${location}' could not be found.` };
+      }
+
+      signatures.push(fetchedSignature);
+    }
 
     // Trips where you don't have to switch trains in order to reach the final destination
     const departures = await stopRepo
       .createQueryBuilder('departure')
-      .where('departure.date >= :date', { date: body[0].time })
+      .where('departure.date >= :date', { date: tripPoints[0].time })
       .andWhere('departure.activityType = :type', {
         type: 'Avgang',
       })
@@ -38,7 +65,7 @@ export class TripService {
       .orderBy('departure.date', 'ASC')
       .getMany();
 
-    const returnTrips: Trip[] = [];
+    const returnTrips: TripResponse[] = [];
     if (departures.length > 0) {
       for (const departure of departures) {
         const stops = await stopRepo
@@ -53,11 +80,40 @@ export class TripService {
           .orderBy('stop.date')
           .getMany();
 
-        const trip = new Trip();
+        const trip = new TripResponse();
+
+        const seatEstimates: { [seatType: string]: number } = {};
+        // For every type of ticket (Adult, Child etc)
+        for (const ticket of body.tickets) {
+          // For every type of seat (First Class, Second Class etc)
+          for (const seatType in SeatType) {
+            // Add to total price for each ticket
+            for (let amount = 0; amount < ticket.amount; amount++) {
+              const ticketPrice = await this._priceService.getTicketPrice(
+                ticket.type,
+                SeatType[seatType],
+              );
+
+              if (seatEstimates[seatType] != null) {
+                seatEstimates[seatType] += ticketPrice;
+              } else {
+                seatEstimates[seatType] = ticketPrice;
+              }
+            }
+          }
+        }
+
+        const estimatedPrices: PriceResult[] = [];
+        for (const [key, value] of Object.entries(seatEstimates)) {
+          estimatedPrices.push({ type: SeatType[key], price: value });
+        }
+
+        trip.estimatedPrices = estimatedPrices;
         trip.train = {
           id: departure.train.trainId,
           name: departure.train.name,
         };
+
         trip.departure = {
           id: departure.id,
           location: departure.fromStation.locationName,
@@ -92,6 +148,6 @@ export class TripService {
       // Fetch trips with switches
     }
 
-    return returnTrips;
+    return { trips: returnTrips };
   }
 }

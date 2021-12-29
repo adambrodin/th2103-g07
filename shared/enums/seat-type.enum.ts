@@ -1,5 +1,6 @@
 export enum SeatType {
-  REGULAR = "Regular",
-  QUIET = "Quiet",
-  ANIMAL_FRIENDLY = "Animal Friendly",
+  FIRST_CLASS = "First Class",
+  SECOND_CLASS = "Second Class",
+  ANIMAL_CART = "Animal Friendly",
+  QUIET_CART = "Quiet Cart",
 }

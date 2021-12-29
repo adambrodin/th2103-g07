@@ -2,7 +2,9 @@ import { HttpService } from '@nestjs/axios';
 import { env } from 'process';
 import { firstValueFrom } from 'rxjs';
 import { getRepository } from 'typeorm';
-import { TicketClassType } from '../../../shared/enums/ticket-class-type.enum';
+import { SeatType } from '../../../shared/enums/seat-type.enum';
+import { TicketType } from '../../../shared/enums/ticket-type.enum';
+import { SeatPriceEntity } from '../entities/seat-price.entity';
 import { TicketPriceEntity } from '../entities/ticket-price.entity';
 import { TrainStationEntity } from '../entities/train-station.entity';
 import { TrainStopEntity } from '../entities/train-stop.entity';
@@ -10,10 +12,21 @@ import { TrainEntity } from '../entities/train.entity';
 import { TrafikverketService } from '../services/trafikverket.service';
 
 export class TrainDataImporter {
-  ticketPrices: { [key: string]: number } = {
+  seatPrices: { [key: string]: number } = {
     FIRST_CLASS: 1000,
     SECOND_CLASS: 500,
+    ANIMAL_CART: 750,
+    QUIET_CART: 650,
   };
+
+  // Multipliers for seatPrices ^, e.g First Class with Senior = 1000 * 0.6 = 600
+  ticketPrices: { [key: string]: number } = {
+    ADULT: 1.0,
+    STUDENT: 0.7,
+    SENIOR: 0.6,
+    CHILD: 0.3,
+  };
+
   constructor(private readonly _httpService: HttpService) {}
 
   apiUrlV1 = 'https://api.trafikinfo.trafikverket.se/v1/data.json';
@@ -122,16 +135,24 @@ export class TrainDataImporter {
     console.log(`Successfully saved ${availableStops} stops to database.`);
   }
 
-  async importTicketPrices() {
+  async importPrices() {
+    const seatPriceRepo = getRepository(SeatPriceEntity);
     const ticketPriceRepo = getRepository(TicketPriceEntity);
-    console.log(Object.entries(this.ticketPrices));
+
+    for (const [key, value] of Object.entries(this.seatPrices)) {
+      const savedPrice = await seatPriceRepo.save({
+        seatType: SeatType[key],
+        price: value,
+      });
+      console.log('Saved seat price: ', savedPrice);
+    }
 
     for (const [key, value] of Object.entries(this.ticketPrices)) {
       const savedPrice = await ticketPriceRepo.save({
-        ticketClass: TicketClassType[key],
-        price: value,
+        ticketType: TicketType[key],
+        priceMultiplier: value,
       });
-      console.log('Saved ticket price: ', savedPrice);
+      console.log('Saved ticket multiplier: ', savedPrice);
     }
   }
 
@@ -149,9 +170,10 @@ export class TrainDataImporter {
       await this.importTrips();
     }
 
+    const seatPrices = await getRepository(SeatPriceEntity).count();
     const ticketPrices = await getRepository(TicketPriceEntity).count();
-    if (ticketPrices <= 0) {
-      await this.importTicketPrices();
+    if (seatPrices <= 0 || ticketPrices <= 0) {
+      await this.importPrices();
     }
   }
 }

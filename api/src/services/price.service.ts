@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { getRepository } from 'typeorm';
-import { SeatType } from '../../../shared/enums/seat-type.enum';
-import { TicketType } from '../../../shared/enums/ticket-type.enum';
+import { SeatType } from '@shared/enums/seat-type.enum';
+import { TicketType } from '@shared/enums/ticket-type.enum';
 import { SeatPriceEntity } from '../entities/seat-price.entity';
 import { TicketPriceEntity } from '../entities/ticket-price.entity';
 

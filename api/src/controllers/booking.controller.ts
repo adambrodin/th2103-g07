@@ -1,9 +1,9 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { BookingService } from '../services/booking.service';
 import { BookingDto } from '@shared/dtos/booking.dto';
-import { TripResponse } from '../../../shared/models/trip-response';
-import { TripSearchDto } from '../../../shared/dtos/requests/trip-search-request.dto';
-import { BookTripRequestDto } from '../../../shared/dtos/requests/book-trip-request.dto';
+import { TripResponse } from '@shared/models/trip-response';
+import { TripSearchDto } from '@shared/dtos/requests/trip-search-request.dto';
+import { BookTripRequestDto } from '@shared/dtos/requests/book-trip-request.dto';
 
 @Controller('booking')
 export class BookingController {

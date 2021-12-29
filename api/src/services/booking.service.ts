@@ -4,16 +4,16 @@ import { TripService } from './trip.service';
 import { TripResponse } from '@shared/models/trip-response';
 import { getRepository } from 'typeorm';
 import { CustomerEntity } from '../entities/customer.entity';
-import { Customer } from '../../../shared/models/customer';
+import { Customer } from '@shared/models/customer';
 import { TrainStopEntity } from '../entities/train-stop.entity';
 import { BookingEntity } from '../entities/booking.entity';
 import { TicketEntity } from '../entities/ticket.entity';
-import { BookingDto } from '../../../shared/dtos/booking.dto';
+import { BookingDto } from '@shared/dtos/booking.dto';
 import { PriceService } from './price.service';
-import { TripSearchDto } from '../../../shared/dtos/requests/trip-search-request.dto';
-import { ReceiptResponseDto } from '../../../shared/dtos/responses/receipt-response.dto';
-import { Seat } from '../../../shared/models/seat';
-import { BookTripRequestDto } from '../../../shared/dtos/requests/book-trip-request.dto';
+import { TripSearchDto } from '@shared/dtos/requests/trip-search-request.dto';
+import { ReceiptResponseDto } from '@shared/dtos/responses/receipt-response.dto';
+import { Seat } from '@shared/models/seat';
+import { BookTripRequestDto } from '@shared/dtos/requests/book-trip-request.dto';
 
 @Injectable()
 export class BookingService {

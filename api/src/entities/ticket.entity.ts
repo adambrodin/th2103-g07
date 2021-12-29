@@ -9,7 +9,7 @@ import {
 import { BookingEntity } from './booking.entity';
 import { TicketType } from '@shared/enums/ticket-type.enum';
 import { TrainStopEntity } from './train-stop.entity';
-import { SeatType } from '../../../shared/enums/seat-type.enum';
+import { SeatType } from '@shared/enums/seat-type.enum';
 
 @Entity({ name: 'Ticket' })
 export class TicketEntity {

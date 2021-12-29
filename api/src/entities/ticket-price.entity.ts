@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
-import { TicketType } from '../../../shared/enums/ticket-type.enum';
+import { TicketType } from '@shared/enums/ticket-type.enum';
 
 @Entity({ name: 'TicketPrice' })
 export class TicketPriceEntity {

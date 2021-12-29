@@ -12,7 +12,7 @@ function BookingContextProvider(props) {
       time: '2021-12-28 17:00',
     },
     tickets: [{ type: 'Adult', amount: 3 }],
-    price: 495,
+    price: 495
   });
 
   function updateContext(values) {

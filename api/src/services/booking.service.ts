@@ -61,6 +61,8 @@ export class BookingService {
         bookingStops.push(bookingStop);
       }
 
+      // Sort the stops in ASCENDING date order
+      bookingStops.sort((a, b) => a.date.getTime() - b.date.getTime());
       const booking = await bookingRepo.save({
         customer: customer,
         departure: bookingStops[0],

@@ -14,20 +14,21 @@ function ResultComponent() {
   let lastSelectedReturnTripId: string = '';
 
   function getTicketPrices(): number {
-    let ticketsPirce: number = 0;
+    let ticketsPrice: number = 0;
     bookingContext.searchData.tickets.forEach((ticket) => {
       if (ticket.type === 'Adult') {
-        ticketsPirce = 500 * ticket.amount;
+        ticketsPrice = 500 * ticket.amount;
       } else if (ticket.type === 'Student') {
-        ticketsPirce = ticketsPirce + 200 * ticket.amount;
+        ticketsPrice = ticketsPrice + 200 * ticket.amount;
       } else if (ticket.type === 'Senior') {
-        ticketsPirce = ticketsPirce + 200 * ticket.amount;
+        ticketsPrice = ticketsPrice + 200 * ticket.amount;
       } else if (ticket.type === 'Child') {
-        ticketsPirce = ticketsPirce + 100 * ticket.amount;
+        ticketsPrice = ticketsPrice + 100 * ticket.amount;
       }
     });
-    return ticketsPirce;
+    return ticketsPrice;
   }
+
   function getTicket(DepartId: string, returnId: string) {
     // Get train object from id
 

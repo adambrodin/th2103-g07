@@ -45,6 +45,19 @@ function StartPage() {
   }
 
   function toggleDatePicker() {
+    if (returnTrip) {
+      updateContext({
+        searchData: {
+          arrival: {
+            ...bookingContext.searchData.arrival,
+          },
+          departure: {
+            ...bookingContext.searchData.departure,
+          },
+          tickets: [...bookingContext.searchData.tickets],
+        },
+      });
+    }
     setReturnTrip(!returnTrip);
     let x = document.getElementById('returnDate');
 

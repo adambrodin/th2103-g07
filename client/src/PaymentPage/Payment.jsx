@@ -8,6 +8,7 @@ import FormControl from '@mui/material/FormControl';
 
 function Payment() {
   let formArray = [];
+  let numberOfForms = 0;
   const [context, updateContext] = useContext(BookingContext);
   const [customer, setCustomer] = useState();
   const [value, setValue] = React.useState('card');
@@ -15,10 +16,12 @@ function Payment() {
   const handleChange = (event) => {
     setValue(event.target.value);
   };
+  context.searchData.tickets.forEach((element) => {
+    numberOfForms += element.amount; // 100, 200, 300
+  });
 
-  // Check if it's more than 1 ticket
-  if (context.tickets[0].amount > 1) {
-    for (let i = 1; i < context.tickets[0].amount; i++) {
+  if (numberOfForms > 1) {
+    for (let i = 1; i < numberOfForms; i++) {
       formArray.push(
         <form className='customer-form'>
           <h3>Resenär {i + 1}</h3>
@@ -76,13 +79,11 @@ function Payment() {
       <div className='summary-container'>
         <div>
           <h3>
-            {context.departure.location} - {context.arrival.location}
+            {context.searchData.departure.location} -{' '}
+            {context.searchData.arrival.location}
           </h3>
-          <h5>
-            {context.departure.time} - {context.arrival.time}
-          </h5>
-          <h5>Antal biljetter: {context.tickets[0].amount}</h5>
-          <h5>Att betala: {context.price}:- </h5>
+          <h5>{context.SelectedTrain.Time}</h5>
+          <h5>Att betala: {context.SelectedTrain.TotalTicketPrice}:- </h5>
         </div>
       </div>
       <div className='customer-container'>

@@ -4,7 +4,7 @@ on: [push]
 
 env:
   AZURE_FUNCTIONAPP_NAME: train-booking-function-app
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: "../../api/"
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: "./api"
   NODE_VERSION: "14.x"
 
 jobs:

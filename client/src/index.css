@@ -48,11 +48,8 @@ code {
 }
 .booking-container{
   width:  fit-content;
+  padding: 1vw;
 }
-
-#text-field-booking-reference-input{
-
-}
-.email-textfield-container{
-
+.text-bold{
+  font-weight: bold;
 }

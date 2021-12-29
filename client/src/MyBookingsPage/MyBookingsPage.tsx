@@ -1,43 +1,60 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
+
 import BookingComponent from "./BookingComponent";
 
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+
 import SearchBookingComponent from "./SearchBookingComponent";
+import Booking from "./Booking";
 
 const bookingExample = {
-  id: "jkdsaglfgjajklgbsdf",
+  id: "1342adfad342ff2191237",
   price: 800,
   time: "2021-12-27 17:06",
 };
 
 const MyBookingsPage = () => {
   const [showBooking, setShowBooking] = useState(false);
-  const tst = (text:string)=>{
-    setShowBooking(showBooking ? false : true);
+  //const [successfulDelete, setSuccessfulDelete] = useState(false);
+  const [, setSearchFailed] = useState(false);
+  const [searchMessage, setSearchMessage] = useState("");
+
+  function searchForBooking(email: string, bookingId: string) {
+    if (email && bookingId) {
+      setShowBooking(true);
+      setSearchFailed(false);
+    }else{
+      setSearchFailed(true);
+      setSearchMessage("Ingen bokning som matchar din sökning kunde hittas. ")
+      //no result found
+  };
+    
+  }
+  function deleteBooking(booking:Booking) {
+    setShowBooking(false);
+    //todo check if completed
+    setSearchMessage("Bokningen har tagits bort. ")
   }
   return (
     <div className="container text-center">
       <h1>Sök Bokning </h1>
-      <SearchBookingComponent callback={tst}></SearchBookingComponent>
-      {showBooking ? (
+      <SearchBookingComponent
+        searchFuntion={searchForBooking}
+      ></SearchBookingComponent>
+      {showBooking && (
         <div className="container booking-container">
-          <Card sx={{ minWidth: 400 }}>
-          <BookingComponent booking={bookingExample}></BookingComponent>
+          <Card sx={{ minWidth: 300, width: 500 }}>
+            <BookingComponent
+              booking={bookingExample}
+              deleteFunction={deleteBooking}
+            ></BookingComponent>
           </Card>
         </div>
-      ) : (
-        <></>
       )}
+      {searchMessage.length>0 && <h4>{searchMessage}</h4>}
+   
     </div>
   );
 };
 export default MyBookingsPage;
-/*<Card sx={{ minWidth: 275 }}>
-</Card>*/

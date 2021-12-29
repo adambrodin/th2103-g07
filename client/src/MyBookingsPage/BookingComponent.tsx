@@ -3,39 +3,39 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
+import Booking from "./Booking";
 
-interface Booking {
-  booking: { id: string; price: number; time: string };
+interface Props {
+  deleteFunction: (booking:Booking) => void;
+  booking:Booking;
 }
-
 // const ChoachPickerComponent = ({ options, handler }: CoachOptions) => {
-const BookingComponent = ({ booking }: Booking) => {
-type CallbackFunction = (string)=>void;
-
+const BookingComponent = ({deleteFunction, booking}: Props) => {
   return (
-      <Box sx={{ bgcolor: "background.paper" }}>
-        <Grid item xs>
-          <Typography gutterBottom variant="h4" component="div">
-            Ta bort Bokning
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          Bokningsreferens: {booking.id}
-        </Grid>
-        <Grid item xs={12}>
-          Bokning lagd: {booking.time}
-        </Grid>
-        <Grid item xs={12}>
-          Pris: {booking.price}
-        </Grid>
-        <Divider variant="middle" />
-        <Box sx={{ mt: 3, ml: 1, mb: 1 }}>
-          <button id="delete-booking-btn" className="btn btn-secondary">
-            Ta bort
-          </button>
-        </Box>
+    <Box sx={{ bgcolor: "background.paper" }}>
+      <Grid item xs>
+        <Typography gutterBottom variant="h4" component="div">
+          Ta bort Bokning
+        </Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <p className="text-bold"> Bokningsreferens: </p> {booking.id}
+      </Grid>
+      <Grid item xs={12}>
+        <p className="text-bold"> Bokning lagd: </p> {booking.time}
+      </Grid>
+      <Grid item xs={12}>
+        <p className="text-bold">Belopp: </p> {booking.price} SEK
+      </Grid>
+      <Box sx={{ mt: 3, ml: 1, mb: 1 }}>
+        <button 
+        id="delete-booking-btn" 
+        className="btn btn-secondary"
+        onClick={()=>deleteFunction(booking)}>
+          Ta bort
+        </button>
       </Box>
-
+    </Box>
   );
 };
 export default BookingComponent;

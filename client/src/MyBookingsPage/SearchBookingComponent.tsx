@@ -2,99 +2,104 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import BookingComponent from "./BookingComponent";
 
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-type CallbackFunction = (string)=>void;
-interface Booking {
-    booking: { id: string; price: number; time: string };
-  }
-  interface Props {
-    callback:CallbackFunction;
-  }
-    const SearchBookingComponent = ({callback}:Props)=>{
-    const [bookingSearch, setBookingSearch] = useState("");
-    const [error, setError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("Incorrect entry. ");
+interface Props {
+  searchFuntion: (email:string, bookingId:string) => void;
+}
 
-    const [booking, setBooking] = useState({
-      id: "",
-      price: 0,
-      time: "",
-    });
-    useEffect(() => {
-      validateSearchString(bookingSearch);
-    }, [bookingSearch]);
-  
-    function validateSearchString(searchString: string) {
-      /*if(searchString.length < 1) {
-      setError(true);
-        setErrorMessage("Incorrect entry. ");
-    } else {*/
-      setError(false);
-      setErrorMessage("");
-      /*}*/
-    }
-    function search() {
-       // setShowBooking(showBooking ? false : true);
-       console.log("hej");
-       callback("This is fine... ");
+const SearchBookingComponent = ({ searchFuntion }: Props) => {
+  const [emailError, setEmailError] = useState(false);
+  const [bookingIdError, setBookingIdError] = useState(false);
+  const [email, setEmail] = useState("");
+  const [bookingId, setBookingId] = useState("");
+  const [bookingIdErrorMessage, setBookingIdErrorMessage] = useState("");
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [searchReady, setSearchReady] = useState(false);
+
+  useEffect(() => {
+    if(!searchReady) return;
+    if(!emailError && !bookingIdError){
+      searchFuntion(email, bookingId);}
+      setSearchReady(false);
+  },[searchReady, emailError, bookingIdError, searchFuntion, email, bookingId]);
+
+  function validateBookingId(id: string) {
+      if(id.length > 1){ 
+        setBookingIdError(false);
+        setBookingIdErrorMessage("")
       }
-    
-    return(
+      else {
+        setBookingIdError(true);
+        setBookingIdErrorMessage("Incorrect entry. ")
+      }
+  }
+   function validateEmail(emailToValidate: string){
+    const emailRegex = /\S+@\S+/;
+    if(String(emailToValidate).toLowerCase().match(emailRegex) ){
+      setEmailError(false);  
+      setEmailErrorMessage("")
+    }else{
+      setEmailError(true);
+      setEmailErrorMessage("Incorrect entry. ");
+    }
+  }
+ function search() {
+    validateBookingId(bookingId);
+    validateEmail(email);
+  setSearchReady(true);
+  }
+
+  return (
     <>
-          <span>
+      <span>
         {" "}
-        Här kan du avsluta aktiva bokningar. Hitta dina bokningar genom att mata in
-        dess referensnummer samt email-addressen du använde vid bokningen i fältet nedan:
+        Här kan du avsluta aktiva bokningar. Hitta dina bokningar genom att mata
+        in dess referensnummer samt email-addressen du använde vid bokningen i
+        fältet nedan:
       </span>
       <br />
       <Box
-      component="form"
-      sx={{
-        '& .MuiTextField-root': { m: 1, width: '40ch' },
-      }}
-      noValidate
-      autoComplete="off"
+        component="form"
+        sx={{
+          "& .MuiTextField-root": { m: 1, width: "40ch" },
+        }}
+        noValidate
+        autoComplete="off"
       >
         <div className="email-textfield-container">
-      <TextField
-          error={error}
-          id="booking-search-email-input"
-          className="text-field-email-input"
-          label="email"
-          helperText={errorMessage}
-          onChange={(e) => setBookingSearch(e.target.value)}
-          multiline={true}
-          fullWidth={true}
-        /> </div>
-        <div className="booking-reference-container">         
           <TextField
-          error={error}
-          id="booking-search-id-input"
-          className="text-field-booking-reference-input"
-          label="referensnummer"
-          helperText={errorMessage}
-          onChange={(e) => setBookingSearch(e.target.value)}
-          multiline={true}
-        />
+            error={emailError}
+            id="booking-search-email-input"
+            className="text-field-email-input"
+            label="Email"
+            helperText={emailErrorMessage}
+            onChange={(e) => setEmail(e.target.value)}
+            multiline={true}
+          />{" "}
+        </div>
+        <div className="booking-reference-container">
+          <TextField
+            error={bookingIdError}
+            id="booking-search-id-input"
+            className="text-field-booking-reference-input"
+            label="Referensnummer"
+            helperText={bookingIdErrorMessage}
+            onChange={(e) => setBookingId(e.target.value)}
+            multiline={true}
+          />
         </div>
         <div>
-        <button
-          id="search-booking-btn"
-          className="btn btn-success float-right"
-          type="button"
-          onClick={search}
-        >
-          Sök
-        </button>
+          <button
+            id="search-booking-btn"
+            className="btn btn-success"
+            type="button"
+            onClick={search}
+          >
+            Sök
+          </button>
         </div>
-    </Box>
+      </Box>
     </>
-    );
+  );
 };
 export default SearchBookingComponent;

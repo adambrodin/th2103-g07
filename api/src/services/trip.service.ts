@@ -1,11 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { getRepository } from 'typeorm';
-import { Trip } from '@shared/models/trip';
+import { PriceResult, TripResponse } from '@shared/models/trip-response';
 import { TrainStopEntity } from '../entities/train-stop.entity';
 import { TripPoint } from '../../../shared/models/trip-point';
+import { TripSearchDto } from '../../../shared/dtos/trip-search.dto';
+import { StationService } from './station.service';
+import { PriceService } from './price.service';
+import { SeatType } from '../../../shared/enums/seat-type.enum';
 
 @Injectable()
 export class TripService {
+  constructor(
+    private readonly _stationService: StationService,
+    private readonly _priceService: PriceService,
+  ) {}
+
   // Maximum amount of trips to retrieve and return in controller
   maxTripsToFetch = 10;
 
@@ -72,6 +81,39 @@ export class TripService {
           .getMany();
 
         const trip = new TripResponse();
+
+        const seatEstimates: { [seatType: string]: number } = {};
+        // For every type of ticket (Adult, Child etc)
+        for (const ticket of body.tickets) {
+          // For every type of seat (First Class, Second Class etc)
+          for (const seatType in SeatType) {
+            // Add to total price for each ticket
+            for (let amount = 0; amount < ticket.amount; amount++) {
+              const ticketPrice = await this._priceService.getTicketPrice(
+                ticket.type,
+                SeatType[seatType],
+              );
+
+              if (seatEstimates[seatType] != null) {
+                seatEstimates[seatType] += ticketPrice;
+              } else {
+                seatEstimates[seatType] = ticketPrice;
+              }
+            }
+          }
+        }
+
+        const estimatedPrices: PriceResult[] = [];
+        for (const [key, value] of Object.entries(seatEstimates)) {
+          estimatedPrices.push({ type: SeatType[key], price: value });
+        }
+
+        trip.estimatedPrices = estimatedPrices;
+        trip.train = {
+          id: departure.train.trainId,
+          name: departure.train.name,
+        };
+
         trip.departure = {
           id: departure.id,
           location: departure.fromStation.locationName,

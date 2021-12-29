@@ -76,12 +76,6 @@ export class BookingService {
         bookingStops.push(bookingStop);
       }
 
-      const train = await getRepository(TrainEntity)
-        .createQueryBuilder('train')
-        .leftJoinAndSelect('train.stops', 'stop')
-        .where('stop.id = :id', { id: bookingStops[0].id })
-        .getOne();
-
       const booking = await bookingRepo.save({
         customer: customer,
         departure: bookingStops[0],

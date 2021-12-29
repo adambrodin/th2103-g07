@@ -83,19 +83,21 @@ export class BookingService {
       });
       const tickets: TicketEntity[] = [];
       for (const seat of body.seats) {
-        const ticketPrice = await getRepository(TicketPriceEntity).findOne({
-          where: { ticketClass: seat.ticketClassType },
-        });
-
-        const ticket = await ticketRepo.save({
-          price: ticketPrice.price,
-          classType: seat.ticketClassType,
+          seatType: seat.seatType,
           booking: booking,
           stops: bookingStops,
-          train: train,
-          type: seat.ticket,
+          type: seat.ticketType,
+          firstName: seat.firstName,
+          lastName: seat.lastName,
         });
 
+        const ticketPrice = await this._priceService.getTicketPrice(
+          seat.ticketType,
+          ticket.seatType,
+        );
+        ticket.price = ticketPrice;
+
+        await ticketRepo.save(ticket);
         tickets.push(ticket);
       }
 

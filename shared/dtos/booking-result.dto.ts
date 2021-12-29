@@ -1,9 +1,9 @@
 import { TripPoint } from "../models/trip-point";
-import { Trip } from "../models/trip";
+import { TripResponse } from "../models/trip-response";
 
 export class BookingResultDto {
   // Trip data including what switches to make and what trains to travel with
-  trips: Trip[];
+  trips: TripResponse[];
 
   departure: TripPoint;
   arrival: TripPoint;

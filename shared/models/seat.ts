@@ -1,15 +1,19 @@
-import { IsEnum } from "class-validator";
+import { IsEnum, IsNotEmpty, IsString } from "class-validator";
 import { SeatType } from "../enums/seat-type.enum";
-import { TicketClassType } from "../enums/ticket-class-type.enum";
 import { TicketType } from "../enums/ticket-type.enum";
 
 export class Seat {
+  @IsString()
+  @IsNotEmpty()
+  firstName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  lastName: string;
+
   @IsEnum(SeatType)
-  seat: SeatType;
+  seatType: SeatType;
 
   @IsEnum(TicketType)
-  ticket: TicketType;
-
-  @IsEnum(TicketClassType)
-  ticketClassType: TicketClassType;
+  ticketType: TicketType;
 }

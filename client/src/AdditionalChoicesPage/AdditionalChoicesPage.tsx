@@ -20,29 +20,43 @@ const tempAnimalCoachPriceFactor: number = 0.5; //todo should be gotten from tab
 
 const AdditionalChoicesPage = () => {
   let nav = useNavigate();
-  const [context] = useContext(BookingContext);
+  const [context, updateContext] = useContext(BookingContext);
+
   // const [price, setPrice] = useState(context.price);
   let options = [
     {
       id: '0',
       name: 'Vanlig vagn',
-      price: context.price,
+      price: context.SelectedTrain.TotalTicketPrice,
     },
     {
       id: '1',
       name: 'Tyst vagn',
-      price: context.price + context.price * tempSilentCoachPriceFactor,
+      price:
+        context.SelectedTrain.TotalTicketPrice +
+        context.SelectedTrain.TotalTicketPrice * tempSilentCoachPriceFactor,
     },
     {
       id: '2',
       name: 'Djurvagn',
-      price: context.price + context.price * tempAnimalCoachPriceFactor,
+      price:
+        context.SelectedTrain.TotalTicketPrice +
+        context.SelectedTrain.TotalTicketPrice * tempAnimalCoachPriceFactor,
     },
   ];
 
   function coachHandler(toggledCoachId: string) {
-    // const coach = options.find(({ id }) => id === toggledCoachId);
-    //if (coach) setPrice(coach.price);
+    const coach = options.find(({ id }) => id === toggledCoachId);
+    if (coach) {
+      updateContext({
+        ...context,
+        SelectedTrain: {
+          ...context.SelectedTrain,
+          TotalTicketPrice: coach.price,
+          CoachType: coach.name,
+        },
+      });
+    }
   }
 
   /*useEffect(() => {

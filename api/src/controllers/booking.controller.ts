@@ -26,7 +26,9 @@ export class BookingController {
     if (outboundTrips?.error != null || returnTrips?.error != null) {
       return {
         response: 'An error occurred whilst fetching available trips.',
-        error: [outboundTrips?.error, returnTrips?.error],
+        error: [outboundTrips?.error, returnTrips?.error].filter(
+          (err) => err != null,
+        ),
       };
     }
 

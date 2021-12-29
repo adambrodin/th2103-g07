@@ -1,55 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { BookTripDto } from '@shared/dtos/book-trip.dto';
 import { ReceiptEntity } from '../entities/receipt.entity';
-import { StationService } from './station.service';
 import { TripService } from './trip.service';
-import { Trip } from '@shared/models/trip';
-import { TripPoint } from '../../../shared/models/trip-point';
+import { TripResponse } from '@shared/models/trip-response';
 import { getRepository } from 'typeorm';
 import { CustomerEntity } from '../entities/customer.entity';
 import { Customer } from '../../../shared/models/customer';
 import { TrainStopEntity } from '../entities/train-stop.entity';
 import { BookingEntity } from '../entities/booking.entity';
 import { TicketEntity } from '../entities/ticket.entity';
-import { TrainEntity } from '../entities/train.entity';
-import { TicketPriceEntity } from '../entities/ticket-price.entity';
 import { BookingDto } from '../../../shared/dtos/booking.dto';
+import { PriceService } from './price.service';
+import { TripSearchDto } from '../../../shared/dtos/trip-search.dto';
 
 @Injectable()
 export class BookingService {
   constructor(
-    private readonly _stationService: StationService,
     private readonly _tripService: TripService,
+    private readonly _priceService: PriceService,
   ) {}
 
   async getAvailableTrips(
-    body: TripPoint[],
-  ): Promise<{ error?: string; trips?: Trip[] }> {
-    const signatures: string[] = [];
+    body: TripSearchDto,
+  ): Promise<{ error?: string; trips?: TripResponse[] }> {
+    const fetchedTrips = await this._tripService.getAvailableTrips(body);
 
-    // Verify that locations are valid TrainStops
-    for (const location of [body[0].location, body[1].location]) {
-      const fetchedSignature = await this._stationService.getLocationSignature(
-        location,
-      );
-
-      if (fetchedSignature == null) {
-        return { error: `Location '${location}' could not be found.` };
-      }
-
-      signatures.push(fetchedSignature);
-    }
-
-    const fetchedTrips = await this._tripService.getAvailableTrips(
-      body,
-      signatures,
-    );
-
-    if (fetchedTrips.length <= 0) {
+    if (fetchedTrips?.error != null) {
+      return { error: fetchedTrips?.error };
+    } else if (fetchedTrips.trips.length <= 0) {
       return { error: 'No available trips were found.' };
     }
 
-    return { trips: fetchedTrips };
+    return { trips: fetchedTrips.trips };
   }
 
   async bookTrip(
@@ -60,6 +42,7 @@ export class BookingService {
       const ticketRepo = getRepository(TicketEntity);
       const stopRepo = getRepository(TrainStopEntity);
       const bookingRepo = getRepository(BookingEntity);
+
       const customer = await this.fetchCustomer(body.customer);
       const bookingStops: TrainStopEntity[] = [];
       for (const stopId of body.trainStops) {
@@ -83,6 +66,7 @@ export class BookingService {
       });
       const tickets: TicketEntity[] = [];
       for (const seat of body.seats) {
+        const ticket = ticketRepo.create({
           seatType: seat.seatType,
           booking: booking,
           stops: bookingStops,

@@ -9,13 +9,31 @@ export class TripService {
   // Maximum amount of trips to retrieve and return in controller
   maxTripsToFetch = 10;
 
-  async getAvailableTrips(body: TripPoint[], signatures: string[]) {
+  async getAvailableTrips(
+    body: TripSearchDto,
+  ): Promise<{ error?: string; trips?: TripResponse[] }> {
+    const tripPoints = [body.departure, body.arrival];
     const stopRepo = getRepository(TrainStopEntity);
+
+    const signatures: string[] = [];
+
+    // Verify that locations are valid TrainStops
+    for (const location of [tripPoints[0].location, tripPoints[1].location]) {
+      const fetchedSignature = await this._stationService.getLocationSignature(
+        location,
+      );
+
+      if (fetchedSignature == null) {
+        return { error: `Location '${location}' could not be found.` };
+      }
+
+      signatures.push(fetchedSignature);
+    }
 
     // Trips where you don't have to switch trains in order to reach the final destination
     const departures = await stopRepo
       .createQueryBuilder('departure')
-      .where('departure.date >= :date', { date: body[0].time })
+      .where('departure.date >= :date', { date: tripPoints[0].time })
       .andWhere('departure.activityType = :type', {
         type: 'Avgang',
       })
@@ -38,7 +56,7 @@ export class TripService {
       .orderBy('departure.date', 'ASC')
       .getMany();
 
-    const returnTrips: Trip[] = [];
+    const returnTrips: TripResponse[] = [];
     if (departures.length > 0) {
       for (const departure of departures) {
         const stops = await stopRepo
@@ -53,7 +71,7 @@ export class TripService {
           .orderBy('stop.date')
           .getMany();
 
-        const trip = new Trip();
+        const trip = new TripResponse();
         trip.departure = {
           id: departure.id,
           location: departure.fromStation.locationName,
@@ -88,6 +106,6 @@ export class TripService {
       // Fetch trips with switches
     }
 
-    return returnTrips;
+    return { trips: returnTrips };
   }
 }

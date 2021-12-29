@@ -3,6 +3,7 @@ import { BookingService } from '../services/booking.service';
 import { TripSearchDto } from '@shared/dtos/trip-search.dto';
 import { BookTripDto } from '@shared/dtos/book-trip.dto';
 import { BookingDto } from '@shared/dtos/booking.dto';
+import { TripResponse } from '../../../shared/models/trip-response';
 
 @Controller('booking')
 export class BookingController {
@@ -10,17 +11,11 @@ export class BookingController {
 
   @Post('search')
   async searchAvailableTrips(@Body() body: TripSearchDto) {
-    const outboundTrips = await this._bookingService.getAvailableTrips([
-      body.departure,
-      body.arrival,
-    ]);
+    const outboundTrips = await this._bookingService.getAvailableTrips(body);
 
-    let returnTrips;
+    let returnTrips: { error?: string; trips?: TripResponse[] };
     if (body.returnDeparture != null && body.returnArrival != null) {
-      returnTrips = await this._bookingService.getAvailableTrips([
-        body.returnDeparture,
-        body.returnArrival,
-      ]);
+      returnTrips = await this._bookingService.getAvailableTrips(body);
     }
 
     if (outboundTrips?.error != null || returnTrips?.error != null) {

@@ -1,6 +1,9 @@
 name: Deploy NestJS API to Azure Function App
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 env:
   AZURE_FUNCTIONAPP_NAME: train-booking-function-app

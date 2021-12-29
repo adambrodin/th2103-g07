@@ -119,10 +119,11 @@ export class BookingService {
         .createQueryBuilder('receipt')
         .where('receipt.id = :id', { id: savedReceipt.id })
         .leftJoinAndSelect('receipt.booking', 'booking')
+        .leftJoinAndSelect('booking.departure', 'departure')
+        .leftJoinAndSelect('departure.currentStation', 'fromStation')
+        .leftJoinAndSelect('booking.arrival', 'arrival')
+        .leftJoinAndSelect('arrival.currentStation', 'toStation')
         .leftJoinAndSelect('booking.tickets', 'ticket')
-        .leftJoinAndSelect('ticket.stops', 'stop')
-        .orderBy('stop.date')
-        .leftJoinAndSelect('stop.train', 'train')
         .getOne();
 
       return { receipt: receipt };

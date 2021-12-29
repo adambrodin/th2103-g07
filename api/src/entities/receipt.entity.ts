@@ -19,7 +19,7 @@ export class ReceiptEntity {
   @Column()
   totalPrice: number;
 
-  @OneToOne(() => BookingEntity)
+  @OneToOne(() => BookingEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'Receipt_Booking' })
   booking: BookingEntity;
 }

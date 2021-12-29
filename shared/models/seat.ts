@@ -1,4 +1,10 @@
-import { IsEnum, IsNotEmpty, IsString } from "class-validator";
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from "class-validator";
 import { SeatType } from "../enums/seat-type.enum";
 import { TicketType } from "../enums/ticket-type.enum";
 
@@ -16,4 +22,8 @@ export class Seat {
 
   @IsEnum(TicketType)
   ticketType: TicketType;
+
+  @IsOptional()
+  @IsNumber()
+  price: number;
 }

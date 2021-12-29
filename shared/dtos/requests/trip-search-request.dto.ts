@@ -4,9 +4,9 @@ import {
   IsOptional,
   ValidateNested,
 } from "class-validator";
-import { TicketDto } from "./ticket.dto";
+import { TicketDto } from "../ticket.dto";
 import { Type } from "class-transformer";
-import { TripPoint } from "../models/trip-point";
+import { TripPoint } from "../../models/trip-point";
 
 export class TripSearchDto {
   @IsNotEmpty()

@@ -6,7 +6,7 @@ import { BookingContext } from '../Contexts/BookingContext';
 
 function ResultComponent() {
   let nav = useNavigate();
-  const [bookingContext] = useContext(BookingContext);
+  const [bookingContext, updateContext] = useContext(BookingContext);
   let lastSelectedDepartTrip: HTMLElement | null = null;
   let lastSelectedReturnTrip: HTMLElement | null = null;
   const ticketPrices: number = getTicketPrices();
@@ -63,6 +63,28 @@ function ResultComponent() {
   function toggleRadio(e: any) {
     const Id = e.target.id.split('-');
 
+    if (Id[0] === 'SecondClass') {
+      updateContext({
+        ...bookingContext,
+        SelectedTrain: {
+          class: Id[0],
+          trainID: Id[1],
+          Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
+          TotalTicketPrice: ticketPrices,
+        },
+      });
+    } else {
+      updateContext({
+        ...bookingContext,
+        SelectedTrain: {
+          class: Id[0],
+          trainID: Id[1],
+          Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
+          TotalTicketPrice: ticketPrices * 2,
+        },
+      });
+    }
+
     if (e.target.id !== 'SecondClass-' + Id[1]) {
       let esh: any = document.getElementById('SecondClass-' + Id[1]);
       esh.checked = false;
@@ -103,6 +125,7 @@ function ResultComponent() {
   function nextPage() {
     nav('/additional-choices');
   }
+  console.log(bookingContext);
 
   return (
     <>

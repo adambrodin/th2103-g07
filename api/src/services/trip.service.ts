@@ -3,7 +3,7 @@ import { getRepository } from 'typeorm';
 import { PriceResult, TripResponse } from '@shared/models/trip-response';
 import { TrainStopEntity } from '../entities/train-stop.entity';
 import { TripPoint } from '../../../shared/models/trip-point';
-import { TripSearchDto } from '../../../shared/dtos/trip-search.dto';
+import { TripSearchDto } from '../../../shared/dtos/requests/trip-search-request.dto';
 import { StationService } from './station.service';
 import { PriceService } from './price.service';
 import { SeatType } from '../../../shared/enums/seat-type.enum';

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { BookTripDto } from '@shared/dtos/book-trip.dto';
 import { ReceiptEntity } from '../entities/receipt.entity';
 import { TripService } from './trip.service';
 import { TripResponse } from '@shared/models/trip-response';
@@ -11,7 +10,10 @@ import { BookingEntity } from '../entities/booking.entity';
 import { TicketEntity } from '../entities/ticket.entity';
 import { BookingDto } from '../../../shared/dtos/booking.dto';
 import { PriceService } from './price.service';
-import { TripSearchDto } from '../../../shared/dtos/trip-search.dto';
+import { TripSearchDto } from '../../../shared/dtos/requests/trip-search-request.dto';
+import { ReceiptResponseDto } from '../../../shared/dtos/responses/receipt-response.dto';
+import { Seat } from '../../../shared/models/seat';
+import { BookTripRequestDto } from '../../../shared/dtos/requests/book-trip-request.dto';
 
 @Injectable()
 export class BookingService {
@@ -35,7 +37,7 @@ export class BookingService {
   }
 
   async bookTrip(
-    body: BookTripDto,
+    body: BookTripRequestDto,
   ): Promise<{ error?: string; receipt?: ReceiptEntity }> {
     try {
       const receiptRepo = getRepository(ReceiptEntity);
@@ -133,22 +135,22 @@ export class BookingService {
     return customer;
   }
 
-  async getBookedTrip(
+  async getBookedReceipt(
     body: BookingDto,
-  ): Promise<{ error?: string; trip?: BookingEntity }> {
+  ): Promise<{ error?: string; receipt?: ReceiptEntity }> {
     const bookedTrip = await this.getExistingBooking(body);
     if (bookedTrip == null) {
       return {
-        error: `Trip with id '${body.bookingId}' belonging to '${body.email}' could not be found.`,
+        error: `Booking with id '${body.bookingId}' belonging to '${body.email}' could not be found.`,
       };
     }
 
-    return { trip: bookedTrip };
+    return { receipt: bookedTrip };
   }
 
   async cancelBooking(
     body: BookingDto,
-  ): Promise<{ error?: string; booking?: BookingEntity }> {
+  ): Promise<{ error?: string; receipt?: ReceiptEntity }> {
     const bookedTrip = await this.getExistingBooking(body);
 
     if (bookedTrip == null) {
@@ -157,24 +159,65 @@ export class BookingService {
       };
     }
 
-    const deletedBooking = await getRepository(BookingEntity).remove(
-      bookedTrip,
-    );
-
-    return { booking: deletedBooking };
+    await getRepository(BookingEntity).remove(bookedTrip.booking);
+    return { receipt: bookedTrip };
   }
 
-  async getExistingBooking(body: BookingDto): Promise<BookingEntity> {
-    return await getRepository(BookingEntity)
-      .createQueryBuilder('booking')
+  async createFormattedReceipt(
+    body: ReceiptEntity,
+  ): Promise<ReceiptResponseDto> {
+    const departure = body.booking.departure;
+    const arrival = body.booking.arrival;
+    const receiptSeats: Seat[] = [];
+
+    for (const ticket of body.booking.tickets) {
+      receiptSeats.push({
+        firstName: ticket.firstName,
+        lastName: ticket.lastName,
+        seatType: ticket.seatType,
+        ticketType: ticket.type,
+        price: ticket.price,
+      });
+    }
+
+    const receipt: ReceiptResponseDto = {
+      totalPrice: body.totalPrice,
+      date: body.date,
+      booking: {
+        id: body.booking.id,
+        departure: {
+          activityType: departure.activityType,
+          tripPoint: {
+            location: departure.currentStation.locationName,
+            time: departure.date,
+          },
+        },
+        arrival: {
+          activityType: arrival.activityType,
+          tripPoint: {
+            location: arrival.currentStation.locationName,
+            time: arrival.date,
+          },
+        },
+      },
+      seats: receiptSeats,
+    };
+
+    return receipt;
+  }
+
+  async getExistingBooking(body: BookingDto): Promise<ReceiptEntity> {
+    return await getRepository(ReceiptEntity)
+      .createQueryBuilder('receipt')
+      .leftJoinAndSelect('receipt.booking', 'booking')
       .where('booking.id = :id', { id: body.bookingId })
       .leftJoin('booking.customer', 'customer')
       .andWhere('customer.email = :email', { email: body.email })
       .leftJoinAndSelect('booking.departure', 'departure')
-      .leftJoinAndSelect('departure.currentStation', 'departureStation')
+      .leftJoinAndSelect('departure.currentStation', 'fromStation')
       .leftJoinAndSelect('booking.arrival', 'arrival')
-      .leftJoinAndSelect('arrival.currentStation', 'arrivalStation')
-      .leftJoinAndSelect('booking.tickets', 'tickets')
+      .leftJoinAndSelect('arrival.currentStation', 'toStation')
+      .leftJoinAndSelect('booking.tickets', 'ticket')
       .getOne();
   }
 }

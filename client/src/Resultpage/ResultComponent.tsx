@@ -9,25 +9,8 @@ function ResultComponent() {
   const [bookingContext, updateContext] = useContext(BookingContext);
   let lastSelectedDepartTrip: HTMLElement | null = null;
   let lastSelectedReturnTrip: HTMLElement | null = null;
-  const ticketPrices: number = getTicketPrices();
   let lastSelectedTripId: string = '';
   let lastSelectedReturnTripId: string = '';
-
-  function getTicketPrices(): number {
-    let ticketsPrice: number = 0;
-    bookingContext.searchData.tickets.forEach((ticket) => {
-      if (ticket.type === 'Adult') {
-        ticketsPrice = 500 * ticket.amount;
-      } else if (ticket.type === 'Student') {
-        ticketsPrice = ticketsPrice + 200 * ticket.amount;
-      } else if (ticket.type === 'Senior') {
-        ticketsPrice = ticketsPrice + 200 * ticket.amount;
-      } else if (ticket.type === 'Child') {
-        ticketsPrice = ticketsPrice + 100 * ticket.amount;
-      }
-    });
-    return ticketsPrice;
-  }
 
   function getTicket(DepartId: string, returnId: string) {
     // Get train object from id
@@ -70,7 +53,8 @@ function ResultComponent() {
           class: Id[0],
           trainID: Id[1],
           Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
-          TotalTicketPrice: ticketPrices,
+          TotalTicketPrice:
+            bookingContext.dbData.OutboundTrips[0].estimatedPrices[1].price,
         },
       });
     } else {
@@ -80,7 +64,8 @@ function ResultComponent() {
           class: Id[0],
           trainID: Id[1],
           Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
-          TotalTicketPrice: ticketPrices * 2,
+          TotalTicketPrice:
+            bookingContext.dbData.OutboundTrips[0].estimatedPrices[0].price,
         },
       });
     }
@@ -109,7 +94,8 @@ function ResultComponent() {
           class: Id[0],
           trainID: Id[1],
           Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
-          TotalTicketPrice: ticketPrices,
+          TotalTicketPrice:
+            bookingContext.dbData.ReturnTrips[0].estimatedPrices[1].price,
         },
       });
     } else {
@@ -119,7 +105,8 @@ function ResultComponent() {
           class: Id[0],
           trainID: Id[1],
           Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
-          TotalTicketPrice: ticketPrices * 2,
+          TotalTicketPrice:
+            bookingContext.dbData.ReturnTrips[0].estimatedPrices[0].price,
         },
       });
     }
@@ -196,7 +183,7 @@ function ResultComponent() {
                     </td>
                     <td>
                       <label htmlFor={'FirstClass-' + trip.train.id}>
-                        {ticketPrices * 2 + ' kr'}
+                        {trip.estimatedPrices[0].price + ' :-'}
                       </label>
                       <input
                         type='radio'
@@ -207,7 +194,7 @@ function ResultComponent() {
                     </td>
                     <td>
                       <label htmlFor={'SecondClass-' + trip.train.id}>
-                        {ticketPrices + ' kr'}
+                        {trip.estimatedPrices[1].price + ' :-'}
                       </label>
                       <input
                         type='radio'
@@ -264,7 +251,7 @@ function ResultComponent() {
                       </td>
                       <td>
                         <label htmlFor={'FirstClass-' + trip.train.id}>
-                          {ticketPrices * 2 + ' kr'}
+                          {trip.estimatedPrices[0].price + ' :-'}
                         </label>
                         <input
                           type='radio'
@@ -275,7 +262,7 @@ function ResultComponent() {
                       </td>
                       <td>
                         <label htmlFor={'FirstClass-' + trip.train.id}>
-                          {ticketPrices + ' kr'}
+                          {trip.estimatedPrices[1].price + ' :-'}
                         </label>
                         <input
                           type='radio'

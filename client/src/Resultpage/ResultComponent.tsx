@@ -101,8 +101,28 @@ function ResultComponent() {
   }
   function toggleReturnRadio(e: any) {
     const Id = e.target.id.split('-');
-    console.log(document.getElementById('ReturnSecondClass-' + Id[1]));
-    console.log(document.getElementById('ReturnFirstClass-' + Id[1]));
+
+    if (Id[0] === 'SecondClass') {
+      updateContext({
+        ...bookingContext,
+        SelectedReturnTrain: {
+          class: Id[0],
+          trainID: Id[1],
+          Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
+          TotalTicketPrice: ticketPrices,
+        },
+      });
+    } else {
+      updateContext({
+        ...bookingContext,
+        SelectedReturnTrain: {
+          class: Id[0],
+          trainID: Id[1],
+          Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
+          TotalTicketPrice: ticketPrices * 2,
+        },
+      });
+    }
 
     if (e.target.id !== 'ReturnSecondClass-' + Id[1]) {
       let esh: any = document.getElementById('ReturnSecondClass-' + Id[1]);
@@ -228,8 +248,8 @@ function ResultComponent() {
                       id={trip.train.id}
                       key={trip.train.id}>
                       <td>
-                        {moment(trip.departure.time).format('hh:mm')} -{' '}
-                        {moment(trip.arrival.time).format('hh:mm')}
+                        {moment(trip.departure.time).format('HH:mm')} -{' '}
+                        {moment(trip.arrival.time).format('HH:mm')}
                         <p>
                           restid
                           {' ' +

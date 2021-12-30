@@ -41,3 +41,14 @@ code {
   padding-top: 2vh;
   padding-bottom: 2vh;
 }
+
+#delete-booking-btn {
+  background-color: firebrick;
+}
+.booking-container {
+  width: fit-content;
+  padding: 1vw;
+}
+.text-bold {
+  font-weight: bold;
+}

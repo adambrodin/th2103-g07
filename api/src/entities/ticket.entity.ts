@@ -9,7 +9,7 @@ import {
 import { BookingEntity } from './booking.entity';
 import { TicketType } from '@shared/enums/ticket-type.enum';
 import { TrainStopEntity } from './train-stop.entity';
-import { TicketClassType } from '../../../shared/enums/ticket-class-type.enum';
+import { SeatType } from '@shared/enums/seat-type.enum';
 
 @Entity({ name: 'Ticket' })
 export class TicketEntity {
@@ -24,15 +24,23 @@ export class TicketEntity {
 
   @Column({
     type: 'enum',
-    enum: TicketClassType,
-    default: TicketClassType.SECOND_CLASS,
+    enum: SeatType,
   })
-  classType: TicketClassType;
+  seatType: SeatType;
 
   @ManyToMany(() => TrainStopEntity, (entity) => entity.tickets)
   @JoinTable({ name: 'Ticket_Stops' })
   stops: TrainStopEntity[];
 
-  @ManyToOne(() => BookingEntity, (entity) => entity.tickets)
+  @ManyToOne(() => BookingEntity, (entity) => entity.tickets, {
+    onDelete: 'CASCADE',
+  })
   booking: BookingEntity;
+
+  // Passenger details
+  @Column()
+  firstName: string;
+
+  @Column()
+  lastName: string;
 }

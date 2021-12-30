@@ -8,6 +8,10 @@ import { useNavigate } from 'react-router-dom';
 
 function StartPage() {
   const [returnTrip, setReturnTrip] = useState(false);
+  const [adultTicketAmount, setAdultAmount] = useState(1);
+  const [studentTicketAmount, setStudentAmount] = useState(0);
+  const [seniorTicketAmount, setSeniorAmount] = useState(0);
+  const [childTicketAmount, setChildAmount] = useState(0);
   const [stations, setStations] = useState(['']);
   const [bookingContext, updateContext] = useContext(BookingContext);
   let nav = useNavigate();
@@ -23,18 +27,57 @@ function StartPage() {
   }, []);
 
   function getResults() {
+    let allTickets: object[] = [];
+
+    if (!isNaN(adultTicketAmount) && adultTicketAmount > 0) {
+      allTickets.push({ type: TicketType.ADULT, amount: adultTicketAmount });
+    }
+    if (!isNaN(studentTicketAmount) && studentTicketAmount > 0) {
+      allTickets.push({
+        type: TicketType.STUDENT,
+        amount: studentTicketAmount,
+      });
+    }
+    if (!isNaN(seniorTicketAmount) && seniorTicketAmount > 0) {
+      allTickets.push({
+        type: TicketType.SENIOR,
+        amount: seniorTicketAmount,
+      });
+    }
+    if (!isNaN(childTicketAmount) && childTicketAmount > 0) {
+      allTickets.push({ type: TicketType.CHILD, amount: childTicketAmount });
+    }
+    let findTrip = {
+      departure: {
+        location: bookingContext.searchData.departure.location,
+        time: bookingContext.searchData.departure.time,
+      },
+      arrival: {
+        location: bookingContext.searchData.arrival.location,
+        time: bookingContext.searchData.arrival.time,
+      },
+      tickets: allTickets,
+    };
+
     fetch(API_URL + '/booking/search', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
-      body: JSON.stringify(bookingContext.searchData),
+      body: JSON.stringify(findTrip),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.data !== undefined) {
-          updateContext({ dbData: data.data });
+          updateContext({
+            dbData: data.data,
+            searchData: {
+              ...bookingContext.searchData,
+              tickets: allTickets,
+            },
+          });
+
           nav('/results');
         } else {
           alert(
@@ -249,18 +292,9 @@ function StartPage() {
                     name=''
                     id='adultTickets'
                     min='0'
+                    value={adultTicketAmount}
                     onChange={(e: any) =>
-                      updateContext({
-                        searchData: {
-                          ...bookingContext.searchData,
-                          tickets: [
-                            {
-                              type: TicketType.ADULT,
-                              amount: parseInt(e.target.value),
-                            },
-                          ],
-                        },
-                      })
+                      setAdultAmount(parseInt(e.target.value))
                     }
                   />
                 </div>
@@ -271,19 +305,9 @@ function StartPage() {
                     name=''
                     id='studentTickets'
                     min='0'
+                    value={studentTicketAmount}
                     onChange={(e: any) =>
-                      updateContext({
-                        searchData: {
-                          ...bookingContext.searchData,
-                          tickets: [
-                            ...bookingContext.searchData.tickets,
-                            {
-                              type: TicketType.STUDENT,
-                              amount: parseInt(e.target.value),
-                            },
-                          ],
-                        },
-                      })
+                      setStudentAmount(parseInt(e.target.value))
                     }
                   />
                 </div>
@@ -294,19 +318,9 @@ function StartPage() {
                     name=''
                     id='pensionerTickets'
                     min='0'
+                    value={seniorTicketAmount}
                     onChange={(e: any) =>
-                      updateContext({
-                        searchData: {
-                          ...bookingContext.searchData,
-                          tickets: [
-                            ...bookingContext.searchData.tickets,
-                            {
-                              type: TicketType.SENIOR,
-                              amount: parseInt(e.target.value),
-                            },
-                          ],
-                        },
-                      })
+                      setSeniorAmount(parseInt(e.target.value))
                     }
                   />
                 </div>
@@ -317,19 +331,9 @@ function StartPage() {
                     name=''
                     id='kidsTicket'
                     min='0'
+                    value={childTicketAmount}
                     onChange={(e: any) =>
-                      updateContext({
-                        searchData: {
-                          ...bookingContext.searchData,
-                          tickets: [
-                            ...bookingContext.searchData.tickets,
-                            {
-                              type: TicketType.CHILD,
-                              amount: parseInt(e.target.value),
-                            },
-                          ],
-                        },
-                      })
+                      setChildAmount(parseInt(e.target.value))
                     }
                   />
                 </div>

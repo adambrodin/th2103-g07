@@ -91,7 +91,7 @@ function ResultComponent() {
       updateContext({
         ...bookingContext,
         SelectedReturnTrain: {
-          class: Id[0],
+          class: Id[0].slice(6, 17),
           trainID: Id[1],
           Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
           TotalTicketPrice:
@@ -102,7 +102,7 @@ function ResultComponent() {
       updateContext({
         ...bookingContext,
         SelectedReturnTrain: {
-          class: Id[0],
+          class: Id[0].slice(6, 17),
           trainID: Id[1],
           Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
           TotalTicketPrice:

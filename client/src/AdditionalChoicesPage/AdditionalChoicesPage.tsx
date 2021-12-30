@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookingContext } from '../Contexts/BookingContext';
 import Stack from '@mui/material/Stack';
@@ -22,26 +22,22 @@ const AdditionalChoicesPage = () => {
   let nav = useNavigate();
   const [context, updateContext] = useContext(BookingContext);
 
-  // const [price, setPrice] = useState(context.price);
+  const [price] = useState(context.SelectedTrain.TotalTicketPrice);
   let options = [
     {
       id: '0',
       name: 'Vanlig vagn',
-      price: context.SelectedTrain.TotalTicketPrice,
+      price: price,
     },
     {
       id: '1',
       name: 'Tyst vagn',
-      price:
-        context.SelectedTrain.TotalTicketPrice +
-        context.SelectedTrain.TotalTicketPrice * tempSilentCoachPriceFactor,
+      price: price + price * tempSilentCoachPriceFactor,
     },
     {
       id: '2',
       name: 'Djurvagn',
-      price:
-        context.SelectedTrain.TotalTicketPrice +
-        context.SelectedTrain.TotalTicketPrice * tempAnimalCoachPriceFactor,
+      price: price + price * tempAnimalCoachPriceFactor,
     },
   ];
 

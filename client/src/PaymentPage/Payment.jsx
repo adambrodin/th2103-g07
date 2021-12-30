@@ -13,6 +13,11 @@ function Payment() {
   const [customer, setCustomer] = useState();
   const [value, setValue] = React.useState('card');
   const [totalPrice, setTotalPrice] = useState();
+  var trip = context.dbData.OutboundTrips.filter(function (entry) {
+    return entry.train.id === context.SelectedTrain.trainID;
+  });
+  let tripStops = [];
+  trip[0].stops.forEach((element) => tripStops.push(element.id));
 
   useEffect(() => {
     if (!context.searchData.returnTrip) {
@@ -43,7 +48,7 @@ function Payment() {
               <input
                 type='text'
                 required
-                onChange={(e) => setCustomer({ firstname: e.target.value })}
+                onChange={(e) => setCustomer({ firstName: e.target.value })}
               />
               <span>Förnamn</span>
             </label>
@@ -52,7 +57,7 @@ function Payment() {
                 type='text'
                 required
                 onChange={(e) =>
-                  setCustomer({ ...customer, lastname: e.target.value })
+                  setCustomer({ ...customer, lastName: e.target.value })
                 }
               />
               <span>Efternamn</span>
@@ -65,24 +70,30 @@ function Payment() {
 
   // Data to save booking to db, not done
   function addBooking() {
-    // let data = {
-    //   customer: {
-    //     firstName: context.firstname,
-    //     lastName: context.lastname,
-    //     email: context.email,
-    //     phoneNumber: context.phone,
-    //   },
-    //   train: {
-    //     id: '1',
-    //     name: 'X2000',
-    //   },
-    //   seats: [
-    //     {
-    //       seat: 'Regular',
-    //       ticket: 'Adult',
-    //     },
-    //   ],
-    // };
+    let bookingData = {
+      customer: {
+        firstName: context.firstname,
+        lastName: context.lastname,
+        email: context.email,
+        phoneNumber: context.phone,
+      },
+      trainStops: tripStops,
+      seats: [
+        {
+          seatType: context.SelectedTrain.class,
+          ticketType: context.searchData.tickets[0].type,
+          firstName: context.firstname,
+          lastName: context.lastname,
+        },
+        {
+          seatType: context.SelectedTrain.class,
+          ticketType: context.searchData.tickets[1].type,
+          firstName: customer.firstName,
+          lastName: customer.lastName,
+        },
+      ],
+    };
+    console.log(bookingData);
   }
 
   return (

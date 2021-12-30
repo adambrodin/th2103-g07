@@ -78,61 +78,68 @@ export class TrainDataImporter {
     const _trafikverketService = new TrafikverketService(this._httpService);
     const availableStations = await getRepository(TrainStationEntity).find();
 
+    let importedStops = 0;
+    const trainRepo = getRepository(TrainEntity);
+    const stopRepo = getRepository(TrainStopEntity);
+    const stationRepo = getRepository(TrainStationEntity);
     for (const station of availableStations) {
-      console.log('At station:', station.locationName);
+      try {
+        console.log('At station:', station.locationName);
 
-      const timetable = await _trafikverketService.fetchFutureTimetable(
-        station.locationSignature,
-      );
+        const timetable = await _trafikverketService.fetchFutureTimetable(
+          station.locationSignature,
+        );
 
-      const trainRepo = getRepository(TrainEntity);
-      const stopRepo = getRepository(TrainStopEntity);
-      const stationRepo = getRepository(TrainStationEntity);
-
-      for (const action of timetable) {
-        let train = await trainRepo.findOne({
-          where: { trainId: action.AdvertisedTrainIdent },
-        });
-
-        if (train == null) {
-          train = await trainRepo.save({
-            trainId: action.AdvertisedTrainIdent,
-            name:
-              action.ProductInformation == null
-                ? ''
-                : action.ProductInformation[0],
+        for (const action of timetable) {
+          let train = await trainRepo.findOne({
+            where: { trainId: action.AdvertisedTrainIdent },
           });
+
+          if (train == null) {
+            train = await trainRepo.save({
+              trainId: action.AdvertisedTrainIdent,
+              name:
+                action.ProductInformation == null
+                  ? ''
+                  : action.ProductInformation[0],
+            });
+          }
+
+          const stop = stopRepo.create();
+          stop.activityType = action.ActivityType;
+          stop.date = action.AdvertisedTimeAtLocation;
+
+          stop.currentStation = await stationRepo.findOne({
+            where: { locationSignature: action.LocationSignature },
+          });
+
+          if (action.ToLocation != null && action.FromLocation != null) {
+            stop.toStation = await stationRepo.findOne({
+              where: {
+                locationSignature: action.ToLocation[0].LocationName,
+              },
+            });
+
+            stop.fromStation = await stationRepo.findOne({
+              where: {
+                locationSignature: action.FromLocation[0].LocationName,
+              },
+            });
+
+            stop.train = train;
+            await stopRepo.save(stop);
+            importedStops++;
+          }
         }
 
-        const stop = stopRepo.create();
-        stop.activityType = action.ActivityType;
-        stop.date = action.AdvertisedTimeAtLocation;
-
-        stop.currentStation = await stationRepo.findOne({
-          where: { locationSignature: action.LocationSignature },
-        });
-
-        if (action.ToLocation != null && action.FromLocation != null) {
-          stop.toStation = await stationRepo.findOne({
-            where: {
-              locationSignature: action.ToLocation[0].LocationName,
-            },
-          });
-
-          stop.fromStation = await stationRepo.findOne({
-            where: {
-              locationSignature: action.FromLocation[0].LocationName,
-            },
-          });
-
-          stop.train = train;
-          await stopRepo.save(stop);
-        }
+        console.log('Total stops imported: ', importedStops);
+      } catch (e: any) {
+        console.log(e.message);
+        setTimeout(() => {}, 5000);
       }
     }
 
-    const availableStops = await getRepository(TrainStopEntity).count();
-    console.log(`Successfully saved ${availableStops} stops to database.`);
+    console.log(`Successfully saved ${importedStops} stops to database.`);
   }
 
   async importPrices() {

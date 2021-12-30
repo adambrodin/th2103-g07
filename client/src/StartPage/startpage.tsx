@@ -47,18 +47,39 @@ function StartPage() {
     if (!isNaN(childTicketAmount) && childTicketAmount > 0) {
       allTickets.push({ type: TicketType.CHILD, amount: childTicketAmount });
     }
-    let findTrip = {
-      departure: {
-        location: bookingContext.searchData.departure.location,
-        time: bookingContext.searchData.departure.time,
-      },
-      arrival: {
-        location: bookingContext.searchData.arrival.location,
-        time: bookingContext.searchData.arrival.time,
-      },
-      tickets: allTickets,
-    };
-
+    let findTrip;
+    if (!returnTrip) {
+      findTrip = {
+        departure: {
+          location: bookingContext.searchData.departure.location,
+          time: bookingContext.searchData.departure.time,
+        },
+        arrival: {
+          location: bookingContext.searchData.arrival.location,
+          time: bookingContext.searchData.arrival.time,
+        },
+        tickets: allTickets,
+      };
+    } else {
+      findTrip = {
+        departure: {
+          location: bookingContext.searchData.departure.location,
+          time: bookingContext.searchData.departure.time,
+        },
+        arrival: {
+          location: bookingContext.searchData.arrival.location,
+          time: bookingContext.searchData.arrival.time,
+        },
+        returnDeparture: {
+          location: bookingContext.searchData.arrival.location,
+          time: bookingContext.searchData.returnDeparture.time,
+        },
+        returnArrival: {
+          location: bookingContext.searchData.departure.location,
+        },
+        tickets: allTickets,
+      };
+    }
     fetch(API_URL + '/booking/search', {
       method: 'POST',
       headers: {

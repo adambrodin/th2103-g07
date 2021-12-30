@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import './Payment.css';
 import { BookingContext } from '../Contexts/BookingContext';
 import Radio from '@mui/material/Radio';
@@ -12,6 +12,19 @@ function Payment() {
   const [context, updateContext] = useContext(BookingContext);
   const [customer, setCustomer] = useState();
   const [value, setValue] = React.useState('card');
+  const [totalPrice, setTotalPrice] = useState();
+
+  useEffect(() => {
+    if (!context.searchData.returnTrip) {
+      setTotalPrice(context.SelectedTrain.TotalTicketPrice);
+    } else {
+      setTotalPrice(
+        context.SelectedTrain.TotalTicketPrice +
+          context.SelectedReturnTrain.TotalTicketPrice
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -82,7 +95,7 @@ function Payment() {
             {context.searchData.arrival.location}
           </h3>
           <h5>{context.SelectedTrain.Time}</h5>
-          <h5>Att betala: {context.SelectedTrain.TotalTicketPrice}:- </h5>
+          <h5>Att betala: {totalPrice}:- </h5>
         </div>
       </div>
       <div className='customer-container'>

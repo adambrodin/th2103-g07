@@ -3,10 +3,10 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
 interface Props {
-  searchFuntion: (email: string, bookingId: string) => void;
+  searchFunction: (email: string, bookingId: string) => void;
 }
 
-const SearchBookingComponent = ({ searchFuntion }: Props) => {
+const SearchBookingComponent = ({ searchFunction }: Props) => {
   const [emailError, setEmailError] = useState(false);
   const [bookingIdError, setBookingIdError] = useState(false);
   const [email, setEmail] = useState("");
@@ -15,25 +15,21 @@ const SearchBookingComponent = ({ searchFuntion }: Props) => {
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [searchReady, setSearchReady] = useState(false);
 
-  useEffect(() => {
-    if (!searchReady) return;
-    if (!emailError && !bookingIdError) {
-      searchFuntion(email, bookingId);
-    }
-    setSearchReady(false);
-  }, [searchReady, emailError, bookingIdError, searchFuntion]);
-
   function validateBookingId(id: string) {
+    return id.length > 1;
+
     if (id.length > 1) {
       setBookingIdError(false);
       setBookingIdErrorMessage("");
     } else {
       setBookingIdError(true);
-      setBookingIdErrorMessage("Ogiltig email. ");
+      setBookingIdErrorMessage("Ogiltigt referensnummer. ");
     }
   }
   function validateEmail(emailToValidate: string) {
     const validationPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    return validationPattern.test(emailToValidate);
+
     if (validationPattern.test(emailToValidate)) {
       setEmailError(false);
       setEmailErrorMessage("");
@@ -42,10 +38,19 @@ const SearchBookingComponent = ({ searchFuntion }: Props) => {
       setEmailErrorMessage("Ogiltig email. ");
     }
   }
+
   function search() {
-    validateBookingId(bookingId);
-    validateEmail(email);
-    setSearchReady(true);
+    let idPassedValidation = validateBookingId(bookingId);
+    let emailPassedValidation = validateEmail(email);
+    setBookingIdError(!idPassedValidation);
+    setBookingIdErrorMessage(
+      idPassedValidation ? "" : "Ogiltigt referensnummer. "
+    );
+    setEmailError(!emailPassedValidation);
+    setEmailErrorMessage(emailPassedValidation ? "" : "Ogiltigt email. ");
+    if (idPassedValidation && emailPassedValidation) {
+      searchFuntion(email, bookingId);
+    }
   }
 
   return (

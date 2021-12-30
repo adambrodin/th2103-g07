@@ -4,39 +4,23 @@ import TextField from "@mui/material/TextField";
 
 interface Props {
   searchFunction: (email: string, bookingId: string) => void;
+  searchErrorFunction: ()=> void;
 }
 
-const SearchBookingComponent = ({ searchFunction }: Props) => {
+const SearchBookingComponent = ({ searchFunction, searchErrorFunction }: Props) => {
   const [emailError, setEmailError] = useState(false);
   const [bookingIdError, setBookingIdError] = useState(false);
   const [email, setEmail] = useState("");
   const [bookingId, setBookingId] = useState("");
   const [bookingIdErrorMessage, setBookingIdErrorMessage] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
-  const [searchReady, setSearchReady] = useState(false);
 
   function validateBookingId(id: string) {
     return id.length > 1;
-
-    if (id.length > 1) {
-      setBookingIdError(false);
-      setBookingIdErrorMessage("");
-    } else {
-      setBookingIdError(true);
-      setBookingIdErrorMessage("Ogiltigt referensnummer. ");
-    }
   }
   function validateEmail(emailToValidate: string) {
     const validationPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     return validationPattern.test(emailToValidate);
-
-    if (validationPattern.test(emailToValidate)) {
-      setEmailError(false);
-      setEmailErrorMessage("");
-    } else {
-      setEmailError(true);
-      setEmailErrorMessage("Ogiltig email. ");
-    }
   }
 
   function search() {
@@ -49,7 +33,9 @@ const SearchBookingComponent = ({ searchFunction }: Props) => {
     setEmailError(!emailPassedValidation);
     setEmailErrorMessage(emailPassedValidation ? "" : "Ogiltigt email. ");
     if (idPassedValidation && emailPassedValidation) {
-      searchFuntion(email, bookingId);
+      searchFunction(email, bookingId);
+    }else{
+      searchErrorFunction();
     }
   }
 

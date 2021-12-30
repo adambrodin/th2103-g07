@@ -2,10 +2,13 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { BookingService } from '../services/booking.service';
 import { TripSearchDto } from '@shared/dtos/trip-search.dto';
 import { BookTripDto } from '@shared/dtos/book-trip.dto';
+import { EmailService } from 'src/services/mailer.service';
 
 @Controller('booking')
 export class BookingController {
-  constructor(private readonly _bookingService: BookingService) {}
+  constructor(
+    private readonly _bookingService: BookingService, 
+    private readonly _mailerService: EmailService) {}
 
   @Post('search')
   async searchAvailableTrips(@Body() body: TripSearchDto) {
@@ -13,7 +16,7 @@ export class BookingController {
       body.departure,
       body.arrival,
     ]);
-
+    await this._mailerService.sendConfirmation();
     let returnTrips;
     if (body.returnDeparture != null && body.returnArrival != null) {
       returnTrips = await this._bookingService.getAvailableTrips([
@@ -55,7 +58,7 @@ export class BookingController {
             : bookingResult?.error,
       };
     }
-
+    await this._mailerService.sendConfirmation();
     return {
       response: 'Trip has been booked successfully.',
       data: { receipt: bookingResult.receipt },

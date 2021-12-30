@@ -11,6 +11,10 @@ function Payment() {
   const [context, updateContext] = useContext(BookingContext);
   const [customer, setCustomer] = useState();
   const [value, setValue] = React.useState('card');
+  const API_URL =
+    process.env.NODE_ENV === 'production'
+      ? 'https://train-booking-function-app.azurewebsites.net/api'
+      : process.env.REACT_APP_API_URL;
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -20,20 +24,20 @@ function Payment() {
   if (context.tickets[0].amount > 1) {
     for (let i = 1; i < context.tickets[0].amount; i++) {
       formArray.push(
-        <form className='customer-form'>
+        <form className="customer-form">
           <h3>Resenär {i + 1}</h3>
-          <div className='c-form-row'>
-            <label htmlFor=''>
+          <div className="c-form-row">
+            <label htmlFor="">
               <input
-                type='text'
+                type="text"
                 required
                 onChange={(e) => setCustomer({ firstname: e.target.value })}
               />
               <span>Förnamn</span>
             </label>
-            <label htmlFor=''>
+            <label htmlFor="">
               <input
-                type='text'
+                type="text"
                 required
                 onChange={(e) =>
                   setCustomer({ ...customer, lastname: e.target.value })
@@ -49,6 +53,27 @@ function Payment() {
 
   // Data to save booking to db, not done
   function addBooking() {
+    fetch(API_URL + '/booking/create-checkout-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+      body: JSON.stringify({ items: [{ id: 1, quantity: 2 }] }),
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          return res.json().then((json) => Promise.reject(json));
+        }
+      })
+      .then((data) => {
+        window.location = data.data.url;
+      })
+      .catch((e) => {
+        console.log(e.error);
+      });
     // let data = {
     //   customer: {
     //     firstName: context.firstname,
@@ -71,9 +96,9 @@ function Payment() {
   }
 
   return (
-    <div className='container'>
+    <div className="container">
       <h1>BETALSIDA</h1>
-      <div className='summary-container'>
+      <div className="summary-container">
         <div>
           <h3>
             {context.departure.location} - {context.arrival.location}
@@ -85,14 +110,14 @@ function Payment() {
           <h5>Att betala: {context.price}:- </h5>
         </div>
       </div>
-      <div className='customer-container'>
-        <div className='information-container'>
-          <form className='customer-form'>
+      <div className="customer-container">
+        <div className="information-container">
+          <form className="customer-form">
             <h3>Resenär</h3>
-            <div className='c-form-row'>
-              <label htmlFor=''>
+            <div className="c-form-row">
+              <label htmlFor="">
                 <input
-                  type='text'
+                  type="text"
                   required
                   onChange={(e) =>
                     updateContext({
@@ -102,9 +127,9 @@ function Payment() {
                 />
                 <span>Förnamn</span>
               </label>
-              <label htmlFor=''>
+              <label htmlFor="">
                 <input
-                  type='text'
+                  type="text"
                   required
                   onChange={(e) =>
                     updateContext({
@@ -115,10 +140,10 @@ function Payment() {
                 <span>Efternamn</span>
               </label>
             </div>
-            <div className='c-form-row'>
-              <label htmlFor=''>
+            <div className="c-form-row">
+              <label htmlFor="">
                 <input
-                  type='email'
+                  type="email"
                   required
                   onChange={(e) =>
                     updateContext({
@@ -128,11 +153,11 @@ function Payment() {
                 />
                 <span>E-postadress</span>
               </label>
-              <label htmlFor=''>
+              <label htmlFor="">
                 <input
-                  type='tel'
+                  type="tel"
                   required
-                  pattern='[0-9]{10}'
+                  pattern="[0-9]{10}"
                   onChange={(e) =>
                     updateContext({
                       phone: e.target.value,
@@ -143,29 +168,30 @@ function Payment() {
               </label>
             </div>
             {/* Remove input after testing */}
-            <input type='submit' />
+            <input type="submit" />
           </form>
           {formArray}
         </div>
       </div>
-      <div className='payment-container'>
-        <FormControl component='fieldset'>
+      <div className="payment-container">
+        <FormControl component="fieldset">
           <RadioGroup
-            name='controlled-radio-buttons-group'
+            name="controlled-radio-buttons-group"
             value={value}
-            onChange={handleChange}>
-            <FormControlLabel value='card' control={<Radio />} label='Kort' />
-            <FormControlLabel value='swish' control={<Radio />} label='Swish' />
+            onChange={handleChange}
+          >
+            <FormControlLabel value="card" control={<Radio />} label="Kort" />
+            <FormControlLabel value="swish" control={<Radio />} label="Swish" />
             <FormControlLabel
-              value='invoice'
+              value="invoice"
               control={<Radio />}
-              label='Faktura'
+              label="Faktura"
             />
           </RadioGroup>
         </FormControl>
       </div>
-      <div className='btn-container'>
-        <button className='btn btn-success' onClick={() => addBooking()}>
+      <div className="btn-container">
+        <button className="btn btn-success" onClick={() => addBooking()}>
           Fortsätt
         </button>
       </div>

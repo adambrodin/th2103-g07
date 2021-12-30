@@ -4,10 +4,17 @@ import { BookingDto } from '@shared/dtos/booking.dto';
 import { TripResponse } from '@shared/models/trip-response';
 import { TripSearchDto } from '@shared/dtos/requests/trip-search-request.dto';
 import { BookTripRequestDto } from '@shared/dtos/requests/book-trip-request.dto';
+declare function require(name: string);
 
 @Controller('booking')
 export class BookingController {
   constructor(private readonly _bookingService: BookingService) {}
+
+  Stripe = require('stripe');
+  stripe = this.Stripe(process.env.STRIPE_PRIVATE_KEY);
+
+  //priset är i öre
+  storeItems = new Map([[1, { priceInSek: 20000, name: 'Train trip Price' }]]);
 
   @Post('search')
   async searchAvailableTrips(@Body() body: TripSearchDto) {
@@ -120,5 +127,39 @@ export class BookingController {
       response: 'Booking has been canceled successfully.',
       data: { canceledBooking: receipt },
     };
+  }
+
+  @Post('create-checkout-session')
+  async checkoutSession(@Body() body: any) {
+    try {
+      const session = await this.stripe.checkout.sessions.create({
+        payment_method_types: ['card', 'klarna'],
+        mode: 'payment',
+        line_items: body.items.map((item) => {
+          const storeItem = this.storeItems.get(item.id);
+          return {
+            price_data: {
+              currency: 'sek',
+              product_data: {
+                name: storeItem.name,
+              },
+              unit_amount: storeItem.priceInSek,
+            },
+            quantity: item.quantity,
+          };
+        }),
+        success_url: 'http://localhost:3000/success',
+        cancel_url: 'http://localhost:3000/canceled',
+      });
+      return {
+        response: 'Payment was succsessfull',
+        data: { url: session.url },
+      };
+    } catch (error) {
+      return {
+        response: 'Payment was succsessfull',
+        data: error,
+      };
+    }
   }
 }

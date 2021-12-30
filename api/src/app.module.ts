@@ -14,6 +14,7 @@ import { EmailService } from './services/mailer.service';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 
+import { PriceService } from './services/price.service';
 
 @Module({
   // TypeOrm database credentials come from environment variables
@@ -57,6 +58,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
     }),
   ],
   controllers: [BookingController, StationController],
-  providers: [BookingService, TrafikverketService, StationService, TripService, EmailService],
+  providers: [BookingService, TrafikverketService, StationService, TripService, EmailService, PriceService],
+
 })
 export class AppModule {}

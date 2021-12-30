@@ -9,11 +9,18 @@ import {
 import { CustomerEntity } from './customer.entity';
 import { ReceiptEntity } from './receipt.entity';
 import { TicketEntity } from './ticket.entity';
+import { TrainStopEntity } from './train-stop.entity';
 
 @Entity({ name: 'Booking' })
 export class BookingEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @ManyToOne(() => TrainStopEntity, (entity) => entity.departures)
+  departure: TrainStopEntity;
+
+  @ManyToOne(() => TrainStopEntity, (entity) => entity.arrivals)
+  arrival: TrainStopEntity;
 
   @ManyToOne(() => CustomerEntity)
   @JoinColumn({ name: 'Booking_Customer' })

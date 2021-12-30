@@ -4,8 +4,10 @@ import {
   JoinColumn,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { BookingEntity } from './booking.entity';
 import { TicketEntity } from './ticket.entity';
 import { TrainStationEntity } from './train-station.entity';
 import { TrainEntity } from './train.entity';
@@ -38,4 +40,10 @@ export class TrainStopEntity {
 
   @Column()
   date: Date;
+
+  @OneToMany(() => BookingEntity, (entity) => entity.departure)
+  departures: BookingEntity[];
+
+  @OneToMany(() => BookingEntity, (entity) => entity.arrival)
+  arrivals: BookingEntity[];
 }

@@ -17,7 +17,7 @@ function Payment() {
     setValue(event.target.value);
   };
   context.searchData.tickets.forEach((element) => {
-    numberOfForms += element.amount; // 100, 200, 300
+    numberOfForms += element.amount;
   });
 
   if (numberOfForms > 1) {
@@ -70,7 +70,6 @@ function Payment() {
     //     },
     //   ],
     // };
-    alert('Redirect');
   }
 
   return (
@@ -143,8 +142,6 @@ function Payment() {
                 <span>Mobilnummer</span>
               </label>
             </div>
-            {/* Remove input after testing */}
-            <input type='submit' />
           </form>
           {formArray}
         </div>

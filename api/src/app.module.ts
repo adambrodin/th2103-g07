@@ -2,12 +2,18 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { BookingController } from './controllers/booking.controller';
 import { BookingService } from './services/booking.service';
 import { TrafikverketService } from './services/trafikverket.service';
 import { StationController } from './controllers/station.controller';
 import { StationService } from './services/station.service';
 import { TripService } from './services/trip.service';
+import { EmailService } from './services/mailer.service';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+
+
 
 @Module({
   // TypeOrm database credentials come from environment variables
@@ -26,8 +32,31 @@ import { TripService } from './services/trip.service';
       }),
     }),
     HttpModule,
+    MailerModule.forRootAsync({
+      useFactory: () => ({
+        transport: {
+          host: 'smtp.gmail.com',
+          port: 465,
+          secure: true, // upgrade later with STARTTLS
+          auth: {
+            user: process.env.GMAIL_USERNAME,
+            pass: process.env.GMAIL_PASSWORD,
+          },
+        },
+        defaults: {
+          from:'"nest-modules" <modules@nestjs.com>',
+        },
+        template: {
+          dir: process.cwd() + '/templates/',
+          adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
+          options: {
+            strict: true,
+          },
+        },
+      }),
+    }),
   ],
   controllers: [BookingController, StationController],
-  providers: [BookingService, TrafikverketService, StationService, TripService],
+  providers: [BookingService, TrafikverketService, StationService, TripService, EmailService],
 })
 export class AppModule {}

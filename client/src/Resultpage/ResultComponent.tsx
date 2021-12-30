@@ -87,7 +87,7 @@ function ResultComponent() {
   function toggleReturnRadio(e: any) {
     const Id = e.target.id.split('-');
 
-    if (Id[0] === 'SecondClass') {
+    if (Id[0] === 'ReturnSecondClass') {
       updateContext({
         ...bookingContext,
         SelectedReturnTrain: {

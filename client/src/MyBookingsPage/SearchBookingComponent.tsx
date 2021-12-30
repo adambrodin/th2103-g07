@@ -21,14 +21,7 @@ const SearchBookingComponent = ({ searchFuntion }: Props) => {
       searchFuntion(email, bookingId);
     }
     setSearchReady(false);
-  }, [
-    searchReady,
-    emailError,
-    bookingIdError,
-    searchFuntion,
-    email,
-    bookingId,
-  ]);
+  }, [searchReady, emailError, bookingIdError, searchFuntion]);
 
   function validateBookingId(id: string) {
     if (id.length > 1) {
@@ -36,17 +29,17 @@ const SearchBookingComponent = ({ searchFuntion }: Props) => {
       setBookingIdErrorMessage("");
     } else {
       setBookingIdError(true);
-      setBookingIdErrorMessage("Incorrect entry. ");
+      setBookingIdErrorMessage("Ogiltig email. ");
     }
   }
   function validateEmail(emailToValidate: string) {
-    const emailRegex = /\S+@\S+/;
-    if (String(emailToValidate).toLowerCase().match(emailRegex)) {
+    const validationPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (validationPattern.test(emailToValidate)) {
       setEmailError(false);
       setEmailErrorMessage("");
     } else {
       setEmailError(true);
-      setEmailErrorMessage("Incorrect entry. ");
+      setEmailErrorMessage("Ogiltig email. ");
     }
   }
   function search() {

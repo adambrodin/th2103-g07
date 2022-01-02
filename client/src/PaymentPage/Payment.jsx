@@ -12,24 +12,11 @@ function Payment() {
   const [context, updateContext] = useContext(BookingContext);
   const [customer, setCustomer] = useState();
   const [value, setValue] = React.useState('card');
-  const [totalPrice, setTotalPrice] = useState();
   var trip = context.dbData.OutboundTrips.filter(function (entry) {
     return entry.train.id === context.SelectedTrain.trainID;
   });
   let tripStops = [];
   trip[0].stops.forEach((element) => tripStops.push(element.id));
-
-  useEffect(() => {
-    if (!context.searchData.returnTrip) {
-      setTotalPrice(context.SelectedTrain.TotalTicketPrice);
-    } else {
-      setTotalPrice(
-        context.SelectedTrain.TotalTicketPrice +
-          context.SelectedReturnTrain.TotalTicketPrice
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleChange = (event) => {
     setValue(event.target.value);

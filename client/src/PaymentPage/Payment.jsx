@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import './Payment.css';
 import { BookingContext } from '../Contexts/BookingContext';
 import Radio from '@mui/material/Radio';
@@ -8,15 +8,26 @@ import FormControl from '@mui/material/FormControl';
 
 function Payment() {
   let formArray = [];
+  let tripStopsArr = [];
+  let returnTripStopsArr = [];
   let numberOfForms = 0;
   const [context, updateContext] = useContext(BookingContext);
   const [customer, setCustomer] = useState();
   const [value, setValue] = React.useState('card');
-  var trip = context.dbData.OutboundTrips.filter(function (entry) {
+
+  let tripStops = context.dbData.OutboundTrips.filter(function (entry) {
     return entry.train.id === context.SelectedTrain.trainID;
   });
-  let tripStops = [];
-  trip[0].stops.forEach((element) => tripStops.push(element.id));
+  tripStops[0].stops.forEach((element) => tripStopsArr.push(element.id));
+
+  if (context.dbData.ReturnTrips) {
+    let returnTripStops = context.dbData.ReturnTrips.filter(function (entry) {
+      return entry.train.id === context.SelectedTrain.trainID;
+    });
+    returnTripStops[0].stops.forEach((element) =>
+      returnTripStopsArr.push(element.id)
+    );
+  }
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -64,19 +75,13 @@ function Payment() {
         email: context.email,
         phoneNumber: context.phone,
       },
-      trainStops: tripStops,
+      trainStops: tripStopsArr,
       seats: [
         {
           seatType: context.SelectedTrain.class,
           ticketType: context.searchData.tickets[0].type,
           firstName: context.firstname,
           lastName: context.lastname,
-        },
-        {
-          seatType: context.SelectedTrain.class,
-          ticketType: context.searchData.tickets[1].type,
-          firstName: customer.firstName,
-          lastName: customer.lastName,
         },
       ],
     };

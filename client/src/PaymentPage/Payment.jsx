@@ -99,16 +99,6 @@ function Payment() {
   return (
     <div className='container'>
       <h1>BETALSIDA</h1>
-      <div className='summary-container'>
-        <div>
-          <h3>
-            {context.searchData.departure.location} -{' '}
-            {context.searchData.arrival.location}
-          </h3>
-          <h5>{context.SelectedTrain.Time}</h5>
-          <h5>Att betala: {totalPrice}:- </h5>
-        </div>
-      </div>
       <div className='customer-container'>
         <div className='information-container'>
           <form className='customer-form'>

@@ -1,17 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
+import { ReceiptResponseDto } from '@shared/dtos/responses/receipt-response.dto';
+
 
 @Injectable()
 export class EmailService {
   constructor(private readonly mailerService: MailerService) {}
 
-  async sendConfirmation(): Promise<void> {
+  async sendConfirmation(receipt: ReceiptResponseDto): Promise<void> {
     const response = await this.mailerService
       .sendMail({
         to: 'spuute@gmail.com',
-        from: 'th2102.g07@gmail.com',
+        from: 'no-reply@grupp7.com',
         subject: 'Bokningsbekräftelse',
-        html: '<h1>Tack för din bokning!</h1><br><p>Din bokning har bokningsnr: ${}',
+        template: './confirmation',
+        context: {
+          fullName: receipt.seats[0].firstName + receipt.seats[0].lastName,
+          bookingNumber: receipt.booking.id,
+          totalPrice: receipt.totalPrice,
+          departure: receipt.date.toUTCString(),
+          seats: receipt.seats.length,
+          seats1: receipt.seats,
+        }
       })
   }
 

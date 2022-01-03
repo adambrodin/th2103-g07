@@ -109,6 +109,7 @@ function StartPage() {
   }
 
   function toggleDatePicker() {
+    setReturnTrip(!returnTrip);
     if (returnTrip) {
       updateContext({
         searchData: {
@@ -118,13 +119,10 @@ function StartPage() {
           departure: {
             ...bookingContext.searchData.departure,
           },
-          tickets: [...bookingContext.searchData.tickets],
         },
       });
     }
-    setReturnTrip(!returnTrip);
     let x = document.getElementById('returnDate');
-
     if (x!.style.display === 'inline') {
       x!.style.display = 'none';
     } else {

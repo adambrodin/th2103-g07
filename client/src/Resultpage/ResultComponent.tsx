@@ -128,9 +128,12 @@ function ResultComponent() {
   }
 
   function nextPage() {
-    nav('/additional-choices');
+    if (bookingContext.SelectedTrain.class === 'SecondClass') {
+      nav('/additional-choices');
+    } else {
+      nav('/payment');
+    }
   }
-  console.log(bookingContext);
 
   return (
     <>

@@ -108,6 +108,7 @@ export class BookingService {
         .leftJoinAndSelect('booking.arrival', 'arrival')
         .leftJoinAndSelect('arrival.currentStation', 'toStation')
         .leftJoinAndSelect('booking.tickets', 'ticket')
+        .leftJoinAndSelect('booking.customer', 'customer')
         .getOne();
 
       return { receipt: receipt };

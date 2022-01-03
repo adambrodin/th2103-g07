@@ -61,7 +61,7 @@ export class BookingController {
       bookingResult.receipt,
       );
       
-    await this._mailerService.sendConfirmation(receipt);
+    await this._mailerService.sendConfirmation(receipt ,bookingResult.receipt.booking.customer);
 
     return {
       response: 'Trip has been booked successfully.',

@@ -361,7 +361,9 @@ function StartPage() {
           </form>
         </div>
       </div>
-      <button onClick={() => getResults()}>Fortsätt</button>
+      <button className='btn btn-success' onClick={() => getResults()}>
+        Fortsätt
+      </button>
     </div>
   );
 }

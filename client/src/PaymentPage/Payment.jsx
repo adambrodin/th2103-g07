@@ -18,7 +18,11 @@ function Payment() {
   let tripStops = context.dbData.OutboundTrips.filter(function (entry) {
     return entry.train.id === context.SelectedTrain.trainID;
   });
-  tripStops[0].stops.forEach((element) => tripStopsArr.push(element.id));
+  if (tripStops.length !== 0) {
+    tripStops[0].stops.forEach((element) => tripStopsArr.push(element.id));
+  } else {
+    tripStopsArr = [];
+  }
 
   if (context.dbData.ReturnTrips) {
     let returnTripStops = context.dbData.ReturnTrips.filter(function (entry) {

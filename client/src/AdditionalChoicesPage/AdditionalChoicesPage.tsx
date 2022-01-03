@@ -49,7 +49,7 @@ const AdditionalChoicesPage = () => {
         SelectedTrain: {
           ...context.SelectedTrain,
           TotalTicketPrice: coach.price,
-          CoachType: coach.name,
+          class: coach.name,
         },
       });
     }

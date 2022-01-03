@@ -45,13 +45,13 @@ import { PriceService } from './services/price.service';
           },
         },
         defaults: {
-          from:'"nest-modules" <modules@nestjs.com>',
+          from:'"no-reply" <noreply@grupp7.com>',
         },
         template: {
-          dir: process.cwd() + '/templates/',
+          dir: process.cwd() + '/src/mail/templates',
           adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
           options: {
-            strict: true,
+            strict: false,
           },
         },
       }),

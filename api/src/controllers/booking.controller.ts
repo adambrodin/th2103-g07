@@ -4,10 +4,13 @@ import { BookingDto } from '@shared/dtos/booking.dto';
 import { TripResponse } from '@shared/models/trip-response';
 import { TripSearchDto } from '@shared/dtos/requests/trip-search-request.dto';
 import { BookTripRequestDto } from '@shared/dtos/requests/book-trip-request.dto';
-
+import { EmailService } from 'src/services/mailer.service';
+import { ReceiptResponseDto } from '@shared/dtos/responses/receipt-response.dto';
 @Controller('booking')
 export class BookingController {
-  constructor(private readonly _bookingService: BookingService) {}
+  constructor(
+    private readonly _bookingService: BookingService, 
+    private readonly _mailerService: EmailService) {}
 
   @Post('search')
   async searchAvailableTrips(@Body() body: TripSearchDto) {
@@ -53,10 +56,12 @@ export class BookingController {
             : bookingResult?.error,
       };
     }
-
+    
     const receipt = await this._bookingService.createFormattedReceipt(
       bookingResult.receipt,
-    );
+      );
+      
+    await this._mailerService.sendConfirmation(receipt ,bookingResult.receipt.booking.customer);
 
     return {
       response: 'Trip has been booked successfully.',

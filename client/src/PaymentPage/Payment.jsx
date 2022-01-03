@@ -83,6 +83,12 @@ function Payment() {
           firstName: context.firstname,
           lastName: context.lastname,
         },
+        {
+          seatType: context.SelectedTrain.class,
+          ticketType: context.searchData.tickets[1].type,
+          firstName: customer.firstName,
+          lastName: customer.lastName,
+        },
       ],
     };
     console.log(bookingData);

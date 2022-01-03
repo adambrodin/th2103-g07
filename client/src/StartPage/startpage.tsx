@@ -1,44 +1,32 @@
-import { DatePicker } from 'rsuite';
-import { useState, useEffect } from 'react';
-import SearchConponent from './ResultComponent';
-import { TicketType } from './Enums/ticket-type.enum';
+import { useState, useEffect, useContext } from 'react';
+import { TicketType } from '../Enums/ticket-type.enum';
 import 'rsuite/dist/rsuite.min.css';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import { BookingContext } from '../Contexts/BookingContext';
 import { useNavigate } from 'react-router-dom';
 
 function StartPage() {
-  let objArray: object[] = [];
   const [returnTrip, setReturnTrip] = useState(false);
-  const [requestData, setRequestData] = useState({});
-  const [tripData, setTripData] = useState(objArray);
-  const [adultNum, setAdultNum] = useState(1);
-  const [studentNum, setStudentNum] = useState(0);
-  const [pensionerNum, setPensionerNum] = useState(0);
-  const [kidsNum, setKidsNum] = useState(0);
-  const [hide, setHide] = useState(false);
+  const [adultTicketAmount, setAdultAmount] = useState(1);
+  const [studentTicketAmount, setStudentAmount] = useState(0);
+  const [seniorTicketAmount, setSeniorAmount] = useState(0);
+  const [childTicketAmount, setChildAmount] = useState(0);
   const [stations, setStations] = useState(['']);
+  const [bookingContext, updateContext] = useContext(BookingContext);
+  let nav = useNavigate();
+
   const API_URL =
     process.env.NODE_ENV === 'production'
       ? 'https://train-booking-function-app.azurewebsites.net/api'
       : (process.env.REACT_APP_API_URL as string);
+
   useEffect(() => {
     fetchAvailableStations();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    ToggleSearchContainer();
-  }, [tripData]);
-
-  function submitForm(event: any) {
-    event.preventDefault();
-    //event.target[8].value för att få värdet om det är återresa eller inte
-
-    const adultTicketAmount = parseInt(event.target[11].value);
-    const studentTicketAmount = parseInt(event.target[12].value);
-    const pensionerTicketAmount = parseInt(event.target[13].value);
-    const kidsTicketAmount = parseInt(event.target[14].value);
+  function getResults() {
     let allTickets: object[] = [];
 
     if (!isNaN(adultTicketAmount) && adultTicketAmount > 0) {
@@ -50,67 +38,68 @@ function StartPage() {
         amount: studentTicketAmount,
       });
     }
-    if (!isNaN(pensionerTicketAmount) && pensionerTicketAmount > 0) {
+    if (!isNaN(seniorTicketAmount) && seniorTicketAmount > 0) {
       allTickets.push({
         type: TicketType.SENIOR,
-        amount: pensionerTicketAmount,
+        amount: seniorTicketAmount,
       });
     }
-    if (!isNaN(kidsTicketAmount) && kidsTicketAmount > 0) {
-      allTickets.push({ type: TicketType.CHILD, amount: kidsTicketAmount });
+    if (!isNaN(childTicketAmount) && childTicketAmount > 0) {
+      allTickets.push({ type: TicketType.CHILD, amount: childTicketAmount });
     }
-
-    let searchData;
-
-    if (returnTrip) {
-      searchData = {
+    let findTrip;
+    if (!returnTrip) {
+      findTrip = {
         departure: {
-          location: event.target[0].value,
-          time: new Date(event.target[9].value),
+          location: bookingContext.searchData.departure.location,
+          time: bookingContext.searchData.departure.time,
         },
         arrival: {
-          location: event.target[4].value,
-          time: new Date(event.target[9].value),
-        },
-        returnDeparture: {
-          location: event.target[4].value,
-          time: new Date(event.target[10].value),
-        },
-        returnArrival: {
-          location: event.target[0].value,
-          time: new Date(event.target[10].value),
+          location: bookingContext.searchData.arrival.location,
+          time: bookingContext.searchData.arrival.time,
         },
         tickets: allTickets,
       };
     } else {
-      searchData = {
+      findTrip = {
         departure: {
-          location: event.target[0].value,
-          time: new Date(event.target[9].value),
+          location: bookingContext.searchData.departure.location,
+          time: bookingContext.searchData.departure.time,
         },
         arrival: {
-          location: event.target[4].value,
-          time: new Date(event.target[9].value),
+          location: bookingContext.searchData.arrival.location,
+          time: bookingContext.searchData.arrival.time,
+        },
+        returnDeparture: {
+          location: bookingContext.searchData.arrival.location,
+          time: bookingContext.searchData.returnDeparture.time,
+        },
+        returnArrival: {
+          location: bookingContext.searchData.departure.location,
         },
         tickets: allTickets,
       };
     }
-
-    setRequestData({ ...searchData });
-
     fetch(API_URL + '/booking/search', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
-      body: JSON.stringify(searchData),
+      body: JSON.stringify(findTrip),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.data !== undefined) {
-          setTripData(tripData.concat(data.data));
-          setHide(!hide);
+          updateContext({
+            dbData: data.data,
+            searchData: {
+              ...bookingContext.searchData,
+              tickets: allTickets,
+            },
+          });
+
+          nav('/results');
         } else {
           alert(
             'Det finns inga tillgängliga resor mellan dem stationerna som söktes på. Vänligen gör en ny sökning.'
@@ -121,29 +110,23 @@ function StartPage() {
 
   function toggleDatePicker() {
     setReturnTrip(!returnTrip);
+    if (returnTrip) {
+      updateContext({
+        searchData: {
+          arrival: {
+            ...bookingContext.searchData.arrival,
+          },
+          departure: {
+            ...bookingContext.searchData.departure,
+          },
+        },
+      });
+    }
     let x = document.getElementById('returnDate');
-
     if (x!.style.display === 'inline') {
       x!.style.display = 'none';
     } else {
       x!.style.display = 'inline';
-    }
-  }
-
-  function ToggleSearchContainer() {
-    let x = document.getElementById('SearchContainer');
-    let y = document.getElementById('searchResults');
-    let z = document.getElementById('backButton');
-    if (x != null && y != null && z != null) {
-      if (x.style.display === 'none') {
-        x.style.display = 'block';
-        y.style.display = 'none';
-        z.style.display = 'none';
-      } else {
-        x.style.display = 'none';
-        y.style.display = 'block';
-        z.style.display = 'block';
-      }
     }
   }
 
@@ -166,157 +149,220 @@ function StartPage() {
       });
   }
 
-  let nav = useNavigate();
-
-  function handleClick() {
-    nav('/payment');
-  }
-
   return (
-    <div className="container text-center">
-      <div className="row">
+    <div className='container text-center'>
+      <div className='row'>
         <h1>Tåg bokningssystem - Group 7</h1>
       </div>
-      <div id="SearchContainer" className="row mt-5">
+      <div id='SearchContainer' className='row mt-5'>
         <h2>Hej, Vart vill du resa?</h2>
-        <div className="justify-content-center">
-          <form action="post" onSubmit={(event) => submitForm(event)}>
-            <div className="form-row">
-              <div className="form-group col-md-8 mx-auto">
-                <div id="startForm" className="input-group">
-                  <label className="input-group-text" htmlFor="fromDestination">
+        <div className='justify-content-center'>
+          <form>
+            <div className='form-row'>
+              <div className='form-group col-md-8 mx-auto'>
+                <div id='startForm' className='input-group'>
+                  <label className='input-group-text' htmlFor='fromDestination'>
                     Från
                   </label>
                   <Autocomplete
                     options={stations}
                     style={{ width: 300 }}
+                    onChange={(e) => {
+                      if (!returnTrip) {
+                        updateContext({
+                          searchData: {
+                            ...bookingContext.searchData,
+                            departure: {
+                              location: (e.target as HTMLInputElement)
+                                .innerHTML,
+                            },
+                          },
+                        });
+                      } else {
+                        updateContext({
+                          searchData: {
+                            ...bookingContext.searchData,
+                            departure: {
+                              location: (e.target as HTMLInputElement)
+                                .innerHTML,
+                            },
+                            returnArrival: {
+                              location: (e.target as HTMLInputElement)
+                                .innerHTML,
+                            },
+                          },
+                        });
+                      }
+                    }}
                     renderInput={(params) => (
                       <TextField
-                        className="fromDestination"
+                        className='fromDestination'
                         {...params}
-                        label="Sök efter stationer"
-                        variant="outlined"
+                        label='Sök efter stationer'
+                        variant='outlined'
                       />
                     )}
                   />
-                  <label className="input-group-text" htmlFor="toDestination">
+                  <label className='input-group-text' htmlFor='toDestination'>
                     Till
                   </label>
                   <Autocomplete
                     options={stations}
                     style={{ width: 300 }}
+                    onChange={(e) => {
+                      if (!returnTrip) {
+                        updateContext({
+                          searchData: {
+                            ...bookingContext.searchData,
+                            arrival: {
+                              location: (e.target as HTMLInputElement)
+                                .innerHTML,
+                            },
+                          },
+                        });
+                      } else {
+                        updateContext({
+                          searchData: {
+                            ...bookingContext.searchData,
+                            arrival: {
+                              location: (e.target as HTMLInputElement)
+                                .innerHTML,
+                            },
+                            returnDeparture: {
+                              location: (e.target as HTMLInputElement)
+                                .innerHTML,
+                            },
+                          },
+                        });
+                      }
+                    }}
                     renderInput={(params) => (
                       <TextField
-                        className="toDestination"
+                        className='toDestination'
                         {...params}
-                        label="Sök efter stationer"
-                        variant="outlined"
+                        label='Sök efter stationer'
+                        variant='outlined'
                       />
                     )}
                   />
                 </div>
               </div>
             </div>
-            <div className="form-row">
-              <div className="form-group col-md-8 mx-auto">
-                <div className="form-check form form-check-inline">
-                  <label className="form-check-lable" htmlFor="returnTrip">
+            <div className='form-row'>
+              <div className='form-group col-md-8 mx-auto'>
+                <div className='form-check form form-check-inline'>
+                  <label className='form-check-lable' htmlFor='returnTrip'>
                     Åter resa
                   </label>
                   <input
-                    className="form-check-input"
-                    type="checkbox"
-                    name="returnTrip"
-                    id="returnTrip"
+                    className='form-check-input'
+                    type='checkbox'
+                    name='returnTrip'
+                    id='returnTrip'
                     onChange={() => toggleDatePicker()}
                   />
                 </div>
-                <div id="timeSelectContainer">
+                <div id='timeSelectContainer'>
                   <>
-                    <DatePicker
-                      format="yyyy-MM-dd HH:mm"
-                      placeholder="Avgångs tid"
-                    />
-                    <span id="returnDate">
-                      <DatePicker
-                        format="yyyy-MM-dd HH:mm"
-                        placeholder="Ankomst tid"
-                      />
-                    </span>
+                    <input
+                      type='datetime-local'
+                      id='start'
+                      name='trip-start'
+                      min='2018-01-01'
+                      max='2023-12-31'
+                      onChange={(e) =>
+                        updateContext({
+                          searchData: {
+                            ...bookingContext.searchData,
+                            departure: {
+                              ...bookingContext.searchData.departure,
+                              time: (e.target as HTMLInputElement).value,
+                            },
+                          },
+                        })
+                      }></input>
+                    <input
+                      type='datetime-local'
+                      id='returnDate'
+                      name='trip-start'
+                      min='2018-01-01'
+                      max='2023-12-31'
+                      onChange={(e) =>
+                        updateContext({
+                          searchData: {
+                            ...bookingContext.searchData,
+                            returnDeparture: {
+                              ...bookingContext.searchData.arrival,
+                              time: (e.target as HTMLInputElement).value,
+                            },
+                            returnArrival: {
+                              ...bookingContext.searchData.departure,
+                            },
+                            returnTrip: returnTrip,
+                          },
+                        })
+                      }></input>
                   </>
                 </div>
                 <div>
-                  <label htmlFor="">Vuxen</label>
+                  <label htmlFor=''>Vuxen</label>
                   <input
-                    type="number"
-                    name=""
-                    id="adultTickets"
-                    min="0"
-                    value={adultNum}
-                    onChange={(e: any) => setAdultNum(e.target.value)}
+                    type='number'
+                    name=''
+                    id='adultTickets'
+                    min='0'
+                    value={adultTicketAmount}
+                    onChange={(e: any) =>
+                      setAdultAmount(parseInt(e.target.value))
+                    }
                   />
                 </div>
                 <div>
-                  <label htmlFor="">Ungdom/Student</label>
+                  <label htmlFor=''>Ungdom/Student</label>
                   <input
-                    type="number"
-                    name=""
-                    id="studentTickets"
-                    min="0"
-                    value={studentNum}
-                    onChange={(e: any) => setStudentNum(e.target.value)}
+                    type='number'
+                    name=''
+                    id='studentTickets'
+                    min='0'
+                    value={studentTicketAmount}
+                    onChange={(e: any) =>
+                      setStudentAmount(parseInt(e.target.value))
+                    }
                   />
                 </div>
                 <div>
-                  <label htmlFor="">Pensionär</label>
+                  <label htmlFor=''>Pensionär</label>
                   <input
-                    type="number"
-                    name=""
-                    id="pensionerTickets"
-                    min="0"
-                    value={pensionerNum}
-                    onChange={(e: any) => setPensionerNum(e.target.value)}
+                    type='number'
+                    name=''
+                    id='pensionerTickets'
+                    min='0'
+                    value={seniorTicketAmount}
+                    onChange={(e: any) =>
+                      setSeniorAmount(parseInt(e.target.value))
+                    }
                   />
                 </div>
                 <div>
-                  <label htmlFor="">Barn</label>
+                  <label htmlFor=''>Barn</label>
                   <input
-                    type="number"
-                    name=""
-                    id="kidsTicket"
-                    min="0"
-                    value={kidsNum}
-                    onChange={(e: any) => setKidsNum(e.target.value)}
+                    type='number'
+                    name=''
+                    id='kidsTicket'
+                    min='0'
+                    value={childTicketAmount}
+                    onChange={(e: any) =>
+                      setChildAmount(parseInt(e.target.value))
+                    }
                   />
                 </div>
-                <input
-                  className="btn btn-success mt-2"
-                  type="submit"
-                  value="Sök"
-                />
               </div>
             </div>
           </form>
         </div>
       </div>
-      <button
-        className="btn btn-secondary"
-        onClick={() => ToggleSearchContainer()}
-        id="backButton"
-      >
-        Tillbaka
-      </button>
-      {tripData.length > 0 ? (
-        <SearchConponent
-          returnTrip={returnTrip}
-          trips={tripData}
-          requestData={requestData}
-        />
-      ) : (
-        <></>
-      )}
-      <button className="btn btn-primary" onClick={handleClick}>
-        BETALSIDA FÖR TEST
+      <button className='btn btn-success' onClick={() => getResults()}>
+        Fortsätt
       </button>
     </div>
   );

@@ -32,11 +32,6 @@ label > input[placeholder=' ']:not(:focus):placeholder-shown + span {
 .customer-container span {
   font-size: 20px;
 }
-.summary-container {
-  display: flex;
-  justify-content: flex-end;
-  margin-right: 5em;
-}
 
 .btn-container {
   display: flex;

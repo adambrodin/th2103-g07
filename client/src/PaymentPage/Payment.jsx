@@ -8,17 +8,40 @@ import FormControl from '@mui/material/FormControl';
 
 function Payment() {
   let formArray = [];
+  let tripStopsArr = [];
+  let returnTripStopsArr = [];
+  let numberOfForms = 0;
   const [context, updateContext] = useContext(BookingContext);
   const [customer, setCustomer] = useState();
   const [value, setValue] = React.useState('card');
 
+  let tripStops = context.dbData.OutboundTrips.filter(function (entry) {
+    return entry.train.id === context.SelectedTrain.trainID;
+  });
+  if (tripStops.length !== 0) {
+    tripStops[0].stops.forEach((element) => tripStopsArr.push(element.id));
+  } else {
+    tripStopsArr = [];
+  }
+
+  if (context.dbData.ReturnTrips) {
+    let returnTripStops = context.dbData.ReturnTrips.filter(function (entry) {
+      return entry.train.id === context.SelectedTrain.trainID;
+    });
+    returnTripStops[0].stops.forEach((element) =>
+      returnTripStopsArr.push(element.id)
+    );
+  }
+
   const handleChange = (event) => {
     setValue(event.target.value);
   };
+  context.searchData.tickets.forEach((element) => {
+    numberOfForms += element.amount;
+  });
 
-  // Check if it's more than 1 ticket
-  if (context.tickets[0].amount > 1) {
-    for (let i = 1; i < context.tickets[0].amount; i++) {
+  if (numberOfForms > 1) {
+    for (let i = 1; i < numberOfForms; i++) {
       formArray.push(
         <form className='customer-form'>
           <h3>Resenär {i + 1}</h3>
@@ -27,7 +50,7 @@ function Payment() {
               <input
                 type='text'
                 required
-                onChange={(e) => setCustomer({ firstname: e.target.value })}
+                onChange={(e) => setCustomer({ firstName: e.target.value })}
               />
               <span>Förnamn</span>
             </label>
@@ -36,7 +59,7 @@ function Payment() {
                 type='text'
                 required
                 onChange={(e) =>
-                  setCustomer({ ...customer, lastname: e.target.value })
+                  setCustomer({ ...customer, lastName: e.target.value })
                 }
               />
               <span>Efternamn</span>
@@ -49,42 +72,35 @@ function Payment() {
 
   // Data to save booking to db, not done
   function addBooking() {
-    // let data = {
-    //   customer: {
-    //     firstName: context.firstname,
-    //     lastName: context.lastname,
-    //     email: context.email,
-    //     phoneNumber: context.phone,
-    //   },
-    //   train: {
-    //     id: '1',
-    //     name: 'X2000',
-    //   },
-    //   seats: [
-    //     {
-    //       seat: 'Regular',
-    //       ticket: 'Adult',
-    //     },
-    //   ],
-    // };
-    alert('Redirect');
+    let bookingData = {
+      customer: {
+        firstName: context.firstname,
+        lastName: context.lastname,
+        email: context.email,
+        phoneNumber: context.phone,
+      },
+      trainStops: tripStopsArr,
+      seats: [
+        {
+          seatType: context.SelectedTrain.class,
+          ticketType: context.searchData.tickets[0].type,
+          firstName: context.firstname,
+          lastName: context.lastname,
+        },
+        {
+          seatType: context.SelectedTrain.class,
+          ticketType: context.searchData.tickets[1].type,
+          firstName: customer.firstName,
+          lastName: customer.lastName,
+        },
+      ],
+    };
+    console.log(bookingData);
   }
 
   return (
     <div className='container'>
       <h1>BETALSIDA</h1>
-      <div className='summary-container'>
-        <div>
-          <h3>
-            {context.departure.location} - {context.arrival.location}
-          </h3>
-          <h5>
-            {context.departure.time} - {context.arrival.time}
-          </h5>
-          <h5>Antal biljetter: {context.tickets[0].amount}</h5>
-          <h5>Att betala: {context.price}:- </h5>
-        </div>
-      </div>
       <div className='customer-container'>
         <div className='information-container'>
           <form className='customer-form'>
@@ -142,8 +158,6 @@ function Payment() {
                 <span>Mobilnummer</span>
               </label>
             </div>
-            {/* Remove input after testing */}
-            <input type='submit' />
           </form>
           {formArray}
         </div>

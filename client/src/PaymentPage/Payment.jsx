@@ -70,46 +70,46 @@ function Payment() {
   function addBooking() {
     const items = [];
     const seatType = context.SelectedTrain.class;
-    console.log(context.SelectedTrain.class);
+
     context.searchData.tickets.forEach((ticket) => {
       if (ticket.type === 'Adult') {
-        if (seatType === 'First Class') {
+        if (seatType === 'FirstClass') {
           items.push({ id: 1, quantity: ticket.amount });
-        } else if (seatType === 'Second Class') {
+        } else if (seatType === 'SecondClass') {
           items.push({ id: 2, quantity: ticket.amount });
-        } else if (seatType === 'Animal Friendly') {
+        } else if (seatType === 'AnimalFriendly') {
           items.push({ id: 3, quantity: ticket.amount });
-        } else if (seatType === 'Quiet Cart') {
+        } else if (seatType === 'QuietCart') {
           items.push({ id: 4, quantity: ticket.amount });
         }
       } else if (ticket.type === 'Student') {
-        if (seatType === 'First Class') {
+        if (seatType === 'FirstClass') {
           items.push({ id: 5, quantity: ticket.amount });
-        } else if (seatType === 'Second Class') {
+        } else if (seatType === 'SecondClass') {
           items.push({ id: 6, quantity: ticket.amount });
-        } else if (seatType === 'Animal Friendly') {
+        } else if (seatType === 'AnimalFriendly') {
           items.push({ id: 7, quantity: ticket.amount });
-        } else if (seatType === 'Quiet Cart') {
+        } else if (seatType === 'QuietCart') {
           items.push({ id: 8, quantity: ticket.amount });
         }
       } else if (ticket.type === 'Senior') {
-        if (seatType === 'First Class') {
+        if (seatType === 'FirstClass') {
           items.push({ id: 9, quantity: ticket.amount });
-        } else if (seatType === 'Second Class') {
+        } else if (seatType === 'SecondClass') {
           items.push({ id: 10, quantity: ticket.amount });
-        } else if (seatType === 'Animal Friendly') {
+        } else if (seatType === 'AnimalFriendly') {
           items.push({ id: 11, quantity: ticket.amount });
-        } else if (seatType === 'Quiet Cart') {
+        } else if (seatType === 'QuietCart') {
           items.push({ id: 12, quantity: ticket.amount });
         }
       } else if (ticket.type === 'Child') {
-        if (seatType === 'First Class') {
+        if (seatType === 'FirstClass') {
           items.push({ id: 13, quantity: ticket.amount });
-        } else if (seatType === 'Second Class') {
+        } else if (seatType === 'SecondClass') {
           items.push({ id: 14, quantity: ticket.amount });
-        } else if (seatType === 'Animal Friendly') {
+        } else if (seatType === 'AnimalFriendly') {
           items.push({ id: 15, quantity: ticket.amount });
-        } else if (seatType === 'Quiet Cart') {
+        } else if (seatType === 'QuietCart') {
           items.push({ id: 16, quantity: ticket.amount });
         }
       }
@@ -122,11 +122,10 @@ function Payment() {
         'Access-Control-Allow-Origin': '*',
       },
       body: JSON.stringify({
-        items,
+        items: items,
       }),
     })
       .then((res) => {
-        console.log(res);
         if (res.ok) {
           return res.json();
         } else {
@@ -134,37 +133,36 @@ function Payment() {
         }
       })
       .then((data) => {
-        // window.location = data.data.url;
-        console.log(data);
+        window.location = data.data.url;
       })
       .catch((e) => {
         console.log(e.error);
       });
 
-    let bookingData = {
-      customer: {
-        firstName: context.firstname,
-        lastName: context.lastname,
-        email: context.email,
-        phoneNumber: context.phone,
-      },
-      trainStops: tripStopsArr,
-      seats: [
-        {
-          seatType: context.SelectedTrain.class,
-          ticketType: context.searchData.tickets[0].type,
-          firstName: context.firstname,
-          lastName: context.lastname,
-        },
-        {
-          seatType: context.SelectedTrain.class,
-          ticketType: context.searchData.tickets[1].type,
-          firstName: customer.firstName,
-          lastName: customer.lastName,
-        },
-      ],
-    };
-    console.log(bookingData);
+    // let bookingData = {
+    //   customer: {
+    //     firstName: context.firstname,
+    //     lastName: context.lastname,
+    //     email: context.email,
+    //     phoneNumber: context.phone,
+    //   },
+    //   trainStops: tripStopsArr,
+    //   seats: [
+    //     {
+    //       seatType: context.SelectedTrain.class,
+    //       ticketType: context.searchData.tickets[0].type,
+    //       firstName: context.firstname,
+    //       lastName: context.lastname,
+    //     },
+    //     {
+    //       seatType: context.SelectedTrain.class,
+    //       ticketType: context.searchData.tickets[1].type,
+    //       firstName: customer.firstName,
+    //       lastName: customer.lastName,
+    //     },
+    //   ],
+    // };
+    // console.log(bookingData);
   }
 
   return (

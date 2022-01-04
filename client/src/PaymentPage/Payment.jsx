@@ -73,7 +73,7 @@ function Payment() {
   // Data to save booking to db, not done
   function addBooking() {
     const items = [];
-    const seatType = 'First Class';
+    const seatType = context.SelectedTrain.class;
     console.log(context.SelectedTrain.class);
     context.searchData.tickets.forEach((ticket) => {
       if (ticket.type === 'Adult') {

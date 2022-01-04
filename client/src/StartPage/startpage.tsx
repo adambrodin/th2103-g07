@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { BookingContext } from '../Contexts/BookingContext';
 import { useNavigate } from 'react-router-dom';
-import { DatePicker, DateRangePicker } from 'rsuite';
+import { DatePicker } from 'rsuite';
 
 function StartPage() {
   const [returnTrip, setReturnTrip] = useState(false);
@@ -152,7 +152,6 @@ function StartPage() {
         setStations(stations.concat(stationNames));
       });
   }
-  console.log(bookingContext);
 
   return (
     <div className='container text-center'>
@@ -172,14 +171,14 @@ function StartPage() {
                   <Autocomplete
                     options={stations}
                     style={{ width: 300 }}
-                    onChange={(e) => {
+                    onChange={(e, value) => {
+                      console.log(value);
                       if (!returnTrip) {
                         updateContext({
                           searchData: {
                             ...bookingContext.searchData,
                             departure: {
-                              location: (e.target as HTMLInputElement)
-                                .innerHTML,
+                              location: value,
                             },
                           },
                         });
@@ -188,12 +187,10 @@ function StartPage() {
                           searchData: {
                             ...bookingContext.searchData,
                             departure: {
-                              location: (e.target as HTMLInputElement)
-                                .innerHTML,
+                              location: value,
                             },
                             returnArrival: {
-                              location: (e.target as HTMLInputElement)
-                                .innerHTML,
+                              location: value,
                             },
                           },
                         });
@@ -205,33 +202,6 @@ function StartPage() {
                         {...params}
                         label='Sök efter stationer'
                         variant='outlined'
-                        onChange={(e) => {
-                          if (!returnTrip) {
-                            updateContext({
-                              searchData: {
-                                ...bookingContext.searchData,
-                                departure: {
-                                  location: (e.target as HTMLInputElement)
-                                    .innerHTML,
-                                },
-                              },
-                            });
-                          } else {
-                            updateContext({
-                              searchData: {
-                                ...bookingContext.searchData,
-                                departure: {
-                                  location: (e.target as HTMLInputElement)
-                                    .innerHTML,
-                                },
-                                returnArrival: {
-                                  location: (e.target as HTMLInputElement)
-                                    .innerHTML,
-                                },
-                              },
-                            });
-                          }
-                        }}
                       />
                     )}
                   />
@@ -241,14 +211,13 @@ function StartPage() {
                   <Autocomplete
                     options={stations}
                     style={{ width: 300 }}
-                    onChange={(e) => {
+                    onChange={(e, value) => {
                       if (!returnTrip) {
                         updateContext({
                           searchData: {
                             ...bookingContext.searchData,
                             arrival: {
-                              location: (e.target as HTMLInputElement)
-                                .innerHTML,
+                              location: value,
                             },
                           },
                         });
@@ -257,12 +226,10 @@ function StartPage() {
                           searchData: {
                             ...bookingContext.searchData,
                             arrival: {
-                              location: (e.target as HTMLInputElement)
-                                .innerHTML,
+                              location: value,
                             },
                             returnDeparture: {
-                              location: (e.target as HTMLInputElement)
-                                .innerHTML,
+                              location: value,
                             },
                           },
                         });
@@ -274,33 +241,6 @@ function StartPage() {
                         {...params}
                         label='Sök efter stationer'
                         variant='outlined'
-                        onChange={(e) => {
-                          if (!returnTrip) {
-                            updateContext({
-                              searchData: {
-                                ...bookingContext.searchData,
-                                arrival: {
-                                  location: (e.target as HTMLInputElement)
-                                    .innerHTML,
-                                },
-                              },
-                            });
-                          } else {
-                            updateContext({
-                              searchData: {
-                                ...bookingContext.searchData,
-                                arrival: {
-                                  location: (e.target as HTMLInputElement)
-                                    .innerHTML,
-                                },
-                                returnDeparture: {
-                                  location: (e.target as HTMLInputElement)
-                                    .innerHTML,
-                                },
-                              },
-                            });
-                          }
-                        }}
                       />
                     )}
                   />

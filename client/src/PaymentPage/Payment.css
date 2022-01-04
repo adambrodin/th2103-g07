@@ -39,3 +39,8 @@ label > input[placeholder=' ']:not(:focus):placeholder-shown + span {
   justify-content: flex-end;
   margin-right: 5em;
 }
+@media (max-width: 600px) {
+  .c-form-row {
+    flex-direction: column;
+  }
+}

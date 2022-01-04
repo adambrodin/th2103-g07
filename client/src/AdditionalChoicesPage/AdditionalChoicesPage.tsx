@@ -44,14 +44,25 @@ const AdditionalChoicesPage = () => {
   function coachHandler(toggledCoachId: string) {
     const coach = options.find(({ id }) => id === toggledCoachId);
     if (coach) {
-      updateContext({
-        ...context,
-        SelectedTrain: {
-          ...context.SelectedTrain,
-          TotalTicketPrice: coach.price,
-          class: coach.name,
-        },
-      });
+      if (coach.name === 'Tyst vagn') {
+        updateContext({
+          ...context,
+          SelectedTrain: {
+            ...context.SelectedTrain,
+            TotalTicketPrice: coach.price,
+            class: 'Quiet Cart',
+          },
+        });
+      }else if (coach.name === 'Djurvagn'){
+        updateContext({
+          ...context,
+          SelectedTrain: {
+            ...context.SelectedTrain,
+            TotalTicketPrice: coach.price,
+            class: 'Animal Friendly',
+          },
+        });
+      }
     }
   }
 

@@ -13,7 +13,6 @@ function Payment() {
     process.env.NODE_ENV === 'production'
       ? 'https://train-booking-function-app.azurewebsites.net/api'
       : process.env.REACT_APP_API_URL;
-  const [value, setValue] = React.useState('card');
 
   let tripStops = context.dbData.OutboundTrips.filter(function (entry) {
     return entry.train.id === context.SelectedTrain.trainID;
@@ -33,9 +32,6 @@ function Payment() {
     );
   }
 
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
   context.searchData.tickets.forEach((element) => {
     numberOfForms += element.amount;
   });
@@ -234,23 +230,6 @@ function Payment() {
           {formArray}
         </div>
       </div>
-      {/* <div className="payment-container">
-        <FormControl component="fieldset">
-          <RadioGroup
-            name="controlled-radio-buttons-group"
-            value={value}
-            onChange={handleChange}
-          >
-            <FormControlLabel value="card" control={<Radio />} label="Kort" />
-            <FormControlLabel value="swish" control={<Radio />} label="Swish" />
-            <FormControlLabel
-              value="invoice"
-              control={<Radio />}
-              label="Faktura"
-            />
-          </RadioGroup>
-        </FormControl>
-      </div> */}
       <div className="btn-container">
         <button className="btn btn-success" onClick={() => addBooking()}>
           Till betalning

@@ -9,6 +9,9 @@ export class TrainEntity {
   @Column()
   name: string;
 
+  @Column({ default: 40 })
+  passengerCapacity: number;
+
   @OneToMany(() => TrainStopEntity, (entity) => entity.train)
   @JoinColumn({ name: 'Train_Stops' })
   stops: TrainStopEntity[];

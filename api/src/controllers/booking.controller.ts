@@ -6,7 +6,7 @@ import { TripSearchDto } from '@shared/dtos/requests/trip-search-request.dto';
 import { BookTripRequestDto } from '@shared/dtos/requests/book-trip-request.dto';
 import { PriceService } from 'src/services/price.service';
 import { EmailService } from 'src/services/mailer.service';
-import { ReceiptResponseDto } from '@shared/dtos/responses/receipt-response.dto';
+// import { ReceiptResponseDto } from '@shared/dtos/responses/receipt-response.dto';
 declare function require(name: string);
 
 @Controller('booking')

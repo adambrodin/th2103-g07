@@ -1,24 +1,15 @@
 import React, { useContext, useState } from 'react';
 import './Payment.css';
 import { BookingContext } from '../Contexts/BookingContext';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
 
 function Payment() {
   let formArray = [];
   const [context, updateContext] = useContext(BookingContext);
   const [customer, setCustomer] = useState();
-  const [value, setValue] = React.useState('card');
   const API_URL =
     process.env.NODE_ENV === 'production'
       ? 'https://train-booking-function-app.azurewebsites.net/api'
       : process.env.REACT_APP_API_URL;
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
 
   // Check if it's more than 1 ticket
   if (context.tickets[0].amount > 1) {
@@ -53,15 +44,65 @@ function Payment() {
 
   // Data to save booking to db, not done
   function addBooking() {
+    const items = [];
+    const seatType = 'First Class';
+    console.log(context.SelectedTrain.class);
+    context.searchData.tickets.forEach((ticket) => {
+      if (ticket.type === 'Adult') {
+        if (seatType === 'First Class') {
+          items.push({ id: 1, quantity: ticket.amount });
+        } else if (seatType === 'Second Class') {
+          items.push({ id: 2, quantity: ticket.amount });
+        } else if (seatType === 'Animal Friendly') {
+          items.push({ id: 3, quantity: ticket.amount });
+        } else if (seatType === 'Quiet Cart') {
+          items.push({ id: 4, quantity: ticket.amount });
+        }
+      } else if (ticket.type === 'Student') {
+        if (seatType === 'First Class') {
+          items.push({ id: 5, quantity: ticket.amount });
+        } else if (seatType === 'Second Class') {
+          items.push({ id: 6, quantity: ticket.amount });
+        } else if (seatType === 'Animal Friendly') {
+          items.push({ id: 7, quantity: ticket.amount });
+        } else if (seatType === 'Quiet Cart') {
+          items.push({ id: 8, quantity: ticket.amount });
+        }
+      } else if (ticket.type === 'Senior') {
+        if (seatType === 'First Class') {
+          items.push({ id: 9, quantity: ticket.amount });
+        } else if (seatType === 'Second Class') {
+          items.push({ id: 10, quantity: ticket.amount });
+        } else if (seatType === 'Animal Friendly') {
+          items.push({ id: 11, quantity: ticket.amount });
+        } else if (seatType === 'Quiet Cart') {
+          items.push({ id: 12, quantity: ticket.amount });
+        }
+      } else if (ticket.type === 'Child') {
+        if (seatType === 'First Class') {
+          items.push({ id: 13, quantity: ticket.amount });
+        } else if (seatType === 'Second Class') {
+          items.push({ id: 14, quantity: ticket.amount });
+        } else if (seatType === 'Animal Friendly') {
+          items.push({ id: 15, quantity: ticket.amount });
+        } else if (seatType === 'Quiet Cart') {
+          items.push({ id: 16, quantity: ticket.amount });
+        }
+      }
+    });
+
     fetch(API_URL + '/booking/create-checkout-session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
-      body: JSON.stringify({ items: [{ id: 1, quantity: 2 }] }),
+      body: JSON.stringify({
+        items,
+      }),
     })
       .then((res) => {
+        console.log(res);
         if (res.ok) {
           return res.json();
         } else {
@@ -92,7 +133,7 @@ function Payment() {
     //     },
     //   ],
     // };
-    alert('Redirect');
+    // alert('Redirect');
   }
 
   return (
@@ -173,7 +214,7 @@ function Payment() {
           {formArray}
         </div>
       </div>
-      <div className="payment-container">
+      {/* <div className="payment-container">
         <FormControl component="fieldset">
           <RadioGroup
             name="controlled-radio-buttons-group"
@@ -189,10 +230,10 @@ function Payment() {
             />
           </RadioGroup>
         </FormControl>
-      </div>
+      </div> */}
       <div className="btn-container">
         <button className="btn btn-success" onClick={() => addBooking()}>
-          Fortsätt
+          Till betalning
         </button>
       </div>
     </div>

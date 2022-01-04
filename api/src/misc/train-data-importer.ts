@@ -102,6 +102,7 @@ export class TrainDataImporter {
                 action.ProductInformation == null
                   ? ''
                   : action.ProductInformation[0],
+              passengerCapacity: 40,
             });
           }
 

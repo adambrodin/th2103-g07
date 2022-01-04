@@ -5,11 +5,16 @@ import { TripResponse } from '@shared/models/trip-response';
 import { TripSearchDto } from '@shared/dtos/requests/trip-search-request.dto';
 import { BookTripRequestDto } from '@shared/dtos/requests/book-trip-request.dto';
 import { PriceService } from 'src/services/price.service';
+import { EmailService } from 'src/services/mailer.service';
+import { ReceiptResponseDto } from '@shared/dtos/responses/receipt-response.dto';
 declare function require(name: string);
 
 @Controller('booking')
 export class BookingController {
-  constructor(private readonly _bookingService: BookingService) {}
+  constructor(
+    private readonly _bookingService: BookingService,
+    private readonly _mailerService: EmailService,
+  ) {}
   private getTotalPrice: PriceService = new PriceService();
   Stripe = require('stripe');
   stripe = this.Stripe(process.env.STRIPE_PRIVATE_KEY);
@@ -61,6 +66,11 @@ export class BookingController {
 
     const receipt = await this._bookingService.createFormattedReceipt(
       bookingResult.receipt,
+    );
+
+    await this._mailerService.sendConfirmation(
+      receipt,
+      bookingResult.receipt.booking.customer,
     );
 
     return {

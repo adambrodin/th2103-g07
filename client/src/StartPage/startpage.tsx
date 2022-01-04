@@ -172,7 +172,6 @@ function StartPage() {
                     options={stations}
                     style={{ width: 300 }}
                     onChange={(e, value) => {
-                      console.log(value);
                       if (!returnTrip) {
                         updateContext({
                           searchData: {

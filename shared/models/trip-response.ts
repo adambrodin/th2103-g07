@@ -9,6 +9,7 @@ export class PriceResult {
 
 export class TripResponse {
   train: Train;
+  remainingSeats: number;
   departure: TripPoint;
   arrival: TripPoint;
   stops: TripPoint[];

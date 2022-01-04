@@ -70,13 +70,14 @@ export class TripService {
       for (const departure of departures) {
         const stops = await stopRepo
           .createQueryBuilder('stop')
-          .leftJoin('stop.train', 'train')
+          .leftJoinAndSelect('stop.train', 'train')
           .where('train.trainId = :id', { id: departure.train.trainId })
           .andWhere('stop.date > :date', { date: departure.date })
           .andWhere('stop.activityType = :type', { type: 'Ankomst' })
           .leftJoinAndSelect('stop.currentStation', 'currentStation')
           .leftJoinAndSelect('stop.fromStation', 'fromStation')
           .leftJoinAndSelect('stop.toStation', 'toStation')
+          .leftJoinAndSelect('stop.tickets', 'tickets')
           .orderBy('stop.date')
           .getMany();
 
@@ -109,11 +110,6 @@ export class TripService {
         }
 
         trip.estimatedPrices = estimatedPrices;
-        trip.train = {
-          id: departure.train.trainId,
-          name: departure.train.name,
-        };
-
         trip.departure = {
           id: departure.id,
           location: departure.fromStation.locationName,
@@ -141,6 +137,12 @@ export class TripService {
           });
         }
 
+        trip.train = {
+          id: departure.train.trainId,
+          name: departure.train.name,
+        };
+
+        trip.remainingSeats = this.getRemainingSeats(stops);
         trip.stops = tripStops;
         returnTrips.push(trip);
       }

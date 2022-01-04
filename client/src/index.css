@@ -52,3 +52,11 @@ code {
 .text-bold {
   font-weight: bold;
 }
+@media (max-width: 600px) {
+  .input-group-text {
+    width: 1em;
+  }
+  form {
+    margin-top: 2em;
+  }
+}

@@ -265,7 +265,6 @@ export class BookingController {
           },
         ],
       ]);
-      console.log(storeItems);
 
       const session = await this.stripe.checkout.sessions.create({
         payment_method_types: ['card', 'klarna'],

@@ -50,16 +50,16 @@ const AdditionalChoicesPage = () => {
           SelectedTrain: {
             ...context.SelectedTrain,
             TotalTicketPrice: coach.price,
-            class: 'Quiet Cart',
+            class: 'QuietCart',
           },
         });
-      }else if (coach.name === 'Djurvagn'){
+      } else if (coach.name === 'Djurvagn') {
         updateContext({
           ...context,
           SelectedTrain: {
             ...context.SelectedTrain,
             TotalTicketPrice: coach.price,
-            class: 'Animal Friendly',
+            class: 'AnimalFriendly',
           },
         });
       }
@@ -80,15 +80,15 @@ const AdditionalChoicesPage = () => {
 
   return (
     <div>
-      <div className='container text-center'>
+      <div className="container text-center">
         <h1>Tillval</h1>
       </div>
-      <Link to='/results'>
-        <button id='back-to-results-btn' className='btn btn-secondary'>
+      <Link to="/results">
+        <button id="back-to-results-btn" className="btn btn-secondary">
           Tillbaka
         </button>
       </Link>
-      <div className='container' id='additional-choices-list'>
+      <div className="container" id="additional-choices-list">
         <Stack spacing={2}>
           <Item>
             <h4>Välj typ av vagn:</h4>
@@ -97,12 +97,13 @@ const AdditionalChoicesPage = () => {
         </Stack>
       </div>
 
-      <div className='col'>
-        <Link to='/payment'>
+      <div className="col">
+        <Link to="/payment">
           <button
-            id='continue-to-payment-btn'
-            className='btn btn-success float-right'
-            onClick={nextPage}>
+            id="continue-to-payment-btn"
+            className="btn btn-success float-right"
+            onClick={nextPage}
+          >
             Fortsätt
           </button>
         </Link>

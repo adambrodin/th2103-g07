@@ -152,4 +152,15 @@ export class TripService {
 
     return { trips: returnTrips };
   }
+
+  getRemainingSeats(stops: TrainStopEntity[]): number {
+    const remainingSeats: { [seatId: number]: number } = {};
+    for (const stop of stops) {
+      remainingSeats[stop.id] =
+        stop.train.passengerCapacity - stop.tickets.length;
+    }
+
+    const returnSeats = Object.values(remainingSeats)?.sort()[0];
+    return returnSeats ?? 0;
+  }
 }

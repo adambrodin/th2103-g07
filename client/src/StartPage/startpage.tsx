@@ -5,6 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { BookingContext } from '../Contexts/BookingContext';
 import { useNavigate } from 'react-router-dom';
+import { DatePicker, DateRangePicker } from 'rsuite';
 
 function StartPage() {
   const [returnTrip, setReturnTrip] = useState(false);
@@ -22,6 +23,9 @@ function StartPage() {
       : (process.env.REACT_APP_API_URL as string);
 
   useEffect(() => {
+    updateContext({
+      searchData: {},
+    });
     fetchAvailableStations();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -148,6 +152,7 @@ function StartPage() {
         setStations(stations.concat(stationNames));
       });
   }
+  console.log(bookingContext);
 
   return (
     <div className='container text-center'>
@@ -200,6 +205,33 @@ function StartPage() {
                         {...params}
                         label='Sök efter stationer'
                         variant='outlined'
+                        onChange={(e) => {
+                          if (!returnTrip) {
+                            updateContext({
+                              searchData: {
+                                ...bookingContext.searchData,
+                                departure: {
+                                  location: (e.target as HTMLInputElement)
+                                    .innerHTML,
+                                },
+                              },
+                            });
+                          } else {
+                            updateContext({
+                              searchData: {
+                                ...bookingContext.searchData,
+                                departure: {
+                                  location: (e.target as HTMLInputElement)
+                                    .innerHTML,
+                                },
+                                returnArrival: {
+                                  location: (e.target as HTMLInputElement)
+                                    .innerHTML,
+                                },
+                              },
+                            });
+                          }
+                        }}
                       />
                     )}
                   />
@@ -242,6 +274,33 @@ function StartPage() {
                         {...params}
                         label='Sök efter stationer'
                         variant='outlined'
+                        onChange={(e) => {
+                          if (!returnTrip) {
+                            updateContext({
+                              searchData: {
+                                ...bookingContext.searchData,
+                                arrival: {
+                                  location: (e.target as HTMLInputElement)
+                                    .innerHTML,
+                                },
+                              },
+                            });
+                          } else {
+                            updateContext({
+                              searchData: {
+                                ...bookingContext.searchData,
+                                arrival: {
+                                  location: (e.target as HTMLInputElement)
+                                    .innerHTML,
+                                },
+                                returnDeparture: {
+                                  location: (e.target as HTMLInputElement)
+                                    .innerHTML,
+                                },
+                              },
+                            });
+                          }
+                        }}
                       />
                     )}
                   />
@@ -252,7 +311,7 @@ function StartPage() {
               <div className='form-group col-md-8 mx-auto'>
                 <div className='form-check form form-check-inline'>
                   <label className='form-check-lable' htmlFor='returnTrip'>
-                    Åter resa
+                    Återresa
                   </label>
                   <input
                     className='form-check-input'
@@ -264,44 +323,42 @@ function StartPage() {
                 </div>
                 <div id='timeSelectContainer'>
                   <>
-                    <input
-                      type='datetime-local'
-                      id='start'
-                      name='trip-start'
-                      min='2018-01-01'
-                      max='2023-12-31'
+                    <DatePicker
+                      format='yyyy-MM-dd HH:mm'
+                      style={{ width: 200 }}
                       onChange={(e) =>
                         updateContext({
                           searchData: {
                             ...bookingContext.searchData,
                             departure: {
                               ...bookingContext.searchData.departure,
-                              time: (e.target as HTMLInputElement).value,
+                              time: e.toISOString(),
                             },
                           },
                         })
-                      }></input>
-                    <input
-                      type='datetime-local'
-                      id='returnDate'
-                      name='trip-start'
-                      min='2018-01-01'
-                      max='2023-12-31'
-                      onChange={(e) =>
-                        updateContext({
-                          searchData: {
-                            ...bookingContext.searchData,
-                            returnDeparture: {
-                              ...bookingContext.searchData.arrival,
-                              time: (e.target as HTMLInputElement).value,
+                      }
+                    />
+                    <span id='returnDate'>
+                      <DatePicker
+                        format='yyyy-MM-dd HH:mm'
+                        style={{ width: 200 }}
+                        onChange={(e) =>
+                          updateContext({
+                            searchData: {
+                              ...bookingContext.searchData,
+                              returnDeparture: {
+                                ...bookingContext.searchData.arrival,
+                                time: e.toISOString(),
+                              },
+                              returnArrival: {
+                                ...bookingContext.searchData.departure,
+                              },
+                              returnTrip: returnTrip,
                             },
-                            returnArrival: {
-                              ...bookingContext.searchData.departure,
-                            },
-                            returnTrip: returnTrip,
-                          },
-                        })
-                      }></input>
+                          })
+                        }
+                      />
+                    </span>
                   </>
                 </div>
                 <div>

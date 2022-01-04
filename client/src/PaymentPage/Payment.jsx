@@ -134,7 +134,8 @@ function Payment() {
         }
       })
       .then((data) => {
-        window.location = data.data.url;
+        // window.location = data.data.url;
+        console.log(data);
       })
       .catch((e) => {
         console.log(e.error);

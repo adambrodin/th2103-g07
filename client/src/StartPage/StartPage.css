@@ -1,0 +1,50 @@
+.title-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2em;
+}
+.search-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.text-container {
+  margin: 1em;
+  width: 300px;
+}
+.return-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.return-container p {
+  margin-left: 0.5em;
+}
+.datepicker-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.date {
+  margin: 1em;
+}
+.ticket-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 10vw;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+  margin: 0;
+}
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

@@ -14,7 +14,6 @@ function Payment() {
   const [customer, setCustomer] = useState();
   const [totalPrice, setTotalPrice] = useState();
   const [summary, setSummary] = useState();
-  const [ticketCheck, setTicketCheck] = useState(false);
   const API_URL =
     process.env.NODE_ENV === 'production'
       ? 'https://train-booking-function-app.azurewebsites.net/api'

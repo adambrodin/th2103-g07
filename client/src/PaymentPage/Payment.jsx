@@ -1,14 +1,19 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import './Payment.css';
 import { BookingContext } from '../Contexts/BookingContext';
+import { useNavigate } from 'react-router-dom';
+
 
 function Payment() {
+  let nav = useNavigate();
   let formArray = [];
   let tripStopsArr = [];
   let returnTripStopsArr = [];
   let numberOfForms = 0;
   const [context, updateContext] = useContext(BookingContext);
   const [customer, setCustomer] = useState();
+  const [totalPrice, setTotalPrice] = useState();
+  const [summary, setSummary] = useState();
   const API_URL =
     process.env.NODE_ENV === 'production'
       ? 'https://train-booking-function-app.azurewebsites.net/api'
@@ -36,23 +41,66 @@ function Payment() {
     numberOfForms += element.amount;
   });
 
+  useEffect(() => {
+    if (!context.searchData.returnTrip) {
+      setTotalPrice(context.SelectedTrain.TotalTicketPrice);
+      setSummary(
+        <>
+          <div className='sum-info'>
+            <h3>
+              {context.searchData.departure.location} -{' '}
+              {context.searchData.arrival.location}
+            </h3>
+            <h3>Tid: {context.SelectedTrain.Time}</h3>
+          </div>
+        </>
+      );
+    } else {
+      setTotalPrice(
+        context.SelectedTrain.TotalTicketPrice +
+          context.SelectedReturnTrain.TotalTicketPrice
+      );
+      setSummary(
+        <div className='return-sum'>
+          <div className='sum-info'>
+            <h4>Utresa</h4>
+            <h3>
+              {context.searchData.departure.location} -{' '}
+              {context.searchData.arrival.location}
+            </h3>
+            <h3>Tid: {context.SelectedTrain.Time}</h3>
+          </div>
+          <div className='sum-info'>
+            <h4>Återresa</h4>
+            <h3>
+              {context.searchData.returnDeparture.location} -{' '}
+              {context.searchData.returnArrival.location}
+            </h3>
+            <h3>Tid: {context.SelectedReturnTrain.Time}</h3>
+          </div>
+        </div>
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (numberOfForms > 1) {
     for (let i = 1; i < numberOfForms; i++) {
       formArray.push(
-        <form className="customer-form">
+        <form className='customer-form'>
           <h3>Resenär {i + 1}</h3>
-          <div className="c-form-row">
-            <label htmlFor="">
+          <div className='c-form-row'>
+            <label htmlFor=''>
               <input
-                type="text"
+                type='text'
                 required
                 onChange={(e) => setCustomer({ firstName: e.target.value })}
               />
               <span>Förnamn</span>
             </label>
-            <label htmlFor="">
+            <label htmlFor=''>
               <input
-                type="text"
+                type='text'
                 required
                 onChange={(e) =>
                   setCustomer({ ...customer, lastName: e.target.value })
@@ -138,44 +186,34 @@ function Payment() {
       .catch((e) => {
         console.log(e.error);
       });
+  }
 
-    // let bookingData = {
-    //   customer: {
-    //     firstName: context.firstname,
-    //     lastName: context.lastname,
-    //     email: context.email,
-    //     phoneNumber: context.phone,
-    //   },
-    //   trainStops: tripStopsArr,
-    //   seats: [
-    //     {
-    //       seatType: context.SelectedTrain.class,
-    //       ticketType: context.searchData.tickets[0].type,
-    //       firstName: context.firstname,
-    //       lastName: context.lastname,
-    //     },
-    //     {
-    //       seatType: context.SelectedTrain.class,
-    //       ticketType: context.searchData.tickets[1].type,
-    //       firstName: customer.firstName,
-    //       lastName: customer.lastName,
-    //     },
-    //   ],
-    // };
-    // console.log(bookingData);
+  function returnPage() {
+    if(context.SelectedTrain.class === 'FirstClass') {
+      nav('/results')
+    } else {
+      nav('/additional-choices')
+    }
   }
 
   return (
-    <div className="container">
-      <h1>BETALSIDA</h1>
-      <div className="customer-container">
-        <div className="information-container">
-          <form className="customer-form">
+    <div className='container'>
+      <button className='btn btn-secondary m-4 shadow' onClick={returnPage}>Tillbaka</button>
+      <div className='summary-container'>
+        {summary}
+        <div className='sum-info'>
+          <h4>{'Antal biljetter: ' + numberOfForms}</h4>
+          <h4>{'Att betala: ' + totalPrice + ':-'}</h4>
+        </div>
+      </div>
+      <div className='customer-container'>
+        <div className='information-container'>
+          <form className='customer-form'>
             <h3>Resenär</h3>
-            <div className="c-form-row">
-              <label htmlFor="">
+            <div className='c-form-row'>
+              <label htmlFor=''>
                 <input
-                  type="text"
+                  type='text'
                   required
                   onChange={(e) =>
                     updateContext({
@@ -185,9 +223,9 @@ function Payment() {
                 />
                 <span>Förnamn</span>
               </label>
-              <label htmlFor="">
+              <label htmlFor=''>
                 <input
-                  type="text"
+                  type='text'
                   required
                   onChange={(e) =>
                     updateContext({
@@ -198,10 +236,10 @@ function Payment() {
                 <span>Efternamn</span>
               </label>
             </div>
-            <div className="c-form-row">
-              <label htmlFor="">
+            <div className='c-form-row'>
+              <label htmlFor=''>
                 <input
-                  type="email"
+                  type='email'
                   required
                   onChange={(e) =>
                     updateContext({
@@ -211,11 +249,11 @@ function Payment() {
                 />
                 <span>E-postadress</span>
               </label>
-              <label htmlFor="">
+              <label htmlFor=''>
                 <input
-                  type="tel"
+                  type='tel'
                   required
-                  pattern="[0-9]{10}"
+                  pattern='[0-9]{10}'
                   onChange={(e) =>
                     updateContext({
                       phone: e.target.value,
@@ -229,13 +267,13 @@ function Payment() {
           {formArray}
         </div>
       </div>
-      <div className="btn-container">
-        <button className="btn btn-success" onClick={() => addBooking()}>
+      <div className='btn-container'>
+        <button className='btn btn-success' onClick={() => addBooking()}>
           Till betalning
         </button>
       </div>
     </div>
   );
-}
+                }
 
 export default Payment;

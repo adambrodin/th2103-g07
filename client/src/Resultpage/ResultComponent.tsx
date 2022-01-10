@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { BookingContext } from '../Contexts/BookingContext';
 
-function ResultComponent() {
+function ResultComponent(data) {
   let nav = useNavigate();
   const [bookingContext, updateContext] = useContext(BookingContext);
   let lastSelectedDepartTrip: HTMLElement | null = null;
@@ -139,23 +139,21 @@ function ResultComponent() {
 
   return (
     <>
-      <Link to='/'>
-        <button className='btn btn-secondary'>Tillbaka</button>
+      <Link to="/">
+        <button className="btn btn-secondary">Tillbaka</button>
       </Link>
-      <div className='container text-center'>
-        <div id='searchResults'>
+      <div className="container text-center">
+        <div id="searchResults">
           <h2>Utresa</h2>
           <p>
-            {bookingContext.searchData.departure.location} -{' '}
-            {bookingContext.searchData.arrival.location}
+            {data.data.searchData.departure.location} -{' '}
+            {data.data.searchData.arrival.location}
           </p>
           <p>
-            {moment(bookingContext.searchData.departure.time).format(
-              'Do MMMM YYYY'
-            )}
+            {moment(data.data.searchData.departure.time).format('Do MMMM YYYY')}
           </p>
-          <table id='departTrip' className='table'>
-            <thead className='thead-dark'>
+          <table id="departTrip" className="table">
+            <thead className="thead-dark">
               <tr>
                 <th>Tid</th>
                 <th>1 klass</th>
@@ -163,12 +161,13 @@ function ResultComponent() {
               </tr>
             </thead>
             <tbody>
-              {bookingContext.dbData.OutboundTrips.map((trip: any) => {
+              {data.data.dbData.OutboundTrips.map((trip: any) => {
                 return (
                   <tr
                     onClick={() => getTicket(trip.train.id, '')}
                     id={trip.train.id}
-                    key={trip.train.id}>
+                    key={trip.train.id}
+                  >
                     <td>
                       {moment(trip.departure.time).format('HH:mm')} -{' '}
                       {moment(trip.arrival.time).format('HH:mm')}
@@ -189,7 +188,7 @@ function ResultComponent() {
                         {trip.estimatedPrices[0].price + ' :-'}
                       </label>
                       <input
-                        type='radio'
+                        type="radio"
                         name={'FirstClass-' + trip.train.id}
                         id={'FirstClass-' + trip.train.id}
                         onChange={(e) => toggleRadio(e)}
@@ -200,7 +199,7 @@ function ResultComponent() {
                         {trip.estimatedPrices[1].price + ' :-'}
                       </label>
                       <input
-                        type='radio'
+                        type="radio"
                         name={'SecondClass-' + trip.train.id}
                         id={'SecondClass-' + trip.train.id}
                         onChange={(e) => toggleRadio(e)}
@@ -211,20 +210,20 @@ function ResultComponent() {
               })}
             </tbody>
           </table>
-          {bookingContext.searchData.returnTrip ? (
+          {data.data.searchData.returnTrip ? (
             <>
               <h2>Återresa</h2>
               <p>
-                {bookingContext.searchData.returnDeparture.location} -{' '}
-                {bookingContext.searchData.returnArrival.location}
+                {data.data.searchData.returnDeparture.location} -{' '}
+                {data.data.searchData.returnArrival.location}
               </p>
               <p>
-                {moment(bookingContext.searchData.returnDeparture.time).format(
+                {moment(data.data.searchData.returnDeparture.time).format(
                   'Do MMMM YYYY'
                 )}
               </p>
-              <table id='returnTrip' className='table'>
-                <thead className='thead-dark'>
+              <table id="returnTrip" className="table">
+                <thead className="thead-dark">
                   <tr>
                     <th>Tid</th>
                     <th>1 klass</th>
@@ -232,11 +231,12 @@ function ResultComponent() {
                   </tr>
                 </thead>
                 <tbody>
-                  {bookingContext.dbData.ReturnTrips.map((trip: any) => (
+                  {data.data.dbData.ReturnTrips.map((trip: any) => (
                     <tr
                       onClick={() => getTicket(trip.train.id, '')}
                       id={trip.train.id}
-                      key={trip.train.id}>
+                      key={trip.train.id}
+                    >
                       <td>
                         {moment(trip.departure.time).format('HH:mm')} -{' '}
                         {moment(trip.arrival.time).format('HH:mm')}
@@ -257,7 +257,7 @@ function ResultComponent() {
                           {trip.estimatedPrices[0].price + ' :-'}
                         </label>
                         <input
-                          type='radio'
+                          type="radio"
                           name={'FirstClass-' + trip.train.id}
                           id={'ReturnFirstClass-' + trip.train.id}
                           onChange={(e) => toggleReturnRadio(e)}
@@ -268,7 +268,7 @@ function ResultComponent() {
                           {trip.estimatedPrices[1].price + ' :-'}
                         </label>
                         <input
-                          type='radio'
+                          type="radio"
                           name={'SecondClass-' + trip.train.id}
                           id={'ReturnSecondClass-' + trip.train.id}
                           onChange={(e) => toggleReturnRadio(e)}
@@ -282,11 +282,12 @@ function ResultComponent() {
           ) : (
             <></>
           )}
-          <div className='col'>
+          <div className="col">
             <button
-              id='continueButton'
-              className='btn btn-success float-right'
-              onClick={nextPage}>
+              id="continueButton"
+              className="btn btn-success float-right"
+              onClick={nextPage}
+            >
               Fortsätt
             </button>
           </div>

@@ -56,3 +56,8 @@ label > input[placeholder=' ']:not(:focus):placeholder-shown + span {
   display: flex;
   flex-direction: row;
 }
+@media (max-width: 600px) {
+  .c-form-row {
+    flex-direction: column;
+  }
+}

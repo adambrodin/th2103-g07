@@ -31,7 +31,7 @@ const SearchBookingComponent = ({
     let emailPassedValidation = validateEmail(email);
     setBookingIdError(!idPassedValidation);
     setBookingIdErrorMessage(
-      idPassedValidation ? "" : "Ogiltigt referensnummer. "
+      idPassedValidation ? "" : "Ogiltigt bokningsnummer. "
     );
     setEmailError(!emailPassedValidation);
     setEmailErrorMessage(emailPassedValidation ? "" : "Ogiltigt email. ");
@@ -47,7 +47,7 @@ const SearchBookingComponent = ({
       <span>
         {" "}
         Här kan du avsluta aktiva bokningar. Hitta dina bokningar genom att mata
-        in dess referensnummer samt email-addressen du använde vid bokningen i
+        in dess bokningsnummer samt email-addressen du använde vid bokningen i
         fältet nedan:
       </span>
       <br />
@@ -75,7 +75,7 @@ const SearchBookingComponent = ({
             error={bookingIdError}
             id="booking-search-id-input"
             className="text-field-booking-reference-input"
-            label="Referensnummer"
+            label="Bokningsnummer"
             helperText={bookingIdErrorMessage}
             onChange={(e) => setBookingId(e.target.value)}
             multiline={true}

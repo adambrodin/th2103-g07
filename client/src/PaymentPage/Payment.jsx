@@ -1,24 +1,88 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import './Payment.css';
 import { BookingContext } from '../Contexts/BookingContext';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
 
 function Payment() {
   let formArray = [];
+  let tripStopsArr = [];
+  let returnTripStopsArr = [];
+  let numberOfForms = 0;
   const [context, updateContext] = useContext(BookingContext);
   const [customer, setCustomer] = useState();
-  const [value, setValue] = React.useState('card');
+  const [totalPrice, setTotalPrice] = useState();
+  const [summary, setSummary] = useState();
+  const API_URL =
+    process.env.NODE_ENV === 'production'
+      ? 'https://train-booking-function-app.azurewebsites.net/api'
+      : process.env.REACT_APP_API_URL;
 
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
+  let tripStops = context.dbData.OutboundTrips.filter(function (entry) {
+    return entry.train.id === context.SelectedTrain.trainID;
+  });
+  if (tripStops.length !== 0) {
+    tripStops[0].stops.forEach((element) => tripStopsArr.push(element.id));
+  } else {
+    tripStopsArr = [];
+  }
 
-  // Check if it's more than 1 ticket
-  if (context.tickets[0].amount > 1) {
-    for (let i = 1; i < context.tickets[0].amount; i++) {
+  if (context.dbData.ReturnTrips) {
+    let returnTripStops = context.dbData.ReturnTrips.filter(function (entry) {
+      return entry.train.id === context.SelectedTrain.trainID;
+    });
+    returnTripStops[0].stops.forEach((element) =>
+      returnTripStopsArr.push(element.id)
+    );
+  }
+
+  context.searchData.tickets.forEach((element) => {
+    numberOfForms += element.amount;
+  });
+
+  useEffect(() => {
+    if (!context.searchData.returnTrip) {
+      setTotalPrice(context.SelectedTrain.TotalTicketPrice);
+      setSummary(
+        <>
+          <div className='sum-info'>
+            <h3>
+              {context.searchData.departure.location} -{' '}
+              {context.searchData.arrival.location}
+            </h3>
+            <h3>Tid: {context.SelectedTrain.Time}</h3>
+          </div>
+        </>
+      );
+    } else {
+      setTotalPrice(
+        context.SelectedTrain.TotalTicketPrice +
+          context.SelectedReturnTrain.TotalTicketPrice
+      );
+      setSummary(
+        <div className='return-sum'>
+          <div className='sum-info'>
+            <h4>Utresa</h4>
+            <h3>
+              {context.searchData.departure.location} -{' '}
+              {context.searchData.arrival.location}
+            </h3>
+            <h3>Tid: {context.SelectedTrain.Time}</h3>
+          </div>
+          <div className='sum-info'>
+            <h4>Återresa</h4>
+            <h3>
+              {context.searchData.returnDeparture.location} -{' '}
+              {context.searchData.returnArrival.location}
+            </h3>
+            <h3>Tid: {context.SelectedReturnTrain.Time}</h3>
+          </div>
+        </div>
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (numberOfForms > 1) {
+    for (let i = 1; i < numberOfForms; i++) {
       formArray.push(
         <form className='customer-form'>
           <h3>Resenär {i + 1}</h3>
@@ -27,7 +91,7 @@ function Payment() {
               <input
                 type='text'
                 required
-                onChange={(e) => setCustomer({ firstname: e.target.value })}
+                onChange={(e) => setCustomer({ firstName: e.target.value })}
               />
               <span>Förnamn</span>
             </label>
@@ -36,7 +100,7 @@ function Payment() {
                 type='text'
                 required
                 onChange={(e) =>
-                  setCustomer({ ...customer, lastname: e.target.value })
+                  setCustomer({ ...customer, lastName: e.target.value })
                 }
               />
               <span>Efternamn</span>
@@ -49,40 +113,85 @@ function Payment() {
 
   // Data to save booking to db, not done
   function addBooking() {
-    // let data = {
-    //   customer: {
-    //     firstName: context.firstname,
-    //     lastName: context.lastname,
-    //     email: context.email,
-    //     phoneNumber: context.phone,
-    //   },
-    //   train: {
-    //     id: '1',
-    //     name: 'X2000',
-    //   },
-    //   seats: [
-    //     {
-    //       seat: 'Regular',
-    //       ticket: 'Adult',
-    //     },
-    //   ],
-    // };
-    alert('Redirect');
+    const items = [];
+    const seatType = context.SelectedTrain.class;
+
+    context.searchData.tickets.forEach((ticket) => {
+      if (ticket.type === 'Adult') {
+        if (seatType === 'FirstClass') {
+          items.push({ id: 1, quantity: ticket.amount });
+        } else if (seatType === 'SecondClass') {
+          items.push({ id: 2, quantity: ticket.amount });
+        } else if (seatType === 'AnimalFriendly') {
+          items.push({ id: 3, quantity: ticket.amount });
+        } else if (seatType === 'QuietCart') {
+          items.push({ id: 4, quantity: ticket.amount });
+        }
+      } else if (ticket.type === 'Student') {
+        if (seatType === 'FirstClass') {
+          items.push({ id: 5, quantity: ticket.amount });
+        } else if (seatType === 'SecondClass') {
+          items.push({ id: 6, quantity: ticket.amount });
+        } else if (seatType === 'AnimalFriendly') {
+          items.push({ id: 7, quantity: ticket.amount });
+        } else if (seatType === 'QuietCart') {
+          items.push({ id: 8, quantity: ticket.amount });
+        }
+      } else if (ticket.type === 'Senior') {
+        if (seatType === 'FirstClass') {
+          items.push({ id: 9, quantity: ticket.amount });
+        } else if (seatType === 'SecondClass') {
+          items.push({ id: 10, quantity: ticket.amount });
+        } else if (seatType === 'AnimalFriendly') {
+          items.push({ id: 11, quantity: ticket.amount });
+        } else if (seatType === 'QuietCart') {
+          items.push({ id: 12, quantity: ticket.amount });
+        }
+      } else if (ticket.type === 'Child') {
+        if (seatType === 'FirstClass') {
+          items.push({ id: 13, quantity: ticket.amount });
+        } else if (seatType === 'SecondClass') {
+          items.push({ id: 14, quantity: ticket.amount });
+        } else if (seatType === 'AnimalFriendly') {
+          items.push({ id: 15, quantity: ticket.amount });
+        } else if (seatType === 'QuietCart') {
+          items.push({ id: 16, quantity: ticket.amount });
+        }
+      }
+    });
+
+    fetch(API_URL + '/booking/create-checkout-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+      body: JSON.stringify({
+        items: items,
+      }),
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          return res.json().then((json) => Promise.reject(json));
+        }
+      })
+      .then((data) => {
+        window.location = data.data.url;
+      })
+      .catch((e) => {
+        console.log(e.error);
+      });
   }
 
   return (
     <div className='container'>
-      <h1>BETALSIDA</h1>
       <div className='summary-container'>
-        <div>
-          <h3>
-            {context.departure.location} - {context.arrival.location}
-          </h3>
-          <h5>
-            {context.departure.time} - {context.arrival.time}
-          </h5>
-          <h5>Antal biljetter: {context.tickets[0].amount}</h5>
-          <h5>Att betala: {context.price}:- </h5>
+        {summary}
+        <div className='sum-info'>
+          <h4>{'Antal biljetter: ' + numberOfForms}</h4>
+          <h4>{'Att betala: ' + totalPrice + ':-'}</h4>
         </div>
       </div>
       <div className='customer-container'>
@@ -142,31 +251,13 @@ function Payment() {
                 <span>Mobilnummer</span>
               </label>
             </div>
-            {/* Remove input after testing */}
-            <input type='submit' />
           </form>
           {formArray}
         </div>
       </div>
-      <div className='payment-container'>
-        <FormControl component='fieldset'>
-          <RadioGroup
-            name='controlled-radio-buttons-group'
-            value={value}
-            onChange={handleChange}>
-            <FormControlLabel value='card' control={<Radio />} label='Kort' />
-            <FormControlLabel value='swish' control={<Radio />} label='Swish' />
-            <FormControlLabel
-              value='invoice'
-              control={<Radio />}
-              label='Faktura'
-            />
-          </RadioGroup>
-        </FormControl>
-      </div>
       <div className='btn-container'>
         <button className='btn btn-success' onClick={() => addBooking()}>
-          Fortsätt
+          Till betalning
         </button>
       </div>
     </div>

@@ -51,6 +51,8 @@ export class BookingService {
         const bookingStop = await stopRepo
           .createQueryBuilder('stop')
           .where('stop.id = :id', { id: stopId })
+          .leftJoinAndSelect('stop.train', 'train')
+          .leftJoinAndSelect('stop.tickets', 'tickets')
           .leftJoinAndSelect('stop.fromStation', 'fromStation')
           .leftJoinAndSelect('stop.toStation', 'toStation')
           .getOne();
@@ -59,6 +61,13 @@ export class BookingService {
         }
 
         bookingStops.push(bookingStop);
+      }
+
+      const remainingSeats = this._tripService.getRemainingSeats(bookingStops);
+      if (body.seats.length > remainingSeats) {
+        return {
+          error: `The passenger capacity of the trip is exceeded. Remaining seats are: ${remainingSeats}.`,
+        };
       }
 
       // Sort the stops in ASCENDING date order
@@ -108,6 +117,7 @@ export class BookingService {
         .leftJoinAndSelect('booking.arrival', 'arrival')
         .leftJoinAndSelect('arrival.currentStation', 'toStation')
         .leftJoinAndSelect('booking.tickets', 'ticket')
+        .leftJoinAndSelect('booking.customer', 'customer')
         .getOne();
 
       return { receipt: receipt };

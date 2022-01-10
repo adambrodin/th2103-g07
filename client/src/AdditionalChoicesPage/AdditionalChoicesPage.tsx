@@ -1,46 +1,69 @@
-import { useContext } from "react";
-import { Link } from "react-router-dom";
-import { BookingContext } from "../Contexts/BookingContext";
-import Stack from "@mui/material/Stack";
-import Paper from "@mui/material/Paper";
-import { styled } from "@mui/material/styles";
+import { useContext, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { BookingContext } from '../Contexts/BookingContext';
+import Stack from '@mui/material/Stack';
+import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
-import "rsuite/dist/rsuite.min.css";
-import ChoachPickerComponent from "./CoachPickerComponent";
+import 'rsuite/dist/rsuite.min.css';
+import ChoachPickerComponent from './CoachPickerComponent';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
-  textAlign: "center",
+  textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
 const tempSilentCoachPriceFactor: number = 0.2; //todo should be gotten from table behind api
 const tempAnimalCoachPriceFactor: number = 0.5; //todo should be gotten from table behind api
 
 const AdditionalChoicesPage = () => {
-  const [context] = useContext(BookingContext);
- // const [price, setPrice] = useState(context.price);
+  let nav = useNavigate();
+  const [context, updateContext] = useContext(BookingContext);
+
+  const [price] = useState(context.SelectedTrain.TotalTicketPrice);
   let options = [
     {
-      id: "0",
-      name: "Vanlig vagn",
-      price: context.price,
+      id: '0',
+      name: 'Vanlig vagn',
+      price: price,
     },
     {
-      id: "1",
-      name: "Tyst vagn",
-      price: context.price + context.price * tempSilentCoachPriceFactor,
+      id: '1',
+      name: 'Tyst vagn',
+      price: price + price * tempSilentCoachPriceFactor,
     },
     {
-      id: "2",
-      name: "Djurvagn",
-      price: context.price + context.price * tempAnimalCoachPriceFactor,
+      id: '2',
+      name: 'Djurvagn',
+      price: price + price * tempAnimalCoachPriceFactor,
     },
   ];
 
   function coachHandler(toggledCoachId: string) {
-   // const coach = options.find(({ id }) => id === toggledCoachId);
-    //if (coach) setPrice(coach.price);
+    const coach = options.find(({ id }) => id === toggledCoachId);
+    if (coach) {
+      if (coach.name === 'Tyst vagn') {
+        updateContext({
+          ...context,
+          SelectedTrain: {
+            ...context.SelectedTrain,
+            TotalTicketPrice: coach.price,
+            class: 'QuietCart',
+          },
+        });
+      } else if (coach.name === 'Djurvagn') {
+        updateContext({
+          ...context,
+          SelectedTrain: {
+            ...context.SelectedTrain,
+            TotalTicketPrice: coach.price,
+            class: 'AnimalFriendly',
+          },
+        });
+      }
+    }
   }
 
   /*useEffect(() => {
@@ -51,12 +74,16 @@ const AdditionalChoicesPage = () => {
   /*
   New choices should be added as stack item
   */
+  function nextPage() {
+    nav('/payment');
+  }
+
   return (
     <div>
-      <div className='container text-center'>
+      <div className="container text-center">
         <h1>Tillval</h1>
       </div>
-      <Link to="/">
+      <Link to="/results">
         <button id="back-to-results-btn" className="btn btn-secondary">
           Tillbaka
         </button>
@@ -75,6 +102,7 @@ const AdditionalChoicesPage = () => {
           <button
             id="continue-to-payment-btn"
             className="btn btn-success float-right"
+            onClick={nextPage}
           >
             Fortsätt
           </button>

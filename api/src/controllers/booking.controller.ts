@@ -4,10 +4,20 @@ import { BookingDto } from '@shared/dtos/booking.dto';
 import { TripResponse } from '@shared/models/trip-response';
 import { TripSearchDto } from '@shared/dtos/requests/trip-search-request.dto';
 import { BookTripRequestDto } from '@shared/dtos/requests/book-trip-request.dto';
+import { PriceService } from 'src/services/price.service';
+import { EmailService } from 'src/services/mailer.service';
+// import { ReceiptResponseDto } from '@shared/dtos/responses/receipt-response.dto';
+declare function require(name: string);
 
 @Controller('booking')
 export class BookingController {
-  constructor(private readonly _bookingService: BookingService) {}
+  constructor(
+    private readonly _bookingService: BookingService,
+    private readonly _mailerService: EmailService,
+  ) {}
+  private getTotalPrice: PriceService = new PriceService();
+  Stripe = require('stripe');
+  stripe = this.Stripe(process.env.STRIPE_PRIVATE_KEY);
 
   @Post('search')
   async searchAvailableTrips(@Body() body: TripSearchDto) {
@@ -56,6 +66,11 @@ export class BookingController {
 
     const receipt = await this._bookingService.createFormattedReceipt(
       bookingResult.receipt,
+    );
+
+    await this._mailerService.sendConfirmation(
+      receipt,
+      bookingResult.receipt.booking.customer,
     );
 
     return {
@@ -120,5 +135,165 @@ export class BookingController {
       response: 'Booking has been canceled successfully.',
       data: { canceledBooking: receipt },
     };
+  }
+
+  @Post('create-checkout-session')
+  async checkoutSession(@Body() body: any) {
+    try {
+      const ticketPrice: number[] =
+        await this.getTotalPrice.getAllTicketPrices();
+      const seatPrice = await this.getTotalPrice.getAllSeatPrices();
+
+      if (seatPrice[0] * ticketPrice[0] === 0) {
+        return {
+          response: 'Somthing went wrong',
+        };
+      }
+
+      //priset är i öre
+      const storeItems = new Map([
+        [
+          1,
+          {
+            priceInSek: Math.round(seatPrice[0] * ticketPrice[0] * 100),
+            name: 'Adult First Class',
+          },
+        ],
+        [
+          2,
+          {
+            priceInSek: Math.round(seatPrice[1] * ticketPrice[0] * 100),
+            name: 'Adult Second Class',
+          },
+        ],
+        [
+          3,
+          {
+            priceInSek: Math.round(seatPrice[2] * ticketPrice[0] * 100),
+            name: 'Adult Animal',
+          },
+        ],
+        [
+          4,
+          {
+            priceInSek: Math.round(seatPrice[3] * ticketPrice[0] * 100),
+            name: 'Adult Quiet',
+          },
+        ],
+        [
+          5,
+          {
+            priceInSek: Math.round(seatPrice[0] * ticketPrice[1] * 100),
+            name: 'Student First Class',
+          },
+        ],
+        [
+          6,
+          {
+            priceInSek: Math.round(seatPrice[1] * ticketPrice[1] * 100),
+            name: 'Student Second Class',
+          },
+        ],
+        [
+          7,
+          {
+            priceInSek: Math.round(seatPrice[2] * ticketPrice[1] * 100),
+            name: 'Student Animal',
+          },
+        ],
+        [
+          8,
+          {
+            priceInSek: Math.round(seatPrice[3] * ticketPrice[1] * 100),
+            name: 'Student Quiet',
+          },
+        ],
+        [
+          9,
+          {
+            priceInSek: Math.round(seatPrice[0] * ticketPrice[2] * 100),
+            name: 'Senior First Class',
+          },
+        ],
+        [
+          10,
+          {
+            priceInSek: Math.round(seatPrice[1] * ticketPrice[2] * 100),
+            name: 'Senior Second Class',
+          },
+        ],
+        [
+          11,
+          {
+            priceInSek: Math.round(seatPrice[2] * ticketPrice[2] * 100),
+            name: 'Senior Animal',
+          },
+        ],
+        [
+          12,
+          {
+            priceInSek: Math.round(seatPrice[3] * ticketPrice[2] * 100),
+            name: 'Senior Quiet',
+          },
+        ],
+        [
+          13,
+          {
+            priceInSek: Math.round(seatPrice[0] * ticketPrice[3] * 100),
+            name: 'Child First Class',
+          },
+        ],
+        [
+          14,
+          {
+            priceInSek: Math.round(seatPrice[1] * ticketPrice[3] * 100),
+            name: 'Child Second Class',
+          },
+        ],
+        [
+          15,
+          {
+            priceInSek: Math.round(seatPrice[2] * ticketPrice[3] * 100),
+            name: 'Child Animal',
+          },
+        ],
+        [
+          16,
+          {
+            priceInSek: Math.round(seatPrice[3] * ticketPrice[3] * 100),
+            name: 'Child Quiet',
+          },
+        ],
+      ]);
+
+      const session = await this.stripe.checkout.sessions.create({
+        payment_method_types: ['card', 'klarna'],
+        mode: 'payment',
+        line_items: body.items.map((item) => {
+          const storeItem = storeItems.get(item.id);
+          return {
+            price_data: {
+              currency: 'sek',
+              product_data: {
+                name: storeItem.name,
+              },
+              unit_amount: storeItem.priceInSek,
+            },
+            quantity: item.quantity,
+          };
+        }),
+        success_url: process.env.CLIENT_URL + '/success',
+        cancel_url: process.env.CLIENT_URL + '/canceled',
+      });
+      return {
+        response: 'Payment was succsessfull',
+        data: { url: session.url },
+      };
+    } catch (error) {
+      return {
+        response: 'Payment was succsessfull',
+        data: error,
+      };
+    }
   }
 }

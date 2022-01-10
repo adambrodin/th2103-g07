@@ -32,4 +32,34 @@ export class PriceService {
 
     return backupPrice.price;
   }
+  async getAllTicketPrices(): Promise<number[]> {
+    const ticketPrice = await getRepository(TicketPriceEntity).find();
+
+    if (ticketPrice) {
+      const resultPrice: number[] = [];
+
+      for (const ticket of ticketPrice) {
+        resultPrice.push(ticket.priceMultiplier);
+      }
+
+      return resultPrice;
+    }
+
+    return [0, 0, 0, 0];
+  }
+  async getAllSeatPrices(): Promise<number[]> {
+    const seatPrice = await getRepository(SeatPriceEntity).find();
+
+    if (seatPrice) {
+      const resultPrice: number[] = [];
+
+      for (const ticket of seatPrice) {
+        resultPrice.push(ticket.price);
+      }
+
+      return resultPrice;
+    }
+
+    return [0, 0, 0, 0];
+  }
 }

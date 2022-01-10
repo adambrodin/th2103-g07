@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import './Payment.css';
 import { BookingContext } from '../Contexts/BookingContext';
 import { useNavigate } from 'react-router-dom';
-
+import $ from 'jquery';
 
 function Payment() {
   let nav = useNavigate();
@@ -113,6 +113,12 @@ function Payment() {
       );
     }
   }
+  $(document).ready(function () {
+    $(document).on('submit', '#customer-form', function () {
+      addBooking();
+      return false;
+    });
+  });
 
   // Data to save booking to db, not done
   function addBooking() {
@@ -189,16 +195,18 @@ function Payment() {
   }
 
   function returnPage() {
-    if(context.SelectedTrain.class === 'FirstClass') {
-      nav('/results')
+    if (context.SelectedTrain.class === 'FirstClass') {
+      nav('/results');
     } else {
-      nav('/additional-choices')
+      nav('/additional-choices');
     }
   }
 
   return (
     <div className='container'>
-      <button className='btn btn-secondary m-4 shadow' onClick={returnPage}>Tillbaka</button>
+      <button className='btn btn-secondary m-4 shadow' onClick={returnPage}>
+        Tillbaka
+      </button>
       <div className='summary-container'>
         {summary}
         <div className='sum-info'>
@@ -208,7 +216,11 @@ function Payment() {
       </div>
       <div className='customer-container'>
         <div className='information-container'>
-          <form className='customer-form'>
+          <form
+            className='customer-form'
+            action='#'
+            id='customer-form'
+            name='paynow'>
             <h3>Resenär</h3>
             <div className='c-form-row'>
               <label htmlFor=''>
@@ -263,17 +275,18 @@ function Payment() {
                 <span>Mobilnummer</span>
               </label>
             </div>
+            <div className='btn-container'>
+              <button className='btn btn-success' type='submit'>
+                {' '}
+                Till betalning
+              </button>
+            </div>
           </form>
           {formArray}
         </div>
       </div>
-      <div className='btn-container'>
-        <button className='btn btn-success' onClick={() => addBooking()}>
-          Till betalning
-        </button>
-      </div>
     </div>
   );
-                }
+}
 
 export default Payment;

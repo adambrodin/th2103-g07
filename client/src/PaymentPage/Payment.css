@@ -37,7 +37,7 @@ label > input[placeholder=' ']:not(:focus):placeholder-shown + span {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  margin-right: 5em;
+  margin-top: 5em;
 }
 .summary-container {
   display: flex;

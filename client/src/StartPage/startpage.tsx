@@ -314,7 +314,7 @@ function StartPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor=''>Ungdom/Student</label>
+                  <label htmlFor=''>Ungdom/Student (18-25 år)</label>
                   <input
                     type='number'
                     name=''
@@ -327,7 +327,7 @@ function StartPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor=''>Pensionär</label>
+                  <label htmlFor=''>Pensionär (65+ år)</label>
                   <input
                     type='number'
                     name=''
@@ -340,7 +340,7 @@ function StartPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor=''>Barn</label>
+                  <label htmlFor=''>Barn (0-17 år)</label>
                   <input
                     type='number'
                     name=''

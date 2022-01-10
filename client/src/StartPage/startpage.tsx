@@ -253,6 +253,21 @@ function StartPage() {
             <DatePicker
               format='yyyy-MM-dd HH:mm'
               placeholder='Avresedatum'
+              isoWeek
+              locale={{
+                sunday: 'Sön',
+                monday: 'Mån',
+                tuesday: 'Tis',
+                wednesday: 'Ons',
+                thursday: 'Tors',
+                friday: 'Fre',
+                saturday: 'Lör',
+                ok: 'OK',
+                today: 'Idag',
+                yesterday: 'Igår',
+                hours: 'Timme',
+                minutes: 'Minut',
+              }}
               style={{ width: 200 }}
               onChange={(e) =>
                 updateContext({
@@ -271,6 +286,21 @@ function StartPage() {
             <DatePicker
               format='yyyy-MM-dd HH:mm'
               placeholder='Hemresedatum'
+              isoWeek
+              locale={{
+                sunday: 'Sön',
+                monday: 'Mån',
+                tuesday: 'Tis',
+                wednesday: 'Ons',
+                thursday: 'Tors',
+                friday: 'Fre',
+                saturday: 'Lör',
+                ok: 'OK',
+                today: 'Idag',
+                yesterday: 'Igår',
+                hours: 'Timme',
+                minutes: 'Minut',
+              }}
               style={{ width: 200 }}
               onChange={(e) =>
                 updateContext({

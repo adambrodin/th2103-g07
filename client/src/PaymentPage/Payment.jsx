@@ -1,8 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
 import './Payment.css';
 import { BookingContext } from '../Contexts/BookingContext';
+import { useNavigate, Link } from 'react-router-dom';
+
 
 function Payment() {
+  let nav = useNavigate();
   let formArray = [];
   let tripStopsArr = [];
   let returnTripStopsArr = [];
@@ -11,6 +14,7 @@ function Payment() {
   const [customer, setCustomer] = useState();
   const [totalPrice, setTotalPrice] = useState();
   const [summary, setSummary] = useState();
+  const [ticketCheck, setTicketCheck] = useState(false);
   const API_URL =
     process.env.NODE_ENV === 'production'
       ? 'https://train-booking-function-app.azurewebsites.net/api'
@@ -185,8 +189,17 @@ function Payment() {
       });
   }
 
+  function returnPage() {
+    if(context.SelectedTrain.class === 'FirstClass') {
+      nav('/results')
+    } else {
+      nav('/additional-choices')
+    }
+  }
+
   return (
     <div className='container'>
+      <button className='btn btn-secondary m-4 shadow' onClick={returnPage}>Tillbaka</button>
       <div className='summary-container'>
         {summary}
         <div className='sum-info'>
@@ -262,6 +275,6 @@ function Payment() {
       </div>
     </div>
   );
-}
+                }
 
 export default Payment;

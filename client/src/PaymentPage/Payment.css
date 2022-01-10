@@ -39,3 +39,20 @@ label > input[placeholder=' ']:not(:focus):placeholder-shown + span {
   justify-content: flex-end;
   margin-right: 5em;
 }
+.summary-container {
+  display: flex;
+  flex-direction: column;
+  margin: 3em 0;
+  border: 1px solid black;
+  padding: 1em;
+  width: fit-content;
+}
+.sum-info {
+  display: flex;
+  flex-direction: column;
+  margin: 0 4em;
+}
+.return-sum {
+  display: flex;
+  flex-direction: row;
+}

@@ -1,8 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
 import './Payment.css';
 import { BookingContext } from '../Contexts/BookingContext';
+import { useNavigate } from 'react-router-dom';
+
 
 function Payment() {
+  let nav = useNavigate();
   let formArray = [];
   let tripStopsArr = [];
   let returnTripStopsArr = [];
@@ -185,8 +188,17 @@ function Payment() {
       });
   }
 
+  function returnPage() {
+    if(context.SelectedTrain.class === 'FirstClass') {
+      nav('/results')
+    } else {
+      nav('/additional-choices')
+    }
+  }
+
   return (
     <div className='container'>
+      <button className='btn btn-secondary m-4 shadow' onClick={returnPage}>Tillbaka</button>
       <div className='summary-container'>
         {summary}
         <div className='sum-info'>
@@ -262,6 +274,6 @@ function Payment() {
       </div>
     </div>
   );
-}
+                }
 
 export default Payment;

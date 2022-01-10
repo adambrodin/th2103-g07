@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { BookingContext } from '../Contexts/BookingContext';
 import Stack from '@mui/material/Stack';
@@ -15,29 +15,26 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
-const tempSilentCoachPriceFactor: number = 0.2; //todo should be gotten from table behind api
-const tempAnimalCoachPriceFactor: number = 0.5; //todo should be gotten from table behind api
 
 const AdditionalChoicesPage = () => {
   let nav = useNavigate();
   const [context, updateContext] = useContext(BookingContext);
 
-  const [price] = useState(context.SelectedTrain.TotalTicketPrice);
   let options = [
     {
       id: '0',
       name: 'Vanlig vagn',
-      price: price,
+      price: context.dbData.OutboundTrips[0].estimatedPrices[1].price,
     },
     {
       id: '1',
       name: 'Tyst vagn',
-      price: price + price * tempSilentCoachPriceFactor,
+      price: context.dbData.OutboundTrips[0].estimatedPrices[3].price,
     },
     {
       id: '2',
       name: 'Djurvagn',
-      price: price + price * tempAnimalCoachPriceFactor,
+      price: context.dbData.OutboundTrips[0].estimatedPrices[2].price,
     },
   ];
 
@@ -80,15 +77,15 @@ const AdditionalChoicesPage = () => {
 
   return (
     <div>
-      <div className="container text-center">
+      <div className='container text-center'>
         <h1>Tillval</h1>
       </div>
-      <Link to="/results">
-        <button id="back-to-results-btn" className="btn btn-secondary">
+      <Link to='/results'>
+        <button id='back-to-results-btn' className='btn btn-secondary'>
           Tillbaka
         </button>
       </Link>
-      <div className="container" id="additional-choices-list">
+      <div className='container' id='additional-choices-list'>
         <Stack spacing={2}>
           <Item>
             <h4>Välj typ av vagn:</h4>
@@ -97,13 +94,12 @@ const AdditionalChoicesPage = () => {
         </Stack>
       </div>
 
-      <div className="col">
-        <Link to="/payment">
+      <div className='col'>
+        <Link to='/payment'>
           <button
-            id="continue-to-payment-btn"
-            className="btn btn-success float-right"
-            onClick={nextPage}
-          >
+            id='continue-to-payment-btn'
+            className='btn btn-success float-right'
+            onClick={nextPage}>
             Fortsätt
           </button>
         </Link>

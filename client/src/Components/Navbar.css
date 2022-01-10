@@ -28,3 +28,8 @@ nav {
   margin: 1em;
   margin-right: 5em;
 }
+@media (max-width: 600px) {
+  .nav-container {
+    margin: 0;
+  }
+}

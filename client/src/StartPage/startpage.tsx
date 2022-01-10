@@ -252,6 +252,7 @@ function StartPage() {
           <div className='date'>
             <DatePicker
               format='yyyy-MM-dd HH:mm'
+              placeholder='Avresedatum'
               style={{ width: 200 }}
               onChange={(e) =>
                 updateContext({
@@ -269,6 +270,7 @@ function StartPage() {
           <div className='date' id='returnDate'>
             <DatePicker
               format='yyyy-MM-dd HH:mm'
+              placeholder='Hemresedatum'
               style={{ width: 200 }}
               onChange={(e) =>
                 updateContext({

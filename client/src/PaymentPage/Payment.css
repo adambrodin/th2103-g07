@@ -60,4 +60,7 @@ label > input[placeholder=' ']:not(:focus):placeholder-shown + span {
   .c-form-row {
     flex-direction: column;
   }
+  .return-sum {
+    flex-direction: column;
+  }
 }

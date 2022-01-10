@@ -87,7 +87,7 @@ function Payment() {
   if (numberOfForms > 1) {
     for (let i = 1; i < numberOfForms; i++) {
       formArray.push(
-        <form className='customer-form'>
+        <>
           <h3>Resenär {i + 1}</h3>
           <div className='c-form-row'>
             <label htmlFor=''>
@@ -109,7 +109,7 @@ function Payment() {
               <span>Efternamn</span>
             </label>
           </div>
-        </form>
+        </>
       );
     }
   }
@@ -275,6 +275,7 @@ function Payment() {
                 <span>Mobilnummer</span>
               </label>
             </div>
+            {formArray}
             <div className='btn-container'>
               <button className='btn btn-success' type='submit'>
                 {' '}
@@ -282,7 +283,6 @@ function Payment() {
               </button>
             </div>
           </form>
-          {formArray}
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { ReceiptResponseDto } from "../../../shared/dtos/responses/receipt-response.dto";
+import { ReceiptResponseDto } from "@shared/dtos/responses/receipt-response.dto";
 
 interface Props {
   deleteFunction: (receipt: ReceiptResponseDto) => void;

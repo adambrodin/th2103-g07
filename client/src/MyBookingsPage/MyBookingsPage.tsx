@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import BookingComponent from "./BookingComponent";
 import Card from "@mui/material/Card";
 import SearchBookingComponent from "./SearchBookingComponent";
-import { ReceiptResponseDto } from "../../../shared/dtos/responses/receipt-response.dto";
+import { ReceiptResponseDto } from "@shared/dtos/responses/receipt-response.dto";
 
 const API_URL =
   process.env.NODE_ENV === "production"

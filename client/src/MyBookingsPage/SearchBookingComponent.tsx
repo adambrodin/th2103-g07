@@ -1,13 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
 interface Props {
   searchFunction: (email: string, bookingId: string) => void;
-  searchErrorFunction: ()=> void;
+  searchErrorFunction: () => void;
 }
 
-const SearchBookingComponent = ({ searchFunction, searchErrorFunction }: Props) => {
+const SearchBookingComponent = ({
+  searchFunction,
+  searchErrorFunction,
+}: Props) => {
   const [emailError, setEmailError] = useState(false);
   const [bookingIdError, setBookingIdError] = useState(false);
   const [email, setEmail] = useState("");
@@ -19,7 +22,7 @@ const SearchBookingComponent = ({ searchFunction, searchErrorFunction }: Props) 
     return id.length > 1;
   }
   function validateEmail(emailToValidate: string) {
-    const validationPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const validationPattern = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     return validationPattern.test(emailToValidate);
   }
 
@@ -34,7 +37,7 @@ const SearchBookingComponent = ({ searchFunction, searchErrorFunction }: Props) 
     setEmailErrorMessage(emailPassedValidation ? "" : "Ogiltigt email. ");
     if (idPassedValidation && emailPassedValidation) {
       searchFunction(email, bookingId);
-    }else{
+    } else {
       searchErrorFunction();
     }
   }

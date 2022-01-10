@@ -7,8 +7,13 @@ import ResultComponent from './Resultpage/ResultComponent';
 import SuccessPage from './SuccessPaymentPage/successPage';
 import CanceledPage from './CanceledPaymentPage/canceledPage';
 import AccessBookingPage from './MyBookingsPage/MyBookingsPage';
+import { useContext } from 'react';
+import { BookingContext } from './Contexts/BookingContext';
 
 function App() {
+  const [bookingContext] = useContext(BookingContext);
+  const test = bookingContext;
+
   return (
     <>
       {/* <StartPage /> */}
@@ -17,7 +22,7 @@ function App() {
         <Routes>
           <Route path="/" element={<StartPage />} />
           <Route path="/payment" element={<Payment />} />
-          <Route path="/results" element={<ResultComponent />} />
+          <Route path="/results" element={<ResultComponent data={test} />} />
           <Route path="/" element={<StartPage />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/success" element={<SuccessPage />} />

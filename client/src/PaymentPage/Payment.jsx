@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import './Payment.css';
 import { BookingContext } from '../Contexts/BookingContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 function Payment() {

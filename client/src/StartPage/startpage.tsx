@@ -289,7 +289,7 @@ function StartPage() {
           </div>
         </div>
         <div className='ticket-container'>
-          <div style={{ width: 160 }}>
+          <div style={{ width: 200 }}>
             <span>Vuxen</span>
             <InputNumber
               value={adultTicketAmount}
@@ -297,24 +297,24 @@ function StartPage() {
               onChange={(e: any) => setAdultAmount(parseInt(e))}
             />
           </div>
-          <div style={{ width: 160 }}>
-            <span>Ungdom/Student</span>
+          <div style={{ width: 200 }}>
+            <span>Ungdom/Student (18-25 år)</span>
             <InputNumber
               value={studentTicketAmount}
               min={0}
               onChange={(e: any) => setStudentAmount(parseInt(e))}
             />
           </div>
-          <div style={{ width: 160 }}>
-            <span>Pensionär</span>
+          <div style={{ width: 200 }}>
+            <span>Pensionär (65+ år)</span>
             <InputNumber
               value={seniorTicketAmount}
               min={0}
               onChange={(e: any) => setSeniorAmount(parseInt(e))}
             />
           </div>
-          <div style={{ width: 160 }}>
-            <span>Barn</span>
+          <div style={{ width: 200 }}>
+            <span>Barn (0-17 år)</span>
             <InputNumber
               value={childTicketAmount}
               min={0}

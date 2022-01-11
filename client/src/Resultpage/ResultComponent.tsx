@@ -1,12 +1,13 @@
 import moment from 'moment';
 import 'rsuite/dist/rsuite.min.css';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { BookingContext } from '../Contexts/BookingContext';
 
 function ResultComponent(data) {
   let nav = useNavigate();
   const [bookingContext, updateContext] = useContext(BookingContext);
+  const [radioValidation, setRadioValidation] = useState(0);
   let lastSelectedDepartTrip: HTMLElement | null = null;
   let lastSelectedReturnTrip: HTMLElement | null = null;
   let lastSelectedTripId: string = '';
@@ -45,7 +46,7 @@ function ResultComponent(data) {
 
   function toggleRadio(e: any) {
     const Id = e.target.id.split('-');
-
+    setRadioValidation(1);
     if (Id[0] === 'SecondClass') {
       updateContext({
         ...bookingContext,
@@ -86,6 +87,7 @@ function ResultComponent(data) {
   }
   function toggleReturnRadio(e: any) {
     const Id = e.target.id.split('-');
+    setRadioValidation(2);
 
     if (Id[0] === 'ReturnSecondClass') {
       updateContext({
@@ -125,25 +127,38 @@ function ResultComponent(data) {
       let esh: any = document.getElementById(lastSelectedReturnTripId);
       esh.checked = false;
     }
-
     lastSelectedReturnTripId = e.target.id;
   }
 
   function nextPage() {
-    if (bookingContext.SelectedTrain.class === 'SecondClass') {
-      nav('/additional-choices');
+    if (bookingContext.searchData.returnTrip === true) {
+      if (radioValidation === 2) {
+        if (bookingContext.SelectedTrain.class === 'SecondClass') {
+          nav('/additional-choices');
+        } else {
+          nav('/payment');
+        }
+      } else {
+        alert('Var vänlig välj ett tåg, tack!');
+      }
+    } else if (radioValidation === 1) {
+      if (bookingContext.SelectedTrain.class === 'SecondClass') {
+        nav('/additional-choices');
+      } else {
+        nav('/payment');
+      }
     } else {
-      nav('/payment');
+      alert('Var vänlig välj ett tåg, tack!');
     }
   }
 
   return (
     <>
-      <Link to="/">
-        <button className="btn btn-secondary">Tillbaka</button>
+      <Link to='/'>
+        <button className='btn btn-secondary'>Tillbaka</button>
       </Link>
-      <div className="container text-center">
-        <div id="searchResults">
+      <div className='container text-center'>
+        <div id='searchResults'>
           <h2>Utresa</h2>
           <p>
             {data.data.searchData.departure.location} -{' '}
@@ -152,8 +167,8 @@ function ResultComponent(data) {
           <p>
             {moment(data.data.searchData.departure.time).format('Do MMMM YYYY')}
           </p>
-          <table id="departTrip" className="table">
-            <thead className="thead-dark">
+          <table id='departTrip' className='table'>
+            <thead className='thead-dark'>
               <tr>
                 <th>Tid</th>
                 <th>1 klass</th>
@@ -166,8 +181,7 @@ function ResultComponent(data) {
                   <tr
                     onClick={() => getTicket(trip.train.id, '')}
                     id={trip.train.id}
-                    key={trip.train.id}
-                  >
+                    key={trip.train.id}>
                     <td>
                       {moment(trip.departure.time).format('HH:mm')} -{' '}
                       {moment(trip.arrival.time).format('HH:mm')}
@@ -188,7 +202,7 @@ function ResultComponent(data) {
                         {trip.estimatedPrices[0].price + ' :-'}
                       </label>
                       <input
-                        type="radio"
+                        type='radio'
                         name={'FirstClass-' + trip.train.id}
                         id={'FirstClass-' + trip.train.id}
                         onChange={(e) => toggleRadio(e)}
@@ -199,7 +213,7 @@ function ResultComponent(data) {
                         {trip.estimatedPrices[1].price + ' :-'}
                       </label>
                       <input
-                        type="radio"
+                        type='radio'
                         name={'SecondClass-' + trip.train.id}
                         id={'SecondClass-' + trip.train.id}
                         onChange={(e) => toggleRadio(e)}
@@ -222,8 +236,8 @@ function ResultComponent(data) {
                   'Do MMMM YYYY'
                 )}
               </p>
-              <table id="returnTrip" className="table">
-                <thead className="thead-dark">
+              <table id='returnTrip' className='table'>
+                <thead className='thead-dark'>
                   <tr>
                     <th>Tid</th>
                     <th>1 klass</th>
@@ -235,8 +249,7 @@ function ResultComponent(data) {
                     <tr
                       onClick={() => getTicket(trip.train.id, '')}
                       id={trip.train.id}
-                      key={trip.train.id}
-                    >
+                      key={trip.train.id}>
                       <td>
                         {moment(trip.departure.time).format('HH:mm')} -{' '}
                         {moment(trip.arrival.time).format('HH:mm')}
@@ -257,7 +270,7 @@ function ResultComponent(data) {
                           {trip.estimatedPrices[0].price + ' :-'}
                         </label>
                         <input
-                          type="radio"
+                          type='radio'
                           name={'FirstClass-' + trip.train.id}
                           id={'ReturnFirstClass-' + trip.train.id}
                           onChange={(e) => toggleReturnRadio(e)}
@@ -268,7 +281,7 @@ function ResultComponent(data) {
                           {trip.estimatedPrices[1].price + ' :-'}
                         </label>
                         <input
-                          type="radio"
+                          type='radio'
                           name={'SecondClass-' + trip.train.id}
                           id={'ReturnSecondClass-' + trip.train.id}
                           onChange={(e) => toggleReturnRadio(e)}
@@ -282,12 +295,11 @@ function ResultComponent(data) {
           ) : (
             <></>
           )}
-          <div className="col">
+          <div className='col'>
             <button
-              id="continueButton"
-              className="btn btn-success float-right"
-              onClick={nextPage}
-            >
+              id='continueButton'
+              className='btn btn-success float-right'
+              onClick={nextPage}>
               Fortsätt
             </button>
           </div>

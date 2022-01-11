@@ -34,7 +34,7 @@ const SearchBookingComponent = ({
       idPassedValidation ? "" : "Ogiltigt bokningsnummer. "
     );
     setEmailError(!emailPassedValidation);
-    setEmailErrorMessage(emailPassedValidation ? "" : "Ogiltigt email. ");
+    setEmailErrorMessage(emailPassedValidation ? "" : "Ogiltig email. ");
     if (idPassedValidation && emailPassedValidation) {
       searchFunction(email, bookingId);
     } else {

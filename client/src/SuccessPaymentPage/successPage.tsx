@@ -63,7 +63,7 @@ function SuccessPage() {
                         <div className="col-lg-3">
                           <p>Adult</p>
                           <p>Andra klass</p>
-                          <p>540 kr</p>
+                          <p>540  kr</p>
                         </div>
                         <div className="col-lg-3">
                           <p><strong>Förnamn:</strong></p>

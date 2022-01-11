@@ -24,8 +24,12 @@ export class BookingService {
 
   async getAvailableTrips(
     body: TripSearchDto,
+    isReturnTrip: boolean,
   ): Promise<{ error?: string; trips?: TripResponse[] }> {
-    const fetchedTrips = await this._tripService.getAvailableTrips(body);
+    const fetchedTrips = await this._tripService.getAvailableTrips(
+      body,
+      isReturnTrip,
+    );
 
     if (fetchedTrips?.error != null) {
       return { error: fetchedTrips?.error };

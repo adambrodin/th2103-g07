@@ -59,6 +59,15 @@ const AdditionalChoicesPage = () => {
             class: 'AnimalFriendly',
           },
         });
+      } else if (coach.name === 'Vanlig vagn') {
+        updateContext({
+          ...context,
+          SelectedTrain: {
+            ...context.SelectedTrain,
+            TotalTicketPrice: coach.price,
+            class: 'SecondClass',
+          },
+        });
       }
     }
   }

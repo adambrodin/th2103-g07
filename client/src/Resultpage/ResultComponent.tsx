@@ -1,12 +1,13 @@
 import moment from 'moment';
 import 'rsuite/dist/rsuite.min.css';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { BookingContext } from '../Contexts/BookingContext';
 
-function ResultComponent() {
+function ResultComponent(data) {
   let nav = useNavigate();
   const [bookingContext, updateContext] = useContext(BookingContext);
+  const [radioValidation, setRadioValidation] = useState(0);
   let lastSelectedDepartTrip: HTMLElement | null = null;
   let lastSelectedReturnTrip: HTMLElement | null = null;
   let lastSelectedTripId: string = '';
@@ -45,7 +46,7 @@ function ResultComponent() {
 
   function toggleRadio(e: any) {
     const Id = e.target.id.split('-');
-
+    setRadioValidation(1);
     if (Id[0] === 'SecondClass') {
       updateContext({
         ...bookingContext,
@@ -86,6 +87,7 @@ function ResultComponent() {
   }
   function toggleReturnRadio(e: any) {
     const Id = e.target.id.split('-');
+    setRadioValidation(2);
 
     if (Id[0] === 'ReturnSecondClass') {
       updateContext({
@@ -125,15 +127,28 @@ function ResultComponent() {
       let esh: any = document.getElementById(lastSelectedReturnTripId);
       esh.checked = false;
     }
-
     lastSelectedReturnTripId = e.target.id;
   }
 
   function nextPage() {
-    if (bookingContext.SelectedTrain.class === 'SecondClass') {
-      nav('/additional-choices');
+    if (bookingContext.searchData.returnTrip === true) {
+      if (radioValidation === 2) {
+        if (bookingContext.SelectedTrain.class === 'SecondClass') {
+          nav('/additional-choices');
+        } else {
+          nav('/payment');
+        }
+      } else {
+        alert('Var vänlig välj ett tåg, tack!');
+      }
+    } else if (radioValidation === 1) {
+      if (bookingContext.SelectedTrain.class === 'SecondClass') {
+        nav('/additional-choices');
+      } else {
+        nav('/payment');
+      }
     } else {
-      nav('/payment');
+      alert('Var vänlig välj ett tåg, tack!');
     }
   }
 
@@ -146,13 +161,11 @@ function ResultComponent() {
         <div id='searchResults'>
           <h2>Utresa</h2>
           <p>
-            {bookingContext.searchData.departure.location} -{' '}
-            {bookingContext.searchData.arrival.location}
+            {data.data.searchData.departure.location} -{' '}
+            {data.data.searchData.arrival.location}
           </p>
           <p>
-            {moment(bookingContext.searchData.departure.time).format(
-              'Do MMMM YYYY'
-            )}
+            {moment(data.data.searchData.departure.time).format('Do MMMM YYYY')}
           </p>
           <table id='departTrip' className='table'>
             <thead className='thead-dark'>
@@ -163,7 +176,7 @@ function ResultComponent() {
               </tr>
             </thead>
             <tbody>
-              {bookingContext.dbData.OutboundTrips.map((trip: any) => {
+              {data.data.dbData.OutboundTrips.map((trip: any) => {
                 return (
                   <tr
                     onClick={() => getTicket(trip.train.id, '')}
@@ -211,15 +224,15 @@ function ResultComponent() {
               })}
             </tbody>
           </table>
-          {bookingContext.searchData.returnTrip ? (
+          {data.data.searchData.returnTrip ? (
             <>
               <h2>Återresa</h2>
               <p>
-                {bookingContext.searchData.returnDeparture.location} -{' '}
-                {bookingContext.searchData.returnArrival.location}
+                {data.data.searchData.returnDeparture.location} -{' '}
+                {data.data.searchData.returnArrival.location}
               </p>
               <p>
-                {moment(bookingContext.searchData.returnDeparture.time).format(
+                {moment(data.data.searchData.returnDeparture.time).format(
                   'Do MMMM YYYY'
                 )}
               </p>
@@ -232,7 +245,7 @@ function ResultComponent() {
                   </tr>
                 </thead>
                 <tbody>
-                  {bookingContext.dbData.ReturnTrips.map((trip: any) => (
+                  {data.data.dbData.ReturnTrips.map((trip: any) => (
                     <tr
                       onClick={() => getTicket(trip.train.id, '')}
                       id={trip.train.id}

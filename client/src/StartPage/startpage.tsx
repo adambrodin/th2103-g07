@@ -277,6 +277,7 @@ function StartPage() {
                       ...bookingContext.searchData.departure,
                       time: e.toISOString(),
                     },
+                    returnTrip: returnTrip,
                   },
                 })
               }

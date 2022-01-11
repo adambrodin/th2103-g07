@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import "./SearchBookingComponent.css";
 
 interface Props {
   searchFunction: (email: string, bookingId: string) => void;
@@ -58,6 +59,7 @@ const SearchBookingComponent = ({
         }}
         noValidate
         autoComplete="off"
+        className="input-container"
       >
         <div className="email-textfield-container">
           <TextField

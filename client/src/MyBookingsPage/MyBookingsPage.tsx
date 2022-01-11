@@ -3,6 +3,7 @@ import BookingComponent from "./BookingComponent";
 import Card from "@mui/material/Card";
 import SearchBookingComponent from "./SearchBookingComponent";
 import { ReceiptResponseDto } from "../../../shared/dtos/responses/receipt-response.dto";
+import "./MyBookingsPage.css";
 
 const API_URL =
   process.env.NODE_ENV === "production"
@@ -49,13 +50,17 @@ const MyBookingsPage = () => {
       body: JSON.stringify(searchData),
     })
       .then((res) => res.json())
-      .then((data) => {
-        if (data.data !== undefined) {
-          setBooking(data.data);
+      .then(({ data }) => {
+        if (data !== undefined) {
+          setBooking(data);
           setShowBooking(true);
 
           setBookingCredentials(searchData);
         } else {
+          setShowBooking(false);
+          setStatusMessage(
+            "Bokningen kunde ej hittas. Vänligen verifiera uppgifterna och försök igen!"
+          );
           setSearchFailed(true);
         }
       });
@@ -82,14 +87,14 @@ const MyBookingsPage = () => {
   }
   return (
     <div className="container text-center">
-      <h1>Sök Bokning </h1>
+      <h1 className="header-text">Sök Bokning </h1>
       <SearchBookingComponent
         searchFunction={searchForBooking}
         searchErrorFunction={searchErrorFunction}
       ></SearchBookingComponent>
       {showBooking && (
-        <div className="container booking-container">
-          <Card variant="outlined" sx={{ minWidth: 260, width: 400 }}>
+        <div className="booking-reference">
+          <Card variant="outlined">
             <BookingComponent
               receipt={booking as ReceiptResponseDto}
               deleteFunction={deleteBooking}
@@ -97,7 +102,10 @@ const MyBookingsPage = () => {
           </Card>
         </div>
       )}
-      {statusMessage.length > 0 && <h4>{statusMessage}</h4>}
+
+      <div className="status-msg">
+        {statusMessage.length > 0 && <h4>{statusMessage}</h4>}
+      </div>
     </div>
   );
 };

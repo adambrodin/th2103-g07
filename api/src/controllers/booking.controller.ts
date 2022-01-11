@@ -21,11 +21,14 @@ export class BookingController {
 
   @Post('search')
   async searchAvailableTrips(@Body() body: TripSearchDto) {
-    const outboundTrips = await this._bookingService.getAvailableTrips(body);
+    const outboundTrips = await this._bookingService.getAvailableTrips(
+      body,
+      false,
+    );
 
     let returnTrips: { error?: string; trips?: TripResponse[] };
     if (body.returnDeparture != null && body.returnArrival != null) {
-      returnTrips = await this._bookingService.getAvailableTrips(body);
+      returnTrips = await this._bookingService.getAvailableTrips(body, true);
     }
 
     if (outboundTrips?.error != null || returnTrips?.error != null) {

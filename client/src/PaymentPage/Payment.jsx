@@ -126,45 +126,89 @@ function Payment() {
     const seatType = context.SelectedTrain.class;
 
     context.searchData.tickets.forEach((ticket) => {
-      if (ticket.type === 'Adult') {
-        if (seatType === 'FirstClass') {
-          items.push({ id: 1, quantity: ticket.amount });
-        } else if (seatType === 'SecondClass') {
-          items.push({ id: 2, quantity: ticket.amount });
-        } else if (seatType === 'AnimalFriendly') {
-          items.push({ id: 3, quantity: ticket.amount });
-        } else if (seatType === 'QuietCart') {
-          items.push({ id: 4, quantity: ticket.amount });
+      if (context.searchData.returnTrip === false) {
+        if (ticket.type === 'Adult') {
+          if (seatType === 'FirstClass') {
+            items.push({ id: 1, quantity: ticket.amount });
+          } else if (seatType === 'SecondClass') {
+            items.push({ id: 2, quantity: ticket.amount });
+          } else if (seatType === 'AnimalFriendly') {
+            items.push({ id: 3, quantity: ticket.amount });
+          } else if (seatType === 'QuietCart') {
+            items.push({ id: 4, quantity: ticket.amount });
+          }
+        } else if (ticket.type === 'Student') {
+          if (seatType === 'FirstClass') {
+            items.push({ id: 5, quantity: ticket.amount });
+          } else if (seatType === 'SecondClass') {
+            items.push({ id: 6, quantity: ticket.amount });
+          } else if (seatType === 'AnimalFriendly') {
+            items.push({ id: 7, quantity: ticket.amount });
+          } else if (seatType === 'QuietCart') {
+            items.push({ id: 8, quantity: ticket.amount });
+          }
+        } else if (ticket.type === 'Senior') {
+          if (seatType === 'FirstClass') {
+            items.push({ id: 9, quantity: ticket.amount });
+          } else if (seatType === 'SecondClass') {
+            items.push({ id: 10, quantity: ticket.amount });
+          } else if (seatType === 'AnimalFriendly') {
+            items.push({ id: 11, quantity: ticket.amount });
+          } else if (seatType === 'QuietCart') {
+            items.push({ id: 12, quantity: ticket.amount });
+          }
+        } else if (ticket.type === 'Child') {
+          if (seatType === 'FirstClass') {
+            items.push({ id: 13, quantity: ticket.amount });
+          } else if (seatType === 'SecondClass') {
+            items.push({ id: 14, quantity: ticket.amount });
+          } else if (seatType === 'AnimalFriendly') {
+            items.push({ id: 15, quantity: ticket.amount });
+          } else if (seatType === 'QuietCart') {
+            items.push({ id: 16, quantity: ticket.amount });
+          }
         }
-      } else if (ticket.type === 'Student') {
-        if (seatType === 'FirstClass') {
-          items.push({ id: 5, quantity: ticket.amount });
-        } else if (seatType === 'SecondClass') {
-          items.push({ id: 6, quantity: ticket.amount });
-        } else if (seatType === 'AnimalFriendly') {
-          items.push({ id: 7, quantity: ticket.amount });
-        } else if (seatType === 'QuietCart') {
-          items.push({ id: 8, quantity: ticket.amount });
-        }
-      } else if (ticket.type === 'Senior') {
-        if (seatType === 'FirstClass') {
-          items.push({ id: 9, quantity: ticket.amount });
-        } else if (seatType === 'SecondClass') {
-          items.push({ id: 10, quantity: ticket.amount });
-        } else if (seatType === 'AnimalFriendly') {
-          items.push({ id: 11, quantity: ticket.amount });
-        } else if (seatType === 'QuietCart') {
-          items.push({ id: 12, quantity: ticket.amount });
-        }
-      } else if (ticket.type === 'Child') {
-        if (seatType === 'FirstClass') {
-          items.push({ id: 13, quantity: ticket.amount });
-        } else if (seatType === 'SecondClass') {
-          items.push({ id: 14, quantity: ticket.amount });
-        } else if (seatType === 'AnimalFriendly') {
-          items.push({ id: 15, quantity: ticket.amount });
-        } else if (seatType === 'QuietCart') {
-          items.push({ id: 16, quantity: ticket.amount });
+      } else {
+        if (ticket.type === 'Adult') {
+          if (seatType === 'FirstClass') {
+            items.push({ id: 1, quantity: ticket.amount * 2 });
+          } else if (seatType === 'SecondClass') {
+            items.push({ id: 2, quantity: ticket.amount * 2 });
+          } else if (seatType === 'AnimalFriendly') {
+            items.push({ id: 3, quantity: ticket.amount * 2 });
+          } else if (seatType === 'QuietCart') {
+            items.push({ id: 4, quantity: ticket.amount * 2 });
+          }
+        } else if (ticket.type === 'Student') {
+          if (seatType === 'FirstClass') {
+            items.push({ id: 5, quantity: ticket.amount * 2 });
+          } else if (seatType === 'SecondClass') {
+            items.push({ id: 6, quantity: ticket.amount * 2 });
+          } else if (seatType === 'AnimalFriendly') {
+            items.push({ id: 7, quantity: ticket.amount * 2 });
+          } else if (seatType === 'QuietCart') {
+            items.push({ id: 8, quantity: ticket.amount * 2 });
+          }
+        } else if (ticket.type === 'Senior') {
+          if (seatType === 'FirstClass') {
+            items.push({ id: 9, quantity: ticket.amount * 2 });
+          } else if (seatType === 'SecondClass') {
+            items.push({ id: 10, quantity: ticket.amount * 2 });
+          } else if (seatType === 'AnimalFriendly') {
+            items.push({ id: 11, quantity: ticket.amount * 2 });
+          } else if (seatType === 'QuietCart') {
+            items.push({ id: 12, quantity: ticket.amount * 2 });
+          }
+        } else if (ticket.type === 'Child') {
+          if (seatType === 'FirstClass') {
+            items.push({ id: 13, quantity: ticket.amount * 2 });
+          } else if (seatType === 'SecondClass') {
+            items.push({ id: 14, quantity: ticket.amount * 2 });
+          } else if (seatType === 'AnimalFriendly') {
+            items.push({ id: 15, quantity: ticket.amount * 2 });
+          } else if (seatType === 'QuietCart') {
+            items.push({ id: 16, quantity: ticket.amount * 2 });
+          }
         }
       }
     });

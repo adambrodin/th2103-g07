@@ -42,32 +42,80 @@ const AdditionalChoicesPage = () => {
     const coach = options.find(({ id }) => id === toggledCoachId);
     if (coach) {
       if (coach.name === 'Tyst vagn') {
-        updateContext({
-          ...context,
-          SelectedTrain: {
-            ...context.SelectedTrain,
-            TotalTicketPrice: coach.price,
-            class: 'QuietCart',
-          },
-        });
+        if (context.searchData.returnTrip === false) {
+          updateContext({
+            ...context,
+            SelectedTrain: {
+              ...context.SelectedTrain,
+              TotalTicketPrice: coach.price,
+              class: 'QuietCart',
+            },
+          });
+        } else {
+          updateContext({
+            ...context,
+            SelectedTrain: {
+              ...context.SelectedTrain,
+              TotalTicketPrice: coach.price,
+              class: 'QuietCart',
+            },
+            SelectedReturnTrain: {
+              ...context.SelectedReturnTrain,
+              TotalTicketPrice: coach.price,
+              class: 'QuietCart',
+            },
+          });
+        }
       } else if (coach.name === 'Djurvagn') {
-        updateContext({
-          ...context,
-          SelectedTrain: {
-            ...context.SelectedTrain,
-            TotalTicketPrice: coach.price,
-            class: 'AnimalFriendly',
-          },
-        });
+        if (context.searchData.returnTrip === false) {
+          updateContext({
+            ...context,
+            SelectedTrain: {
+              ...context.SelectedTrain,
+              TotalTicketPrice: coach.price,
+              class: 'AnimalFriendly',
+            },
+          });
+        } else {
+          updateContext({
+            ...context,
+            SelectedTrain: {
+              ...context.SelectedTrain,
+              TotalTicketPrice: coach.price,
+              class: 'AnimalFriendly',
+            },
+            SelectedReturnTrain: {
+              ...context.SelectedReturnTrain,
+              TotalTicketPrice: coach.price,
+              class: 'AnimalFriendly',
+            },
+          });
+        }
       } else if (coach.name === 'Vanlig vagn') {
-        updateContext({
-          ...context,
-          SelectedTrain: {
-            ...context.SelectedTrain,
-            TotalTicketPrice: coach.price,
-            class: 'SecondClass',
-          },
-        });
+        if (context.searchData.returnTrip === false) {
+          updateContext({
+            ...context,
+            SelectedTrain: {
+              ...context.SelectedTrain,
+              TotalTicketPrice: coach.price,
+              class: 'SecondClass',
+            },
+          });
+        } else {
+          updateContext({
+            ...context,
+            SelectedTrain: {
+              ...context.SelectedTrain,
+              TotalTicketPrice: coach.price,
+              class: 'SecondClass',
+            },
+            SelectedReturnTrain: {
+              ...context.SelectedReturnTrain,
+              TotalTicketPrice: coach.price,
+              class: 'SecondClass',
+            },
+          });
+        }
       }
     }
   }

@@ -259,7 +259,7 @@ function Payment() {
   }
 
   function returnPage() {
-    if (context.SelectedTrain.class === "FirstClass") {
+    if (context.SelectedTrain.class === "First Class") {
       nav("/results");
     } else {
       nav("/additional-choices");

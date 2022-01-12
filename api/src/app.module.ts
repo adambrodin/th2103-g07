@@ -3,7 +3,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { BookingController } from './controllers/booking.controller';
 import { BookingService } from './services/booking.service';
 import { TrafikverketService } from './services/trafikverket.service';
@@ -12,9 +11,8 @@ import { StationService } from './services/station.service';
 import { TripService } from './services/trip.service';
 import { EmailService } from './services/mailer.service';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-
-
 import { PriceService } from './services/price.service';
+import { StripeController } from './controllers/stripe.controller';
 
 @Module({
   // TypeOrm database credentials come from environment variables
@@ -45,7 +43,7 @@ import { PriceService } from './services/price.service';
           },
         },
         defaults: {
-          from:'"no-reply" <noreply@grupp7.com>',
+          from: '"no-reply" <noreply@grupp7.com>',
         },
         template: {
           dir: process.cwd() + '/src/mail/templates',
@@ -57,8 +55,14 @@ import { PriceService } from './services/price.service';
       }),
     }),
   ],
-  controllers: [BookingController, StationController],
-  providers: [BookingService, TrafikverketService, StationService, TripService, EmailService, PriceService],
-
+  controllers: [BookingController, StationController, StripeController],
+  providers: [
+    BookingService,
+    TrafikverketService,
+    StationService,
+    TripService,
+    EmailService,
+    PriceService,
+  ],
 })
 export class AppModule {}

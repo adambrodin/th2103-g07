@@ -6,8 +6,7 @@ import { TripSearchDto } from '@shared/dtos/requests/trip-search-request.dto';
 import { BookTripRequestDto } from '@shared/dtos/requests/book-trip-request.dto';
 import { PriceService } from 'src/services/price.service';
 import { EmailService } from 'src/services/mailer.service';
-// import { ReceiptResponseDto } from '@shared/dtos/responses/receipt-response.dto';
-declare function require(name: string);
+import Stripe from 'stripe';
 
 @Controller('booking')
 export class BookingController {
@@ -16,8 +15,9 @@ export class BookingController {
     private readonly _mailerService: EmailService,
   ) {}
   private getTotalPrice: PriceService = new PriceService();
-  Stripe = require('stripe');
-  stripe = this.Stripe(process.env.STRIPE_PRIVATE_KEY);
+  stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY, {
+    apiVersion: '2020-08-27',
+  });
 
   @Post('search')
   async searchAvailableTrips(@Body() body: TripSearchDto) {
@@ -269,6 +269,7 @@ export class BookingController {
       const session = await this.stripe.checkout.sessions.create({
         payment_method_types: ['card', 'klarna'],
         mode: 'payment',
+        metadata: { body: JSON.stringify(body) },
         line_items: body.items.map((item) => {
           const storeItem = storeItems.get(item.id);
           return {
@@ -282,7 +283,8 @@ export class BookingController {
             quantity: item.quantity,
           };
         }),
-        success_url: process.env.CLIENT_URL + '/success',
+        success_url:
+          process.env.CLIENT_URL + '/success?session_id={CHECKOUT_SESSION_ID}',
         cancel_url: process.env.CLIENT_URL + '/canceled',
       });
       return {

@@ -113,12 +113,6 @@ function Payment() {
       );
     }
   }
-  $(document).ready(function () {
-    $(document).on('submit', '#customer-form', function () {
-      addBooking();
-      return false;
-    });
-  });
 
   // Data to save booking to db, not done
   function addBooking() {
@@ -276,9 +270,13 @@ function Payment() {
               </label>
             </div>
             {formArray}
-            <div className='btn-container'>
-              <button className='btn btn-success' type='submit'>
-                {' '}
+            <div className="btn-container">
+              <button
+                className="btn btn-success"
+                type="submit"
+                onClick={(e) => addBooking(e)}
+              >
+                {" "}
                 Till betalning
               </button>
             </div>

@@ -20,8 +20,11 @@ export class TripService {
 
   async getAvailableTrips(
     body: TripSearchDto,
+    isReturnTrip: boolean,
   ): Promise<{ error?: string; trips?: TripResponse[] }> {
-    const tripPoints = [body.departure, body.arrival];
+    const tripPoints = isReturnTrip
+      ? [body.returnDeparture, body.returnArrival]
+      : [body.departure, body.arrival];
     const stopRepo = getRepository(TrainStopEntity);
 
     const signatures: string[] = [];

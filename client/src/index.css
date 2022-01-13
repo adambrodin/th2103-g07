@@ -100,3 +100,18 @@ textarea {
 .MuiOutlinedInput-root fieldset {
   border-color: #b0eba2;
 }
+.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.css-cnd76u-MuiPaper-root {
+  background-color: #2e445b;
+  color: white;
+}
+.MuiToggleButtonGroup-root.css-1gjgmky-MuiToggleButtonGroup-root button {
+  color: white;
+}
+.MuiToggleButtonGroup-root.css-1gjgmky-MuiToggleButtonGroup-root button:active {
+  background-color: #b0eba2;
+  color: black;
+}
+.MuiToggleButtonGroup-root.css-1gjgmky-MuiToggleButtonGroup-root button:focus {
+  background-color: #b0eba2;
+  color: black;
+}

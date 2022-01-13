@@ -30,7 +30,7 @@ function Payment() {
       setTotalPrice(context.SelectedTrain.TotalTicketPrice);
       setSummary(
         <>
-          <div className="sum-info">
+          <div className='sum-info'>
             <h3>
               {context.searchData.departure.location} -{' '}
               {context.searchData.arrival.location}
@@ -45,8 +45,8 @@ function Payment() {
           context.SelectedReturnTrain.TotalTicketPrice
       );
       setSummary(
-        <div className="return-sum">
-          <div className="sum-info">
+        <div className='return-sum'>
+          <div className='sum-info'>
             <h4>Utresa</h4>
             <h3>
               {context.searchData.departure.location} -{' '}
@@ -54,7 +54,7 @@ function Payment() {
             </h3>
             <h3>Tid: {context.SelectedTrain.Time}</h3>
           </div>
-          <div className="sum-info">
+          <div className='sum-info'>
             <h4>Återresa</h4>
             <h3>
               {context.searchData.returnDeparture.location} -{' '}
@@ -85,9 +85,9 @@ function Payment() {
               />
               <span>Förnamn</span>
             </label>
-            <label htmlFor="">
+            <label htmlFor=''>
               <input
-                type="text"
+                type='text'
                 required
                 className='input-color'
                 onBlur={(e) => {
@@ -241,7 +241,8 @@ function Payment() {
       body: JSON.stringify({
         items: items,
         outboundBookingId: parsedOutbound.data.booking.id,
-        returnBookingId: parsedReturn != null ? parsedReturn?.data?.booking?.id : null
+        returnBookingId:
+          parsedReturn != null ? parsedReturn?.data?.booking?.id : null,
       }),
     })
       .then(async (res) => {
@@ -284,7 +285,7 @@ function Payment() {
           </div>
         </div>
       </div>
-      <div className='customer-container justify-content-center align-center'>
+      <div className='customer-container '>
         <div className='information-container mt-5'>
           <form
             className='customer-form'
@@ -302,7 +303,7 @@ function Payment() {
                 />
                 <span className='font-color'>Förnamn</span>
               </label>
-              <label htmlFor="">
+              <label htmlFor=''>
                 <input
                   type='text'
                   className='input-color'
@@ -312,8 +313,8 @@ function Payment() {
                 <span className='font-color'>Efternamn</span>
               </label>
             </div>
-            <div className="c-form-row">
-              <label htmlFor="">
+            <div className='c-form-row'>
+              <label htmlFor=''>
                 <input
                   type='email'
                   className='input-color'
@@ -322,12 +323,12 @@ function Payment() {
                 />
                 <span className='font-color'>E-postadress</span>
               </label>
-              <label htmlFor="">
+              <label htmlFor=''>
                 <input
                   type='tel'
                   className='input-color'
                   required
-                  pattern="[0-9]{10}"
+                  pattern='[0-9]{10}'
                   onBlur={(e) => (customerPhone = e.target.value)}
                 />
                 <span className='font-color'>Mobilnummer</span>
@@ -341,7 +342,10 @@ function Payment() {
                 </button>
               </div>
               <div className='col-md-6'>
-                <button className='btn confirm-button m-4' onClick={(e) => addBooking(e)} type='submit'>
+                <button
+                  className='btn confirm-button m-4'
+                  onClick={(e) => addBooking(e)}
+                  type='submit'>
                   {' '}
                   Till betalning
                 </button>

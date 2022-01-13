@@ -85,3 +85,8 @@ label > input[placeholder=' ']:not(:focus):placeholder-shown + span {
 .information-container {
   margin: 0 auto;
 }
+@media (max-width: 600px) {
+  .c-form-row {
+    flex-direction: column;
+  }
+}

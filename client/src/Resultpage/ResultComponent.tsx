@@ -9,39 +9,6 @@ function ResultComponent(data) {
   const [bookingContext, updateContext] = useContext(BookingContext);
   const [lastSelectedTripId, setLastSelectedTripId] = useState('');
   const [lastSelectedReturnTripId, setLastSelectedReturnTripId] = useState('');
-  // let lastSelectedDepartTrip: HTMLElement | null = null;
-  // let lastSelectedReturnTrip: HTMLElement | null = null;
-
-  // function getTicket(DepartId: string, returnId: string) {
-  //   // Get train object from id
-
-  //   let currentDepartTrip = document.getElementById(DepartId);
-  //   let currentReturnTrip;
-  //   if (returnId) {
-  //     currentReturnTrip = document.getElementById(returnId);
-  //   }
-
-  //   if (lastSelectedDepartTrip != null && currentDepartTrip != null) {
-  //     lastSelectedDepartTrip.classList.remove('selectedTicket');
-  //   }
-  //   if (lastSelectedReturnTrip != null && currentReturnTrip != null) {
-  //     lastSelectedReturnTrip.classList.remove('selectedTicket');
-  //   }
-
-  //   if (currentDepartTrip != null) {
-  //     currentDepartTrip.classList.add('selectedTicket');
-  //   }
-  //   if (currentReturnTrip != null) {
-  //     currentReturnTrip.classList.add('selectedTicket');
-  //   }
-
-  //   if (currentDepartTrip != null) {
-  //     lastSelectedDepartTrip = currentDepartTrip;
-  //   }
-  //   if (currentReturnTrip != null) {
-  //     lastSelectedReturnTrip = currentReturnTrip;
-  //   }
-  // }
 
   function toggleRadio(e: any) {
     const Id = e.target.id.split('-');
@@ -184,11 +151,7 @@ function ResultComponent(data) {
             <tbody>
               {data.data.dbData.OutboundTrips.map((trip: any) => {
                 return (
-                  <tr
-                    // onClick={() => getTicket(trip.train.id, '')}
-                    id={trip.train.id}
-                    key={trip.train.id}
-                  >
+                  <tr id={trip.train.id} key={trip.train.id}>
                     <td>
                       {moment(trip.departure.time).format('HH:mm')} -{' '}
                       {moment(trip.arrival.time).format('HH:mm')}
@@ -253,11 +216,7 @@ function ResultComponent(data) {
                 </thead>
                 <tbody>
                   {data.data.dbData.ReturnTrips.map((trip: any) => (
-                    <tr
-                      // onClick={() => getTicket(trip.train.id, '')}
-                      id={'r-' + trip.train.id}
-                      key={trip.train.id}
-                    >
+                    <tr id={'r-' + trip.train.id} key={trip.train.id}>
                       <td>
                         {moment(trip.departure.time).format('HH:mm')} -{' '}
                         {moment(trip.arrival.time).format('HH:mm')}

@@ -1,28 +1,28 @@
-import "./SuccessPaymentPage.css";
+import './SuccessPaymentPage.css';
 
-import { useEffect, useState } from "react";
-import moment from "moment";
-import "moment/locale/sv";
+import { useEffect, useState } from 'react';
+import moment from 'moment';
+import 'moment/locale/sv';
 function SuccessPage() {
-  moment.locale("sv");
+  moment.locale('sv');
 
   const API_URL =
-    process.env.NODE_ENV === "production"
-      ? "https://train-booking-function-app.azurewebsites.net/api"
+    process.env.NODE_ENV === 'production'
+      ? 'https://train-booking-function-app.azurewebsites.net/api'
       : process.env.REACT_APP_API_URL;
 
   // Fetch session_id from URL /success?session_id=${ID}
   const sessionId = new URLSearchParams(window.location.search).get(
-    "session_id"
+    'session_id'
   );
 
   const [receipt, setReceipt] = useState<any>();
   useEffect(() => {
-    fetch(API_URL + "/payment/" + sessionId, {
-      method: "GET",
+    fetch(API_URL + '/payment/' + sessionId, {
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
       },
     })
       .then((res) => {
@@ -53,7 +53,7 @@ function SuccessPage() {
                   <p className="sec-font-color">
                     {moment(
                       receipt?.outboundTrip.receipt.booking.departure.date
-                    ).format("LLL")}
+                    ).format('LLL')}
                   </p>
                   <p className="sec-font-color">
                     <strong>Från: </strong>
@@ -72,7 +72,7 @@ function SuccessPage() {
                   <p className="sec-font-color">
                     {moment(
                       receipt?.outboundTrip.receipt.booking.arrival.date
-                    ).format("LLL")}
+                    ).format('LLL')}
                   </p>
                   <p className="sec-font-color">
                     <strong>Till:</strong>
@@ -131,7 +131,7 @@ function SuccessPage() {
                     return (
                       <div
                         className="col-lg-5 mt-3"
-                        key={"ticket-" + ticket.id}
+                        key={'ticket-' + ticket.id}
                       >
                         <div className="card dark-bg shadow">
                           <div className="card-body">

@@ -5,18 +5,18 @@ function Navbar() {
   return (
     <>
       <nav className="container">
-        <div className='nav-container'>
-          <div className='nav-logo'>
-            <Link to='/'>
+        <div className="nav-container">
+          <div className="nav-logo">
+            <Link to="/">
               <img
-                src='https://cdn-icons-png.flaticon.com/512/821/821354.png'
-                alt=''
+                src="https://cdn-icons-png.flaticon.com/512/821/821354.png"
+                alt=""
               />
             </Link>
           </div>
-          <div className='nav-links'>
-            <Link to='/'>Startsida</Link>
-            <Link to='/my-bookings'>Mina bokningar</Link>
+          <div className="nav-links">
+            <Link to="/">Startsida</Link>
+            <Link to="/my-bookings">Mina bokningar</Link>
           </div>
         </div>
       </nav>

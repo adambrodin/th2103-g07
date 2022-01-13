@@ -29,13 +29,15 @@ const ChoachPickerComponent = ({ options, handler }: CoachOptions) => {
         value={alignment}
         exclusive
         onChange={handleAlignment}
-        aria-label='text alignment'>
+        aria-label="text alignment"
+      >
         {options.map((coach) => {
           return (
             <ToggleButton
               key={coach.id}
               value={coach.id}
-              aria-label={coach.name}>
+              aria-label={coach.name}
+            >
               {coach.name} <br />
               {coach.price} SEK
             </ToggleButton>

@@ -1,7 +1,7 @@
-import { useState } from "react";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import "./SearchBookingComponent.css";
+import { useState } from 'react';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import './SearchBookingComponent.css';
 
 interface Props {
   searchFunction: (email: string, bookingId: string) => void;
@@ -14,10 +14,10 @@ const SearchBookingComponent = ({
 }: Props) => {
   const [emailError, setEmailError] = useState(false);
   const [bookingIdError, setBookingIdError] = useState(false);
-  const [email, setEmail] = useState("");
-  const [bookingId, setBookingId] = useState("");
-  const [bookingIdErrorMessage, setBookingIdErrorMessage] = useState("");
-  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [email, setEmail] = useState('');
+  const [bookingId, setBookingId] = useState('');
+  const [bookingIdErrorMessage, setBookingIdErrorMessage] = useState('');
+  const [emailErrorMessage, setEmailErrorMessage] = useState('');
 
   function validateBookingId(id: string) {
     return id.length > 1;
@@ -32,10 +32,10 @@ const SearchBookingComponent = ({
     let emailPassedValidation = validateEmail(email);
     setBookingIdError(!idPassedValidation);
     setBookingIdErrorMessage(
-      idPassedValidation ? "" : "Ogiltigt bokningsnummer. "
+      idPassedValidation ? '' : 'Ogiltigt bokningsnummer. '
     );
     setEmailError(!emailPassedValidation);
-    setEmailErrorMessage(emailPassedValidation ? "" : "Ogiltig email. ");
+    setEmailErrorMessage(emailPassedValidation ? '' : 'Ogiltig email. ');
     if (idPassedValidation && emailPassedValidation) {
       searchFunction(email, bookingId);
     } else {
@@ -46,7 +46,7 @@ const SearchBookingComponent = ({
   return (
     <>
       <span className="font-color">
-        {" "}
+        {' '}
         Här kan du avsluta aktiva bokningar. Hitta dina bokningar genom att mata
         in dess bokningsnummer samt email-addressen du använde vid bokningen i
         fältet nedan:
@@ -55,7 +55,7 @@ const SearchBookingComponent = ({
       <Box
         component="form"
         sx={{
-          "& .MuiTextField-root": { m: 1, width: "32ch" },
+          '& .MuiTextField-root': { m: 1, width: '32ch' },
         }}
         noValidate
         autoComplete="off"
@@ -70,7 +70,7 @@ const SearchBookingComponent = ({
             helperText={emailErrorMessage}
             onChange={(e) => setEmail(e.target.value)}
             multiline={true}
-          />{" "}
+          />{' '}
         </div>
         <div className="booking-reference-container">
           <TextField

@@ -156,17 +156,18 @@ function StartPage() {
 
   return (
     <>
-      <div className='bg-img d-none d-md-block'></div>
-      <div className='container text-center'>
-        <div id='SearchContainer' className='row mt-5'>
-          <h2 className='mb-3 test text-light'>Hej, Vart vill du resa?</h2>
-          <div className='justify-content-center'>
+      <div className="bg-img d-none d-md-block"></div>
+      <div className="container text-center">
+        <div id="SearchContainer" className="row mt-5">
+          <h2 className="mb-3 test text-light">Hej, Vart vill du resa?</h2>
+          <div className="justify-content-center">
             <form>
-              <div className='form-row'>
-                <div className='form-group col-md-8 mx-auto '>
+              <div className="form-row">
+                <div className="form-group col-md-8 mx-auto ">
                   <div
-                    id='startForm'
-                    className='input-group mt-5 row justify-content-around'>
+                    id="startForm"
+                    className="input-group mt-5 row justify-content-around"
+                  >
                     <Autocomplete
                       options={stations}
                       style={{ width: 300 }}
@@ -196,10 +197,10 @@ function StartPage() {
                       }}
                       renderInput={(params) => (
                         <TextField
-                          className='fromDestination'
+                          className="fromDestination"
                           {...params}
-                          label='Avresestation'
-                          variant='filled'
+                          label="Avresestation"
+                          variant="filled"
                         />
                       )}
                     />
@@ -232,39 +233,40 @@ function StartPage() {
                       }}
                       renderInput={(params) => (
                         <TextField
-                          className='toDestination'
+                          className="toDestination"
                           {...params}
-                          label='Ankomststation'
-                          variant='filled'
+                          label="Ankomststation"
+                          variant="filled"
                         />
                       )}
                     />
                   </div>
                 </div>
               </div>
-              <div className='form-row spaceing'>
-                <div className='form-group col-md-8 mx-auto'>
-                  <div className='form-check form form-check-inline row justify-content-center '>
+              <div className="form-row spaceing">
+                <div className="form-group col-md-8 mx-auto">
+                  <div className="form-check form form-check-inline row justify-content-center ">
                     <input
-                      className='form-check-input mt-2'
-                      type='checkbox'
-                      name='returnTrip'
-                      id='returnTrip'
+                      className="form-check-input mt-2"
+                      type="checkbox"
+                      name="returnTrip"
+                      id="returnTrip"
                       onChange={() => toggleDatePicker()}
                     />
                     <label
-                      className='form-check-lable lead'
-                      htmlFor='returnTrip'>
+                      className="form-check-lable lead"
+                      htmlFor="returnTrip"
+                    >
                       Återresa
                     </label>
                   </div>
 
-                  <div className='mt-3' id='timeSelectContainer'>
+                  <div className="mt-3" id="timeSelectContainer">
                     <>
                       <DatePicker
-                        placeholder='Välj datum för avresa'
-                        className='datePicker'
-                        format='yyyy-MM-dd HH:mm'
+                        placeholder="Välj datum för avresa"
+                        className="datePicker"
+                        format="yyyy-MM-dd HH:mm"
                         isoWeek
                         locale={{
                           sunday: 'Sön',
@@ -293,10 +295,10 @@ function StartPage() {
                           })
                         }
                       />
-                      <span id='returnDate'>
+                      <span id="returnDate">
                         <DatePicker
-                          placeholder='Välj datum för återresa'
-                          format='yyyy-MM-dd HH:mm'
+                          placeholder="Välj datum för återresa"
+                          format="yyyy-MM-dd HH:mm"
                           isoWeek
                           locale={{
                             sunday: 'Sön',
@@ -332,19 +334,19 @@ function StartPage() {
                       </span>
                     </>
                   </div>
-                  <div className='row'>
-                    <div className='col-md-6'>
-                      <label className='mt-3 lead' htmlFor=''>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <label className="mt-3 lead" htmlFor="">
                         Vuxen
                       </label>
                     </div>
-                    <div className='col-md-6'>
+                    <div className="col-md-6">
                       <input
-                        className='mt-3 text-light'
-                        type='number'
-                        name=''
-                        id='adultTickets'
-                        min='0'
+                        className="mt-3 text-light"
+                        type="number"
+                        name=""
+                        id="adultTickets"
+                        min="0"
                         value={adultTicketAmount}
                         onChange={(e: any) =>
                           setAdultAmount(parseInt(e.target.value))
@@ -352,19 +354,19 @@ function StartPage() {
                       />
                     </div>
                   </div>
-                  <div className='row'>
-                    <div className='col-md-6'>
-                      <label className='mt-3 lead' htmlFor=''>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <label className="mt-3 lead" htmlFor="">
                         Ungdom/Student (18-25 år)
                       </label>
                     </div>
-                    <div className='col-md-6'>
+                    <div className="col-md-6">
                       <input
-                        className='mt-3 text-light'
-                        type='number'
-                        name=''
-                        id='studentTickets'
-                        min='0'
+                        className="mt-3 text-light"
+                        type="number"
+                        name=""
+                        id="studentTickets"
+                        min="0"
                         value={studentTicketAmount}
                         onChange={(e: any) =>
                           setStudentAmount(parseInt(e.target.value))
@@ -372,19 +374,19 @@ function StartPage() {
                       />
                     </div>
                   </div>
-                  <div className='row'>
-                    <div className='col-md-6'>
-                      <label className='mt-3 lead' htmlFor=''>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <label className="mt-3 lead" htmlFor="">
                         Pensionär (65+ år)
                       </label>
                     </div>
-                    <div className='col-md-6'>
+                    <div className="col-md-6">
                       <input
-                        className='mt-3 text-light'
-                        type='number'
-                        name=''
-                        id='pensionerTickets'
-                        min='0'
+                        className="mt-3 text-light"
+                        type="number"
+                        name=""
+                        id="pensionerTickets"
+                        min="0"
                         value={seniorTicketAmount}
                         onChange={(e: any) =>
                           setSeniorAmount(parseInt(e.target.value))
@@ -392,19 +394,19 @@ function StartPage() {
                       />
                     </div>
                   </div>
-                  <div className='row'>
-                    <div className='col-md-6'>
-                      <label className='mt-3 lead' htmlFor=''>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <label className="mt-3 lead" htmlFor="">
                         Barn (0-17 år)
                       </label>
                     </div>
-                    <div className='col-md-6'>
+                    <div className="col-md-6">
                       <input
-                        className='mt-3 text-light'
-                        type='number'
-                        name=''
-                        id='kidsTicket'
-                        min='0'
+                        className="mt-3 text-light"
+                        type="number"
+                        name=""
+                        id="kidsTicket"
+                        min="0"
                         value={childTicketAmount}
                         onChange={(e: any) =>
                           setChildAmount(parseInt(e.target.value))
@@ -418,8 +420,9 @@ function StartPage() {
           </div>
         </div>
         <button
-          className='btn confirm-button mt-3'
-          onClick={() => getResults()}>
+          className="btn confirm-button mt-3"
+          onClick={() => getResults()}
+        >
           Fortsätt
         </button>
       </div>

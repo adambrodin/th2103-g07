@@ -1,56 +1,59 @@
 import moment from 'moment';
 import 'rsuite/dist/rsuite.min.css';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { BookingContext } from '../Contexts/BookingContext';
 
 function ResultComponent(data) {
   let nav = useNavigate();
   const [bookingContext, updateContext] = useContext(BookingContext);
-  let lastSelectedDepartTrip: HTMLElement | null = null;
-  let lastSelectedReturnTrip: HTMLElement | null = null;
-  let lastSelectedTripId: string = '';
-  let lastSelectedReturnTripId: string = '';
+  const [lastSelectedTripId, setLastSelectedTripId] = useState('');
+  const [lastSelectedReturnTripId, setLastSelectedReturnTripId] = useState('');
+  // let lastSelectedDepartTrip: HTMLElement | null = null;
+  // let lastSelectedReturnTrip: HTMLElement | null = null;
 
-  function getTicket(DepartId: string, returnId: string) {
-    // Get train object from id
+  // function getTicket(DepartId: string, returnId: string) {
+  //   // Get train object from id
 
-    let currentDepartTrip = document.getElementById(DepartId);
-    let currentReturnTrip;
-    if (returnId) {
-      currentReturnTrip = document.getElementById(returnId);
-    }
+  //   let currentDepartTrip = document.getElementById(DepartId);
+  //   let currentReturnTrip;
+  //   if (returnId) {
+  //     currentReturnTrip = document.getElementById(returnId);
+  //   }
 
-    if (lastSelectedDepartTrip != null && currentDepartTrip != null) {
-      lastSelectedDepartTrip.classList.remove('selectedTicket');
-    }
-    if (lastSelectedReturnTrip != null && currentReturnTrip != null) {
-      lastSelectedReturnTrip.classList.remove('selectedTicket');
-    }
+  //   if (lastSelectedDepartTrip != null && currentDepartTrip != null) {
+  //     lastSelectedDepartTrip.classList.remove('selectedTicket');
+  //   }
+  //   if (lastSelectedReturnTrip != null && currentReturnTrip != null) {
+  //     lastSelectedReturnTrip.classList.remove('selectedTicket');
+  //   }
 
-    if (currentDepartTrip != null) {
-      currentDepartTrip.classList.add('selectedTicket');
-    }
-    if (currentReturnTrip != null) {
-      currentReturnTrip.classList.add('selectedTicket');
-    }
+  //   if (currentDepartTrip != null) {
+  //     currentDepartTrip.classList.add('selectedTicket');
+  //   }
+  //   if (currentReturnTrip != null) {
+  //     currentReturnTrip.classList.add('selectedTicket');
+  //   }
 
-    if (currentDepartTrip != null) {
-      lastSelectedDepartTrip = currentDepartTrip;
-    }
-    if (currentReturnTrip != null) {
-      lastSelectedReturnTrip = currentReturnTrip;
-    }
-  }
+  //   if (currentDepartTrip != null) {
+  //     lastSelectedDepartTrip = currentDepartTrip;
+  //   }
+  //   if (currentReturnTrip != null) {
+  //     lastSelectedReturnTrip = currentReturnTrip;
+  //   }
+  // }
 
   function toggleRadio(e: any) {
     const Id = e.target.id.split('-');
+    const lastSelectedId = lastSelectedTripId.split('-');
+    let currentDepartTrip = document.getElementById(Id[1]);
+    let lastSelectedDepartTrip = document.getElementById(lastSelectedId[1]);
 
     if (Id[0] === 'SecondClass') {
       updateContext({
         ...bookingContext,
         SelectedTrain: {
-          class: Id[0],
+          class: 'Second Class',
           trainID: Id[1],
           Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
           TotalTicketPrice:
@@ -61,7 +64,7 @@ function ResultComponent(data) {
       updateContext({
         ...bookingContext,
         SelectedTrain: {
-          class: Id[0],
+          class: 'First Class',
           trainID: Id[1],
           Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
           TotalTicketPrice:
@@ -71,27 +74,40 @@ function ResultComponent(data) {
     }
 
     if (e.target.id !== 'SecondClass-' + Id[1]) {
-      let esh: any = document.getElementById('SecondClass-' + Id[1]);
-      esh.checked = false;
+      let radio: any = document.getElementById('SecondClass-' + Id[1]);
+      radio.checked = false;
     } else if (e.target.id !== 'FirstClass-' + Id[1]) {
       let esh: any = document.getElementById('FirstClass-' + Id[1]);
       esh.checked = false;
     }
+
     if (lastSelectedTripId !== e.target.id && lastSelectedTripId !== '') {
-      let esh: any = document.getElementById(lastSelectedTripId);
-      esh.checked = false;
+      let radio: any = document.getElementById(lastSelectedTripId);
+      radio.checked = false;
     }
 
-    lastSelectedTripId = e.target.id;
+    if (lastSelectedDepartTrip != null && currentDepartTrip != null) {
+      lastSelectedDepartTrip.classList.remove('selectedTicket');
+    }
+
+    if (currentDepartTrip != null) {
+      currentDepartTrip.classList.add('selectedTicket');
+    }
+    setLastSelectedTripId(e.target.id);
   }
   function toggleReturnRadio(e: any) {
     const Id = e.target.id.split('-');
+    const lastSelectedId = lastSelectedReturnTripId.split('-');
+    let currentReturnTrip = document.getElementById('r-' + Id[1]);
+    let lastSelectedReturnTrip = document.getElementById(
+      'r-' + lastSelectedId[1]
+    );
 
     if (Id[0] === 'ReturnSecondClass') {
       updateContext({
         ...bookingContext,
         SelectedReturnTrain: {
-          class: Id[0].slice(6, 17).split(),
+          class: 'Second Class',
           trainID: Id[1],
           Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
           TotalTicketPrice:
@@ -102,7 +118,7 @@ function ResultComponent(data) {
       updateContext({
         ...bookingContext,
         SelectedReturnTrain: {
-          class: Id[0].slice(6, 17),
+          class: 'First Class',
           trainID: Id[1],
           Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
           TotalTicketPrice:
@@ -125,8 +141,13 @@ function ResultComponent(data) {
       let esh: any = document.getElementById(lastSelectedReturnTripId);
       esh.checked = false;
     }
-
-    lastSelectedReturnTripId = e.target.id;
+    if (lastSelectedReturnTrip != null && currentReturnTrip != null) {
+      lastSelectedReturnTrip.classList.remove('selectedTicket');
+    }
+    if (currentReturnTrip != null) {
+      currentReturnTrip.classList.add('selectedTicket');
+    }
+    setLastSelectedReturnTripId(e.target.id);
   }
 
   function nextPage() {
@@ -164,7 +185,7 @@ function ResultComponent(data) {
               {data.data.dbData.OutboundTrips.map((trip: any) => {
                 return (
                   <tr
-                    onClick={() => getTicket(trip.train.id, '')}
+                    // onClick={() => getTicket(trip.train.id, '')}
                     id={trip.train.id}
                     key={trip.train.id}
                   >
@@ -233,8 +254,8 @@ function ResultComponent(data) {
                 <tbody>
                   {data.data.dbData.ReturnTrips.map((trip: any) => (
                     <tr
-                      onClick={() => getTicket(trip.train.id, '')}
-                      id={trip.train.id}
+                      // onClick={() => getTicket(trip.train.id, '')}
+                      id={'r-' + trip.train.id}
                       key={trip.train.id}
                     >
                       <td>

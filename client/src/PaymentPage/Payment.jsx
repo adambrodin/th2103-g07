@@ -90,9 +90,12 @@ function Payment() {
                 type="text"
                 required
                 className='input-color'
-                onChange={(e) =>
-                  setCustomer({ ...customer, lastName: e.target.value })
-                }
+                onBlur={(e) => {
+                  passengers[i] = {
+                    firstName: passengers[i].firstName,
+                    lastName: e.target.value,
+                  };
+                }}
               />
               <span>Efternamn</span>
             </label>
@@ -228,7 +231,7 @@ function Payment() {
     }
 
     const parsedOutbound = await outboundBooking.json();
-    const parsedReturn = await returnBooking.json();
+    const parsedReturn = await returnBooking?.json();
     fetch(API_URL + "/booking/create-checkout-session", {
       method: "POST",
       headers: {
@@ -238,7 +241,8 @@ function Payment() {
       body: JSON.stringify({
         items: items,
         outboundBookingId: parsedOutbound.data.booking.id,
-        returnBookingId: parsedReturn?.data?.booking?.id,
+        //returnBookingId: parsedReturn?.data?.booking?.id,
+        returnBookingId: parsedReturn != null ? parsedReturn?.data?.booking?.id : null
       }),
     })
       .then(async (res) => {
@@ -268,7 +272,7 @@ function Payment() {
   return (
     <div className='container'>
       <div className='row'>
-        <div class='card text-center card-width payment-card mt-5'>
+        <div className='card text-center card-width payment-card mt-5'>
           <img
             src='https://previews.123rf.com/images/denisbelitsky/denisbelitsky1707/denisbelitsky170700022/81440808-high-speed-commuter-train-in-motion-at-the-railway-station-at-sunset-in-europe-beautiful-red-modern-.jpg'
             class='card-img-top img-width'
@@ -338,7 +342,7 @@ function Payment() {
                 </button>
               </div>
               <div className='col-md-6'>
-                <button className='btn confirm-button m-4' type='submit'>
+                <button className='btn confirm-button m-4' onClick={(e) => addBooking(e)} type='submit'>
                   {' '}
                   Till betalning
                 </button>

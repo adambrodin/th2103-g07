@@ -1,6 +1,6 @@
 import moment from 'moment';
 import 'rsuite/dist/rsuite.min.css';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { BookingContext } from '../Contexts/BookingContext';
 import './ResultComponent.css';
@@ -147,7 +147,7 @@ function ResultComponent(data) {
   function nextPage() {
     if (bookingContext.searchData.returnTrip === true) {
       if (radioValidation === 2) {
-        if (bookingContext.SelectedTrain.class === "SecondClass") {
+        if (bookingContext.SelectedTrain.class === "Second Class") {
           nav("/additional-choices");
         } else {
           nav("/payment");
@@ -156,7 +156,7 @@ function ResultComponent(data) {
         alert("Var vänlig välj ett tåg, tack!");
       }
     } else if (radioValidation === 1) {
-      if (bookingContext.SelectedTrain.class === "SecondClass") {
+      if (bookingContext.SelectedTrain.class === "Second Class") {
         nav("/additional-choices");
       } else {
         nav("/payment");

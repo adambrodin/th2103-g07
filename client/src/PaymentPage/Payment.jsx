@@ -216,7 +216,7 @@ function Payment() {
         </div>
 
       </div>
-      <div className='customer-container'>
+      <div className='customer-container justify-content-center align-center'>
         <div className='information-container mt-5'>
           <form
             className='customer-form'
@@ -282,14 +282,21 @@ function Payment() {
               </label>
             </div>
             {formArray}
-            <div className='btn-container'>
-              <button className='btn btn-success' type='submit'>
+            <div className='row'>
+              <div className="col-md-6">
+              <button className='btn m-4 back-button' onClick={returnPage}>
+                Tillbaka
+              </button>
+              </div>
+              <div className="col-md-6">
+                
+              <button className='btn confirm-button m-4' type='submit'>
                 {' '}
                 Till betalning
               </button>
-              <button className='btn btn-secondary m-4 shadow' onClick={returnPage}>
-                Tillbaka
-              </button>
+
+
+              </div>
             </div>
           </form>
         </div>

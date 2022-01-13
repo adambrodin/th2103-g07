@@ -22,20 +22,25 @@ const AdditionalChoicesPage = () => {
 
   let options = [
     {
-      id: '0',
-      name: 'Vanlig vagn',
-      price: context.dbData.OutboundTrips[0].estimatedPrices[1].price,
+      id: "0",
+      name: "Vanlig vagn",
+      price: Math.round(
+        context.dbData.OutboundTrips[0].estimatedPrices[1].price
+      ),
     },
     {
-      id: '1',
-      name: 'Tyst vagn',
-      price: context.dbData.OutboundTrips[0].estimatedPrices[3].price,
+      id: "1",
+      name: "Tyst vagn",
+      price: Math.round(
+        context.dbData.OutboundTrips[0].estimatedPrices[3].price
+      ),
     },
     {
-      id: '2',
-      name: 'Djurvagn',
-      price: context.dbData.OutboundTrips[0].estimatedPrices[2].price,
-    },
+      id: "2",
+      name: "Djurvagn",
+      price: Math.round(
+        context.dbData.OutboundTrips[0].estimatedPrices[2].price
+      ),
   ];
 
   function coachHandler(toggledCoachId: string) {
@@ -130,7 +135,7 @@ const AdditionalChoicesPage = () => {
         <h1 className='font-color'>Tillval</h1>
       </div>
 
-      <div className='container' id='additional-choices-list'>
+      <div className="container" id="additional-choices-list">
         <Stack spacing={2}>
           <Item className='mb-4'>
             <h4 className='mb-3'>Välj typ av vagn:</h4>

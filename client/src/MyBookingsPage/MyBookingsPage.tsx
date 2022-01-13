@@ -87,7 +87,7 @@ const MyBookingsPage = () => {
   }
   return (
     <div className="container text-center">
-      <h1 className="header-text">Sök Bokning </h1>
+      <h1 className="header-text font-color">Sök Bokning </h1>
       <SearchBookingComponent
         searchFunction={searchForBooking}
         searchErrorFunction={searchErrorFunction}
@@ -103,7 +103,7 @@ const MyBookingsPage = () => {
         </div>
       )}
 
-      <div className="status-msg">
+      <div className="status-msg font-color">
         {statusMessage.length > 0 && <h4>{statusMessage}</h4>}
       </div>
     </div>

@@ -24,17 +24,23 @@ const AdditionalChoicesPage = () => {
     {
       id: "0",
       name: "Vanlig vagn",
-      price: context.dbData.OutboundTrips[0].estimatedPrices[1].price,
+      price: Math.round(
+        context.dbData.OutboundTrips[0].estimatedPrices[1].price
+      ),
     },
     {
       id: "1",
       name: "Tyst vagn",
-      price: context.dbData.OutboundTrips[0].estimatedPrices[3].price,
+      price: Math.round(
+        context.dbData.OutboundTrips[0].estimatedPrices[3].price
+      ),
     },
     {
       id: "2",
       name: "Djurvagn",
-      price: context.dbData.OutboundTrips[0].estimatedPrices[2].price,
+      price: Math.round(
+        context.dbData.OutboundTrips[0].estimatedPrices[2].price
+      ),
     },
   ];
 
@@ -134,11 +140,11 @@ const AdditionalChoicesPage = () => {
 
   return (
     <div>
-      <div className='container mt-5'>
+      <div className="container mt-5">
         <h2 className="font-color text-center">Tillval</h2>
       </div>
 
-      <div className='container' id='additional-choices-list'>
+      <div className="container" id="additional-choices-list">
         <Stack spacing={2}>
           <Item className="mb-4">
             <h4 className="mb-3">Välj typ av vagn:</h4>
@@ -146,19 +152,20 @@ const AdditionalChoicesPage = () => {
           </Item>
         </Stack>
         <div className="row">
-          <div className='col-md-6'>
-            <Link to='/results'>
-              <button id='back-to-results-btn' className='btn back-button'>
+          <div className="col-md-6">
+            <Link to="/results">
+              <button id="back-to-results-btn" className="btn back-button">
                 Tillbaka
               </button>
             </Link>
           </div>
           <div className="col-md-6">
-            <Link to='/payment'>
+            <Link to="/payment">
               <button
-                id='continue-to-payment-btn'
-                className='btn confirm-button float-right'
-                onClick={nextPage}>
+                id="continue-to-payment-btn"
+                className="btn confirm-button float-right"
+                onClick={nextPage}
+              >
                 Fortsätt
               </button>
             </Link>

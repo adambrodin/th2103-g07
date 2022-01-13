@@ -1,58 +1,46 @@
-import { useState, useEffect } from 'react';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
+import { useState } from "react";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import "./SearchBookingComponent.css";
 
 interface Props {
-  searchFuntion: (email: string, bookingId: string) => void;
+  searchFunction: (email: string, bookingId: string) => void;
+  searchErrorFunction: () => void;
 }
 
-const SearchBookingComponent = ({ searchFuntion }: Props) => {
+const SearchBookingComponent = ({
+  searchFunction,
+  searchErrorFunction,
+}: Props) => {
   const [emailError, setEmailError] = useState(false);
   const [bookingIdError, setBookingIdError] = useState(false);
-  const [email, setEmail] = useState('');
-  const [bookingId, setBookingId] = useState('');
-  const [bookingIdErrorMessage, setBookingIdErrorMessage] = useState('');
-  const [emailErrorMessage, setEmailErrorMessage] = useState('');
-  const [searchReady, setSearchReady] = useState(false);
-
-  useEffect(() => {
-    if (!searchReady) return;
-    if (!emailError && !bookingIdError) {
-      searchFuntion(email, bookingId);
-    }
-    setSearchReady(false);
-  }, [
-    searchReady,
-    emailError,
-    bookingIdError,
-    searchFuntion,
-    email,
-    bookingId,
-  ]);
+  const [email, setEmail] = useState("");
+  const [bookingId, setBookingId] = useState("");
+  const [bookingIdErrorMessage, setBookingIdErrorMessage] = useState("");
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
 
   function validateBookingId(id: string) {
-    if (id.length > 1) {
-      setBookingIdError(false);
-      setBookingIdErrorMessage('');
-    } else {
-      setBookingIdError(true);
-      setBookingIdErrorMessage('Incorrect entry. ');
-    }
+    return id.length > 1;
   }
   function validateEmail(emailToValidate: string) {
-    const emailRegex = /\S+@\S+/;
-    if (String(emailToValidate).toLowerCase().match(emailRegex)) {
-      setEmailError(false);
-      setEmailErrorMessage('');
-    } else {
-      setEmailError(true);
-      setEmailErrorMessage('Incorrect entry. ');
-    }
+    const validationPattern = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+    return validationPattern.test(emailToValidate);
   }
+
   function search() {
-    validateBookingId(bookingId);
-    validateEmail(email);
-    setSearchReady(true);
+    let idPassedValidation = validateBookingId(bookingId);
+    let emailPassedValidation = validateEmail(email);
+    setBookingIdError(!idPassedValidation);
+    setBookingIdErrorMessage(
+      idPassedValidation ? "" : "Ogiltigt bokningsnummer. "
+    );
+    setEmailError(!emailPassedValidation);
+    setEmailErrorMessage(emailPassedValidation ? "" : "Ogiltig email. ");
+    if (idPassedValidation && emailPassedValidation) {
+      searchFunction(email, bookingId);
+    } else {
+      searchErrorFunction();
+    }
   }
 
   return (
@@ -60,7 +48,7 @@ const SearchBookingComponent = ({ searchFuntion }: Props) => {
       <span>
         {' '}
         Här kan du avsluta aktiva bokningar. Hitta dina bokningar genom att mata
-        in dess referensnummer samt email-addressen du använde vid bokningen i
+        in dess bokningsnummer samt email-addressen du använde vid bokningen i
         fältet nedan:
       </span>
       <br />
@@ -70,8 +58,10 @@ const SearchBookingComponent = ({ searchFuntion }: Props) => {
           '& .MuiTextField-root': { m: 1, width: '32ch' },
         }}
         noValidate
-        autoComplete='off'>
-        <div className='email-textfield-container'>
+        autoComplete="off"
+        className="input-container"
+      >
+        <div className="email-textfield-container">
           <TextField
             error={emailError}
             id='booking-search-email-input'
@@ -85,9 +75,9 @@ const SearchBookingComponent = ({ searchFuntion }: Props) => {
         <div className='booking-reference-container'>
           <TextField
             error={bookingIdError}
-            id='booking-search-id-input'
-            className='text-field-booking-reference-input'
-            label='Referensnummer'
+            id="booking-search-id-input"
+            className="text-field-booking-reference-input"
+            label="Bokningsnummer"
             helperText={bookingIdErrorMessage}
             onChange={(e) => setBookingId(e.target.value)}
             multiline={true}

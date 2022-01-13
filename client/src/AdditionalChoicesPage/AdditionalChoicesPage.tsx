@@ -1,18 +1,18 @@
-import { useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { BookingContext } from '../Contexts/BookingContext';
-import Stack from '@mui/material/Stack';
-import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import { BookingContext } from "../Contexts/BookingContext";
+import Stack from "@mui/material/Stack";
+import Paper from "@mui/material/Paper";
+import { styled } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
-import 'rsuite/dist/rsuite.min.css';
-import ChoachPickerComponent from './CoachPickerComponent';
+import "rsuite/dist/rsuite.min.css";
+import ChoachPickerComponent from "./CoachPickerComponent";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
-  textAlign: 'center',
+  textAlign: "center",
   color: theme.palette.text.secondary,
 }));
 
@@ -22,18 +22,18 @@ const AdditionalChoicesPage = () => {
 
   let options = [
     {
-      id: '0',
-      name: 'Vanlig vagn',
+      id: "0",
+      name: "Vanlig vagn",
       price: context.dbData.OutboundTrips[0].estimatedPrices[1].price,
     },
     {
-      id: '1',
-      name: 'Tyst vagn',
+      id: "1",
+      name: "Tyst vagn",
       price: context.dbData.OutboundTrips[0].estimatedPrices[3].price,
     },
     {
-      id: '2',
-      name: 'Djurvagn',
+      id: "2",
+      name: "Djurvagn",
       price: context.dbData.OutboundTrips[0].estimatedPrices[2].price,
     },
   ];
@@ -41,24 +41,81 @@ const AdditionalChoicesPage = () => {
   function coachHandler(toggledCoachId: string) {
     const coach = options.find(({ id }) => id === toggledCoachId);
     if (coach) {
-      if (coach.name === 'Tyst vagn') {
-        updateContext({
-          ...context,
-          SelectedTrain: {
-            ...context.SelectedTrain,
-            TotalTicketPrice: coach.price,
-            class: 'QuietCart',
-          },
-        });
-      } else if (coach.name === 'Djurvagn') {
-        updateContext({
-          ...context,
-          SelectedTrain: {
-            ...context.SelectedTrain,
-            TotalTicketPrice: coach.price,
-            class: 'AnimalFriendly',
-          },
-        });
+      if (coach.name === "Tyst vagn") {
+        if (context.searchData.returnTrip === false) {
+          updateContext({
+            ...context,
+            SelectedTrain: {
+              ...context.SelectedTrain,
+              TotalTicketPrice: coach.price,
+              class: "Quiet Cart",
+            },
+          });
+        } else {
+          updateContext({
+            ...context,
+            SelectedTrain: {
+              ...context.SelectedTrain,
+              TotalTicketPrice: coach.price,
+              class: "Quiet Cart",
+            },
+            SelectedReturnTrain: {
+              ...context.SelectedReturnTrain,
+              TotalTicketPrice: coach.price,
+              class: "Quiet Cart",
+            },
+          });
+        }
+      } else if (coach.name === "Djurvagn") {
+        if (context.searchData.returnTrip === false) {
+          updateContext({
+            ...context,
+            SelectedTrain: {
+              ...context.SelectedTrain,
+              TotalTicketPrice: coach.price,
+              class: "Animal Friendly",
+            },
+          });
+        } else {
+          updateContext({
+            ...context,
+            SelectedTrain: {
+              ...context.SelectedTrain,
+              TotalTicketPrice: coach.price,
+              class: "Animal Friendly",
+            },
+            SelectedReturnTrain: {
+              ...context.SelectedReturnTrain,
+              TotalTicketPrice: coach.price,
+              class: "Animal Friendly",
+            },
+          });
+        }
+      } else if (coach.name === "Vanlig vagn") {
+        if (context.searchData.returnTrip === false) {
+          updateContext({
+            ...context,
+            SelectedTrain: {
+              ...context.SelectedTrain,
+              TotalTicketPrice: coach.price,
+              class: "Second Class",
+            },
+          });
+        } else {
+          updateContext({
+            ...context,
+            SelectedTrain: {
+              ...context.SelectedTrain,
+              TotalTicketPrice: coach.price,
+              class: "Second Class",
+            },
+            SelectedReturnTrain: {
+              ...context.SelectedReturnTrain,
+              TotalTicketPrice: coach.price,
+              class: "Second Class",
+            },
+          });
+        }
       }
     }
   }
@@ -72,7 +129,7 @@ const AdditionalChoicesPage = () => {
   New choices should be added as stack item
   */
   function nextPage() {
-    nav('/payment');
+    nav("/payment");
   }
 
   return (

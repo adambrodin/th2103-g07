@@ -1,0 +1,18 @@
+.status-msg {
+  margin-top: 1rem;
+}
+
+.header-text {
+  margin-bottom: 1rem;
+}
+
+.booking-container {
+  margin-top: 1rem;
+}
+
+.booking-reference {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

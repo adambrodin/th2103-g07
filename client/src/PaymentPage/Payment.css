@@ -76,7 +76,10 @@ label > input[placeholder=' ']:not(:focus):placeholder-shown + span {
 }
 
 .font-color {
-    color: #b0eba2;
+  color: #b0eba2;
+}
+.input-color {
+  color: #c0c0c0;
 }
 
 .information-container {

@@ -51,7 +51,7 @@ function Payment() {
               {context.searchData.departure.location} -{' '}
               {context.searchData.arrival.location}
             </h3>
-            <h4 className="text-center">Tid: {context.SelectedTrain.Time}</h4>
+            <h4 className='text-center'>Tid: {context.SelectedTrain.Time}</h4>
           </div>
         </>
       );
@@ -88,11 +88,12 @@ function Payment() {
     for (let i = 1; i < numberOfForms; i++) {
       formArray.push(
         <>
-          <h3>Resenär {i + 1}</h3>
-          <div className='c-form-row'>
+          <h3 className='font-color'>Resenär {i + 1}</h3>
+          <div className='c-form-row font-color'>
             <label htmlFor=''>
               <input
                 type='text'
+                className='input-color'
                 required
                 onChange={(e) => setCustomer({ firstName: e.target.value })}
               />
@@ -102,6 +103,7 @@ function Payment() {
               <input
                 type='text'
                 required
+                className='input-color'
                 onChange={(e) =>
                   setCustomer({ ...customer, lastName: e.target.value })
                 }
@@ -204,17 +206,19 @@ function Payment() {
 
   return (
     <div className='container'>
-      <div className="row">
-
-      <div class="card text-center card-width payment-card mt-5">
-        <img src="https://previews.123rf.com/images/denisbelitsky/denisbelitsky1707/denisbelitsky170700022/81440808-high-speed-commuter-train-in-motion-at-the-railway-station-at-sunset-in-europe-beautiful-red-modern-.jpg" class="card-img-top img-width" alt="..." />
-        <div class="card-body">
-           <h5 class="card-title mt-3">{summary}</h5>
-            <p class="card-text lead">{'Antal biljetter: ' + numberOfForms}</p>
-            <p class="card-text lead">{'Att betala: ' + totalPrice + ':-'}</p>
-         </div>
+      <div className='row'>
+        <div class='card text-center card-width payment-card mt-5'>
+          <img
+            src='https://previews.123rf.com/images/denisbelitsky/denisbelitsky1707/denisbelitsky170700022/81440808-high-speed-commuter-train-in-motion-at-the-railway-station-at-sunset-in-europe-beautiful-red-modern-.jpg'
+            class='card-img-top img-width'
+            alt='...'
+          />
+          <div class='card-body'>
+            <h5 class='card-title mt-3'>{summary}</h5>
+            <p class='card-text lead'>{'Antal biljetter: ' + numberOfForms}</p>
+            <p class='card-text lead'>{'Att betala: ' + totalPrice + ':-'}</p>
+          </div>
         </div>
-
       </div>
       <div className='customer-container justify-content-center align-center'>
         <div className='information-container mt-5'>
@@ -223,12 +227,12 @@ function Payment() {
             action='#'
             id='customer-form'
             name='paynow'>
-            <h3 className="font-color">Resenär</h3>
+            <h3 className='font-color'>Resenär</h3>
             <div className='c-form-row'>
               <label htmlFor=''>
                 <input
                   type='text'
-                  className="font-color"
+                  className='input-color'
                   required
                   onChange={(e) =>
                     updateContext({
@@ -236,12 +240,12 @@ function Payment() {
                     })
                   }
                 />
-                <span className="font-color">Förnamn</span>
+                <span className='font-color'>Förnamn</span>
               </label>
               <label htmlFor=''>
                 <input
                   type='text'
-                  className="font-color"
+                  className='input-color'
                   required
                   onChange={(e) =>
                     updateContext({
@@ -249,14 +253,14 @@ function Payment() {
                     })
                   }
                 />
-                <span className="font-color">Efternamn</span>
+                <span className='font-color'>Efternamn</span>
               </label>
             </div>
             <div className='c-form-row'>
               <label htmlFor=''>
                 <input
                   type='email'
-                  className="font-color"
+                  className='input-color'
                   required
                   onChange={(e) =>
                     updateContext({
@@ -264,12 +268,12 @@ function Payment() {
                     })
                   }
                 />
-                <span className="font-color">E-postadress</span>
+                <span className='font-color'>E-postadress</span>
               </label>
               <label htmlFor=''>
                 <input
                   type='tel'
-                  className="font-color"
+                  className='input-color'
                   required
                   pattern='[0-9]{10}'
                   onChange={(e) =>
@@ -278,24 +282,21 @@ function Payment() {
                     })
                   }
                 />
-                <span className="font-color">Mobilnummer</span>
+                <span className='font-color'>Mobilnummer</span>
               </label>
             </div>
             {formArray}
             <div className='row'>
-              <div className="col-md-6">
-              <button className='btn m-4 back-button' onClick={returnPage}>
-                Tillbaka
-              </button>
+              <div className='col-md-6'>
+                <button className='btn m-4 back-button' onClick={returnPage}>
+                  Tillbaka
+                </button>
               </div>
-              <div className="col-md-6">
-                
-              <button className='btn confirm-button m-4' type='submit'>
-                {' '}
-                Till betalning
-              </button>
-
-
+              <div className='col-md-6'>
+                <button className='btn confirm-button m-4' type='submit'>
+                  {' '}
+                  Till betalning
+                </button>
               </div>
             </div>
           </form>

@@ -10,6 +10,7 @@ nav {
 .nav-links {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 .nav-links a {
   margin: 0 1rem;
@@ -28,4 +29,11 @@ nav {
   margin: 1em;
   margin-right: 5em;
 }
-
+@media (max-width: 600px) {
+  .nav-container {
+    margin: 0;
+  }
+  .nav-logo {
+    margin-right: -3em;
+  }
+}

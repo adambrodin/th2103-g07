@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
+import { useState, useEffect } from 'react';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 
 interface Props {
   searchFuntion: (email: string, bookingId: string) => void;
@@ -9,10 +9,10 @@ interface Props {
 const SearchBookingComponent = ({ searchFuntion }: Props) => {
   const [emailError, setEmailError] = useState(false);
   const [bookingIdError, setBookingIdError] = useState(false);
-  const [email, setEmail] = useState("");
-  const [bookingId, setBookingId] = useState("");
-  const [bookingIdErrorMessage, setBookingIdErrorMessage] = useState("");
-  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [email, setEmail] = useState('');
+  const [bookingId, setBookingId] = useState('');
+  const [bookingIdErrorMessage, setBookingIdErrorMessage] = useState('');
+  const [emailErrorMessage, setEmailErrorMessage] = useState('');
   const [searchReady, setSearchReady] = useState(false);
 
   useEffect(() => {
@@ -33,20 +33,20 @@ const SearchBookingComponent = ({ searchFuntion }: Props) => {
   function validateBookingId(id: string) {
     if (id.length > 1) {
       setBookingIdError(false);
-      setBookingIdErrorMessage("");
+      setBookingIdErrorMessage('');
     } else {
       setBookingIdError(true);
-      setBookingIdErrorMessage("Incorrect entry. ");
+      setBookingIdErrorMessage('Incorrect entry. ');
     }
   }
   function validateEmail(emailToValidate: string) {
     const emailRegex = /\S+@\S+/;
     if (String(emailToValidate).toLowerCase().match(emailRegex)) {
       setEmailError(false);
-      setEmailErrorMessage("");
+      setEmailErrorMessage('');
     } else {
       setEmailError(true);
-      setEmailErrorMessage("Incorrect entry. ");
+      setEmailErrorMessage('Incorrect entry. ');
     }
   }
   function search() {
@@ -58,37 +58,36 @@ const SearchBookingComponent = ({ searchFuntion }: Props) => {
   return (
     <>
       <span>
-        {" "}
+        {' '}
         Här kan du avsluta aktiva bokningar. Hitta dina bokningar genom att mata
         in dess referensnummer samt email-addressen du använde vid bokningen i
         fältet nedan:
       </span>
       <br />
       <Box
-        component="form"
+        component='form'
         sx={{
-          "& .MuiTextField-root": { m: 1, width: "32ch" },
+          '& .MuiTextField-root': { m: 1, width: '32ch' },
         }}
         noValidate
-        autoComplete="off"
-      >
-        <div className="email-textfield-container">
+        autoComplete='off'>
+        <div className='email-textfield-container'>
           <TextField
             error={emailError}
-            id="booking-search-email-input"
-            className="text-field-email-input"
-            label="Email"
+            id='booking-search-email-input'
+            className='text-field-email-input'
+            label='Email'
             helperText={emailErrorMessage}
             onChange={(e) => setEmail(e.target.value)}
             multiline={true}
-          />{" "}
+          />{' '}
         </div>
-        <div className="booking-reference-container">
+        <div className='booking-reference-container'>
           <TextField
             error={bookingIdError}
-            id="booking-search-id-input"
-            className="text-field-booking-reference-input"
-            label="Referensnummer"
+            id='booking-search-id-input'
+            className='text-field-booking-reference-input'
+            label='Referensnummer'
             helperText={bookingIdErrorMessage}
             onChange={(e) => setBookingId(e.target.value)}
             multiline={true}
@@ -96,11 +95,10 @@ const SearchBookingComponent = ({ searchFuntion }: Props) => {
         </div>
         <div>
           <button
-            id="search-booking-btn"
-            className="btn btn-success"
-            type="button"
-            onClick={search}
-          >
+            id='search-booking-btn'
+            className='btn confirm-button'
+            type='button'
+            onClick={search}>
             Sök
           </button>
         </div>

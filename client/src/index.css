@@ -15,7 +15,7 @@ code {
 }
 
 h2 {
-  font-family: "Arial";
+  font-family: 'Arial';
 }
 
 #startForm label {
@@ -73,14 +73,30 @@ h2 {
 }
 
 .datePicker {
-  background-color:#aeee97;
+  background-color: #aeee97;
 }
 
-input, textarea{
-  background-color:#2e445b;
-  color: white;
+input,
+textarea {
+  background-color: #2e445b;
+  color: #f00;
+  border: none;
+  padding: 6px;
+  border-radius: 5px;
 }
 
 .lead {
   color: #aab2be;
+}
+.email-textfield-container label {
+  color: #c0c0c0;
+}
+.booking-reference-container label {
+  color: #c0c0c0;
+}
+.MuiBox-root textarea {
+  color: white;
+}
+.MuiOutlinedInput-root fieldset {
+  border-color: #b0eba2;
 }

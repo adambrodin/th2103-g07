@@ -6,7 +6,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { BookingContext } from '../Contexts/BookingContext';
 import { useNavigate } from 'react-router-dom';
 import { DatePicker } from 'rsuite';
-import './startpage.css'
+import './startpage.css';
 
 function StartPage() {
   const [returnTrip, setReturnTrip] = useState(false);
@@ -156,20 +156,17 @@ function StartPage() {
 
   return (
     <>
-      <div className='bg-img'></div>
+      <div className='bg-img d-none d-md-block'></div>
       <div className='container text-center'>
-
         <div id='SearchContainer' className='row mt-5'>
-
-          <h2 className="mb-3 test text-light">Hej, Vart vill du resa?</h2>
+          <h2 className='mb-3 test text-light'>Hej, Vart vill du resa?</h2>
           <div className='justify-content-center'>
             <form>
               <div className='form-row'>
-                <div className='form-group col-md-8 mx-auto'>
-                  <div id='startForm' className='input-group'>
-                    <label className='input-group-text' htmlFor='fromDestination'>
-                      Från
-                    </label>
+                <div className='form-group col-md-8 mx-auto '>
+                  <div
+                    id='startForm'
+                    className='input-group mt-5 row justify-content-around'>
                     <Autocomplete
                       options={stations}
                       style={{ width: 300 }}
@@ -201,14 +198,11 @@ function StartPage() {
                         <TextField
                           className='fromDestination'
                           {...params}
-                          label='Sök efter stationer'
+                          label='Avresestation'
                           variant='filled'
                         />
                       )}
                     />
-                    <label className='input-group-text' htmlFor='toDestination'>
-                      Till
-                    </label>
                     <Autocomplete
                       options={stations}
                       style={{ width: 300 }}
@@ -240,7 +234,7 @@ function StartPage() {
                         <TextField
                           className='toDestination'
                           {...params}
-                          label='Sök efter stationer'
+                          label='Ankomststation'
                           variant='filled'
                         />
                       )}
@@ -249,27 +243,43 @@ function StartPage() {
                 </div>
               </div>
               <div className='form-row spaceing'>
-
                 <div className='form-group col-md-8 mx-auto'>
-                  <div className='form-check form form-check-inline'>
-                    <label className='form-check-lable lead' htmlFor='returnTrip'>
-                      Återresa
-                    </label>
+                  <div className='form-check form form-check-inline row justify-content-center '>
                     <input
-                      className='form-check-input'
+                      className='form-check-input mt-2'
                       type='checkbox'
                       name='returnTrip'
                       id='returnTrip'
                       onChange={() => toggleDatePicker()}
                     />
+                    <label
+                      className='form-check-lable lead'
+                      htmlFor='returnTrip'>
+                      Återresa
+                    </label>
                   </div>
 
-                  <div className="mt-3" id='timeSelectContainer'>
+                  <div className='mt-3' id='timeSelectContainer'>
                     <>
                       <DatePicker
                         placeholder='Välj datum för avresa'
-                        className="datePicker"
+                        className='datePicker'
                         format='yyyy-MM-dd HH:mm'
+                        isoWeek
+                        locale={{
+                          sunday: 'Sön',
+                          monday: 'Mån',
+                          tuesday: 'Tis',
+                          wednesday: 'Ons',
+                          thursday: 'Tors',
+                          friday: 'Fre',
+                          saturday: 'Lör',
+                          ok: 'OK',
+                          today: 'Idag',
+                          yesterday: 'Igår',
+                          hours: 'Timme',
+                          minutes: 'Minut',
+                        }}
                         style={{ width: 200 }}
                         onChange={(e) =>
                           updateContext({
@@ -287,6 +297,21 @@ function StartPage() {
                         <DatePicker
                           placeholder='Välj datum för återresa'
                           format='yyyy-MM-dd HH:mm'
+                          isoWeek
+                          locale={{
+                            sunday: 'Sön',
+                            monday: 'Mån',
+                            tuesday: 'Tis',
+                            wednesday: 'Ons',
+                            thursday: 'Tors',
+                            friday: 'Fre',
+                            saturday: 'Lör',
+                            ok: 'OK',
+                            today: 'Idag',
+                            yesterday: 'Igår',
+                            hours: 'Timme',
+                            minutes: 'Minut',
+                          }}
                           style={{ width: 200 }}
                           onChange={(e) =>
                             updateContext({
@@ -307,12 +332,15 @@ function StartPage() {
                       </span>
                     </>
                   </div>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <label className="mt-3 lead" htmlFor=''>Vuxen</label>
+                  <div className='row'>
+                    <div className='col-md-6'>
+                      <label className='mt-3 lead' htmlFor=''>
+                        Vuxen
+                      </label>
                     </div>
-                    <div className="col-md-6">
-                      <input className="mt-3"
+                    <div className='col-md-6'>
+                      <input
+                        className='mt-3 text-light'
                         type='number'
                         name=''
                         id='adultTickets'
@@ -324,12 +352,15 @@ function StartPage() {
                       />
                     </div>
                   </div>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <label className="mt-3 lead" htmlFor=''>Ungdom/Student (18-25 år)</label>
+                  <div className='row'>
+                    <div className='col-md-6'>
+                      <label className='mt-3 lead' htmlFor=''>
+                        Ungdom/Student (18-25 år)
+                      </label>
                     </div>
-                    <div className="col-md-6">
-                      <input className="mt-3"
+                    <div className='col-md-6'>
+                      <input
+                        className='mt-3 text-light'
                         type='number'
                         name=''
                         id='studentTickets'
@@ -341,12 +372,15 @@ function StartPage() {
                       />
                     </div>
                   </div>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <label className="mt-3 lead" htmlFor=''>Pensionär (65+ år)</label>
+                  <div className='row'>
+                    <div className='col-md-6'>
+                      <label className='mt-3 lead' htmlFor=''>
+                        Pensionär (65+ år)
+                      </label>
                     </div>
-                    <div className="col-md-6">
-                      <input className="mt-3"
+                    <div className='col-md-6'>
+                      <input
+                        className='mt-3 text-light'
                         type='number'
                         name=''
                         id='pensionerTickets'
@@ -358,12 +392,15 @@ function StartPage() {
                       />
                     </div>
                   </div>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <label className="mt-3 lead" htmlFor=''>Barn (0-17 år)</label>
+                  <div className='row'>
+                    <div className='col-md-6'>
+                      <label className='mt-3 lead' htmlFor=''>
+                        Barn (0-17 år)
+                      </label>
                     </div>
-                    <div className="col-md-6">
-                      <input className="mt-3"
+                    <div className='col-md-6'>
+                      <input
+                        className='mt-3 text-light'
                         type='number'
                         name=''
                         id='kidsTicket'
@@ -379,9 +416,10 @@ function StartPage() {
               </div>
             </form>
           </div>
-
         </div>
-        <button className='btn confirm-button mt-3' onClick={() => getResults()}>
+        <button
+          className='btn confirm-button mt-3'
+          onClick={() => getResults()}>
           Fortsätt
         </button>
       </div>

@@ -26,7 +26,6 @@ const ChoachPickerComponent = ({ options, handler }: CoachOptions) => {
   return (
     <div>
       <ToggleButtonGroup
-        color='success'
         value={alignment}
         exclusive
         onChange={handleAlignment}

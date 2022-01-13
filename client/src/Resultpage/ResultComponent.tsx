@@ -9,6 +9,7 @@ function ResultComponent(data) {
   const [bookingContext, updateContext] = useContext(BookingContext);
   const [lastSelectedTripId, setLastSelectedTripId] = useState('');
   const [lastSelectedReturnTripId, setLastSelectedReturnTripId] = useState('');
+  const [radioValidation, setRadioValidation] = useState(0);
 
   function toggleRadio(e: any) {
     const Id = e.target.id.split('-');
@@ -16,12 +17,18 @@ function ResultComponent(data) {
     let currentDepartTrip = document.getElementById(Id[1]);
     let lastSelectedDepartTrip = document.getElementById(lastSelectedId[1]);
 
+    setRadioValidation(1);
+    const outBoundTrip = (
+      bookingContext?.dbData?.OutboundTrips as any[]
+    ).filter((trip) => trip.train.id === Id[1]);
+
     if (Id[0] === 'SecondClass') {
       updateContext({
         ...bookingContext,
         SelectedTrain: {
           class: 'Second Class',
           trainID: Id[1],
+          stops: outBoundTrip[0].stops,
           Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
           TotalTicketPrice:
             bookingContext.dbData.OutboundTrips[0].estimatedPrices[1].price,
@@ -33,6 +40,7 @@ function ResultComponent(data) {
         SelectedTrain: {
           class: 'First Class',
           trainID: Id[1],
+          stops: outBoundTrip[0].stops,
           Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
           TotalTicketPrice:
             bookingContext.dbData.OutboundTrips[0].estimatedPrices[0].price,
@@ -69,6 +77,11 @@ function ResultComponent(data) {
     let lastSelectedReturnTrip = document.getElementById(
       'r-' + lastSelectedId[1]
     );
+    setRadioValidation(2);
+
+    const returnTrip = (bookingContext?.dbData?.ReturnTrips as any[]).filter(
+      (trip) => trip.train.id === Id[1]
+    );
 
     if (Id[0] === 'ReturnSecondClass') {
       updateContext({
@@ -76,6 +89,7 @@ function ResultComponent(data) {
         SelectedReturnTrain: {
           class: 'Second Class',
           trainID: Id[1],
+          stops: returnTrip[0].stops ?? null,
           Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
           TotalTicketPrice:
             bookingContext.dbData.ReturnTrips[0].estimatedPrices[1].price,
@@ -87,6 +101,7 @@ function ResultComponent(data) {
         SelectedReturnTrain: {
           class: 'First Class',
           trainID: Id[1],
+          stops: returnTrip[0].stops ?? null,
           Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
           TotalTicketPrice:
             bookingContext.dbData.ReturnTrips[0].estimatedPrices[0].price,
@@ -118,10 +133,24 @@ function ResultComponent(data) {
   }
 
   function nextPage() {
-    if (bookingContext.SelectedTrain.class === 'SecondClass') {
-      nav('/additional-choices');
+    if (bookingContext.searchData.returnTrip === true) {
+      if (radioValidation === 2) {
+        if (bookingContext.SelectedReturnTrain.class === 'Second Class') {
+          nav('/additional-choices');
+        } else {
+          nav('/payment');
+        }
+      } else {
+        alert('Var vänlig välj ett tåg, tack!');
+      }
+    } else if (radioValidation === 1) {
+      if (bookingContext.SelectedTrain.class === 'Second Class') {
+        nav('/additional-choices');
+      } else {
+        nav('/payment');
+      }
     } else {
-      nav('/payment');
+      alert('Var vänlig välj ett tåg, tack!');
     }
   }
 

@@ -23,7 +23,6 @@ function App() {
           <Route path="/" element={<StartPage />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/results" element={<ResultComponent data={test} />} />
-          <Route path="/" element={<StartPage />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/success" element={<SuccessPage />} />
           <Route path="/canceled" element={<CanceledPage />} />

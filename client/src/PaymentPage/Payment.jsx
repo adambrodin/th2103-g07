@@ -1,7 +1,7 @@
-import { useContext, useState, useEffect } from "react";
-import "./Payment.css";
-import { BookingContext } from "../Contexts/BookingContext";
-import { useNavigate } from "react-router-dom";
+import { useContext, useState, useEffect } from 'react';
+import './Payment.css';
+import { BookingContext } from '../Contexts/BookingContext';
+import { useNavigate } from 'react-router-dom';
 
 function Payment() {
   let passengers = [];
@@ -16,11 +16,11 @@ function Payment() {
   const [totalPrice, setTotalPrice] = useState();
   const [summary, setSummary] = useState();
   const API_URL =
-    process.env.NODE_ENV === "production"
-      ? "https://train-booking-function-app.azurewebsites.net/api"
+    process.env.NODE_ENV === 'production'
+      ? 'https://train-booking-function-app.azurewebsites.net/api'
       : process.env.REACT_APP_API_URL;
 
-  console.log("Context:", context);
+  console.log('Context:', context);
   context.searchData.tickets.forEach((element) => {
     numberOfForms += element.amount;
   });
@@ -32,7 +32,7 @@ function Payment() {
         <>
           <div className="sum-info">
             <h3>
-              {context.searchData.departure.location} -{" "}
+              {context.searchData.departure.location} -{' '}
               {context.searchData.arrival.location}
             </h3>
             <h4 className='text-center'>Tid: {context.SelectedTrain.Time}</h4>
@@ -49,7 +49,7 @@ function Payment() {
           <div className="sum-info">
             <h4>Utresa</h4>
             <h3>
-              {context.searchData.departure.location} -{" "}
+              {context.searchData.departure.location} -{' '}
               {context.searchData.arrival.location}
             </h3>
             <h3>Tid: {context.SelectedTrain.Time}</h3>
@@ -57,7 +57,7 @@ function Payment() {
           <div className="sum-info">
             <h4>Återresa</h4>
             <h3>
-              {context.searchData.returnDeparture.location} -{" "}
+              {context.searchData.returnDeparture.location} -{' '}
               {context.searchData.returnArrival.location}
             </h3>
             <h3>Tid: {context.SelectedReturnTrain.Time}</h3>
@@ -116,44 +116,44 @@ function Payment() {
         ticket.amount *= 2;
       }
 
-      if (ticket.type === "Adult") {
-        if (seatType === "First Class") {
+      if (ticket.type === 'Adult') {
+        if (seatType === 'First Class') {
           items.push({ id: 1, quantity: ticket.amount });
-        } else if (seatType === "Second Class") {
+        } else if (seatType === 'Second Class') {
           items.push({ id: 2, quantity: ticket.amount });
-        } else if (seatType === "Animal Friendly") {
+        } else if (seatType === 'Animal Friendly') {
           items.push({ id: 3, quantity: ticket.amount });
-        } else if (seatType === "Quiet Cart") {
+        } else if (seatType === 'Quiet Cart') {
           items.push({ id: 4, quantity: ticket.amount });
         }
-      } else if (ticket.type === "Student") {
-        if (seatType === "First Class") {
+      } else if (ticket.type === 'Student') {
+        if (seatType === 'First Class') {
           items.push({ id: 5, quantity: ticket.amount });
-        } else if (seatType === "Second Class") {
+        } else if (seatType === 'Second Class') {
           items.push({ id: 6, quantity: ticket.amount });
-        } else if (seatType === "Animal Friendly") {
+        } else if (seatType === 'Animal Friendly') {
           items.push({ id: 7, quantity: ticket.amount });
-        } else if (seatType === "Quiet Cart") {
+        } else if (seatType === 'Quiet Cart') {
           items.push({ id: 8, quantity: ticket.amount });
         }
-      } else if (ticket.type === "Senior") {
-        if (seatType === "First Class") {
+      } else if (ticket.type === 'Senior') {
+        if (seatType === 'First Class') {
           items.push({ id: 9, quantity: ticket.amount });
-        } else if (seatType === "Second Class") {
+        } else if (seatType === 'Second Class') {
           items.push({ id: 10, quantity: ticket.amount });
-        } else if (seatType === "Animal Friendly") {
+        } else if (seatType === 'Animal Friendly') {
           items.push({ id: 11, quantity: ticket.amount });
-        } else if (seatType === "Quiet Cart") {
+        } else if (seatType === 'Quiet Cart') {
           items.push({ id: 12, quantity: ticket.amount });
         }
-      } else if (ticket.type === "Child") {
-        if (seatType === "First Class") {
+      } else if (ticket.type === 'Child') {
+        if (seatType === 'First Class') {
           items.push({ id: 13, quantity: ticket.amount });
-        } else if (seatType === "Second Class") {
+        } else if (seatType === 'Second Class') {
           items.push({ id: 14, quantity: ticket.amount });
-        } else if (seatType === "Animal Friendly") {
+        } else if (seatType === 'Animal Friendly') {
           items.push({ id: 15, quantity: ticket.amount });
-        } else if (seatType === "Quiet Cart") {
+        } else if (seatType === 'Quiet Cart') {
           items.push({ id: 16, quantity: ticket.amount });
         }
       }
@@ -180,11 +180,11 @@ function Payment() {
     }
     outboundStops.push(selectedOutbound.arrival.id);
 
-    const outboundBooking = await fetch(API_URL + "/booking/reservation", {
-      method: "POST",
+    const outboundBooking = await fetch(API_URL + '/booking/reservation', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
       },
       body: JSON.stringify({
         customer: {
@@ -201,7 +201,7 @@ function Payment() {
     let returnBooking;
     if (context?.searchData?.returnTrip) {
       const selectedReturn = context.dbData?.ReturnTrips?.filter(
-        (trip) => trip.train.id === context.SelectedTrain.trainID
+        (trip) => trip.train.id === context.SelectedReturnTrain.trainID
       )[0];
 
       const returnStops = [];
@@ -211,11 +211,11 @@ function Payment() {
       }
       returnStops.push(selectedReturn.arrival.id);
 
-      returnBooking = await fetch(API_URL + "/booking/reservation", {
-        method: "POST",
+      returnBooking = await fetch(API_URL + '/booking/reservation', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
         },
         body: JSON.stringify({
           customer: {
@@ -231,17 +231,16 @@ function Payment() {
     }
 
     const parsedOutbound = await outboundBooking.json();
-    const parsedReturn = await returnBooking?.json();
-    fetch(API_URL + "/booking/create-checkout-session", {
-      method: "POST",
+    const parsedReturn = await returnBooking.json();
+    fetch(API_URL + '/booking/create-checkout-session', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
       },
       body: JSON.stringify({
         items: items,
         outboundBookingId: parsedOutbound.data.booking.id,
-        //returnBookingId: parsedReturn?.data?.booking?.id,
         returnBookingId: parsedReturn != null ? parsedReturn?.data?.booking?.id : null
       }),
     })
@@ -257,15 +256,15 @@ function Payment() {
         window.location = data.data.url;
       })
       .catch((e) => {
-        console.log("Fetch checkout-session error:", e.error);
+        console.log('Fetch checkout-session error:', e.error);
       });
   }
 
   function returnPage() {
-    if (context.SelectedTrain.class === "First Class") {
-      nav("/results");
+    if (context.SelectedTrain.class === 'First Class') {
+      nav('/results');
     } else {
-      nav("/additional-choices");
+      nav('/additional-choices');
     }
   }
 

@@ -15,10 +15,14 @@ function SuccessPage() {
                 <div className="col-lg-6">
                   <p><strong>Datum och tid för avgång:</strong></p>
                   <p>2021-01-13 10:00</p>
+                  <p><strong>Från: </strong></p>
+                  <p>Göteborg C</p>
                 </div>
                 <div className="col-lg-6">
                   <p><strong>Datum och tid för ankomst:</strong></p>
                   <p>2021-01-13 13:00</p>
+                  <p><strong>Till:</strong></p>
+                  <p>Stockholm Central</p>
                 </div>
               </div>
               <div className="row">

@@ -4,7 +4,7 @@ import './Navbar.css';
 function Navbar() {
   return (
     <>
-      <nav>
+      <nav className="container">
         <div className='nav-container'>
           <div className='nav-logo'>
             <Link to='/'>

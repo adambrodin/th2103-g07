@@ -1,0 +1,35 @@
+.bg-img {
+    position: fixed;
+    background-position: center;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    display: block;
+    background-image: url(https://i.redd.it/jx0cehys3yr31.jpg);
+    height: 400px;
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    -ms-filter: blur(2px);
+    filter: blur(3px);
+}
+
+.test {
+    z-index: 1;
+}
+
+.toDestination {
+    background-color: #fff;
+}
+
+.fromDestination {
+    background-color: #fff;
+}
+
+.aa {
+    z-index: 10000;
+}
+
+.spaceing {
+    margin-top: 300px;
+}

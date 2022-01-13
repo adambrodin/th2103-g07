@@ -51,7 +51,7 @@ function Payment() {
               {context.searchData.departure.location} -{' '}
               {context.searchData.arrival.location}
             </h3>
-            <h3>Tid: {context.SelectedTrain.Time}</h3>
+            <h4 className="text-center">Tid: {context.SelectedTrain.Time}</h4>
           </div>
         </>
       );
@@ -204,28 +204,31 @@ function Payment() {
 
   return (
     <div className='container'>
-      <button className='btn btn-secondary m-4 shadow' onClick={returnPage}>
-        Tillbaka
-      </button>
-      <div className='summary-container'>
-        {summary}
-        <div className='sum-info'>
-          <h4>{'Antal biljetter: ' + numberOfForms}</h4>
-          <h4>{'Att betala: ' + totalPrice + ':-'}</h4>
+      <div className="row">
+
+      <div class="card text-center card-width payment-card mt-5">
+        <img src="https://previews.123rf.com/images/denisbelitsky/denisbelitsky1707/denisbelitsky170700022/81440808-high-speed-commuter-train-in-motion-at-the-railway-station-at-sunset-in-europe-beautiful-red-modern-.jpg" class="card-img-top img-width" alt="..." />
+        <div class="card-body">
+           <h5 class="card-title mt-3">{summary}</h5>
+            <p class="card-text lead">{'Antal biljetter: ' + numberOfForms}</p>
+            <p class="card-text lead">{'Att betala: ' + totalPrice + ':-'}</p>
+         </div>
         </div>
+
       </div>
       <div className='customer-container'>
-        <div className='information-container'>
+        <div className='information-container mt-5'>
           <form
             className='customer-form'
             action='#'
             id='customer-form'
             name='paynow'>
-            <h3>Resenär</h3>
+            <h3 className="font-color">Resenär</h3>
             <div className='c-form-row'>
               <label htmlFor=''>
                 <input
                   type='text'
+                  className="font-color"
                   required
                   onChange={(e) =>
                     updateContext({
@@ -233,11 +236,12 @@ function Payment() {
                     })
                   }
                 />
-                <span>Förnamn</span>
+                <span className="font-color">Förnamn</span>
               </label>
               <label htmlFor=''>
                 <input
                   type='text'
+                  className="font-color"
                   required
                   onChange={(e) =>
                     updateContext({
@@ -245,13 +249,14 @@ function Payment() {
                     })
                   }
                 />
-                <span>Efternamn</span>
+                <span className="font-color">Efternamn</span>
               </label>
             </div>
             <div className='c-form-row'>
               <label htmlFor=''>
                 <input
                   type='email'
+                  className="font-color"
                   required
                   onChange={(e) =>
                     updateContext({
@@ -259,11 +264,12 @@ function Payment() {
                     })
                   }
                 />
-                <span>E-postadress</span>
+                <span className="font-color">E-postadress</span>
               </label>
               <label htmlFor=''>
                 <input
                   type='tel'
+                  className="font-color"
                   required
                   pattern='[0-9]{10}'
                   onChange={(e) =>
@@ -272,7 +278,7 @@ function Payment() {
                     })
                   }
                 />
-                <span>Mobilnummer</span>
+                <span className="font-color">Mobilnummer</span>
               </label>
             </div>
             {formArray}
@@ -280,6 +286,9 @@ function Payment() {
               <button className='btn btn-success' type='submit'>
                 {' '}
                 Till betalning
+              </button>
+              <button className='btn btn-secondary m-4 shadow' onClick={returnPage}>
+                Tillbaka
               </button>
             </div>
           </form>

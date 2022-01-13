@@ -3,6 +3,7 @@ import 'rsuite/dist/rsuite.min.css';
 import { useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { BookingContext } from '../Contexts/BookingContext';
+import './ResultComponent.css'
 
 function ResultComponent(data) {
   let nav = useNavigate();
@@ -139,28 +140,25 @@ function ResultComponent(data) {
 
   return (
     <>
-      <Link to="/">
-        <button className="btn btn-secondary">Tillbaka</button>
-      </Link>
-      <div className="container text-center">
+      <div className="container">
         <div id="searchResults">
-          <h2>Utresa</h2>
-          <p>
+          <h2 className="fromTo text-center">Utresa</h2>
+          <p className="fromTo text-center">
             {data.data.searchData.departure.location} -{' '}
             {data.data.searchData.arrival.location}
           </p>
-          <p>
+          <p className="fromTo text-center">
             {moment(data.data.searchData.departure.time).format('Do MMMM YYYY')}
           </p>
           <table id="departTrip" className="table">
-            <thead className="thead-dark">
+            <thead className="thead-dark fromTo text-center">
               <tr>
                 <th>Tid</th>
                 <th>1 klass</th>
                 <th>2 klass</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="fromTo text-center">
               {data.data.dbData.OutboundTrips.map((trip: any) => {
                 return (
                   <tr
@@ -212,25 +210,25 @@ function ResultComponent(data) {
           </table>
           {data.data.searchData.returnTrip ? (
             <>
-              <h2>Återresa</h2>
-              <p>
+              <h2 className="fromTo text-center">Återresa</h2>
+              <p className="fromTo text-center">
                 {data.data.searchData.returnDeparture.location} -{' '}
                 {data.data.searchData.returnArrival.location}
               </p>
-              <p>
+              <p className="fromTo text-center">
                 {moment(data.data.searchData.returnDeparture.time).format(
                   'Do MMMM YYYY'
                 )}
               </p>
               <table id="returnTrip" className="table">
-                <thead className="thead-dark">
+                <thead className="thead-dark fromTo text-center">
                   <tr>
                     <th>Tid</th>
                     <th>1 klass</th>
                     <th>2 klass</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="fromTo text-center">
                   {data.data.dbData.ReturnTrips.map((trip: any) => (
                     <tr
                       onClick={() => getTicket(trip.train.id, '')}
@@ -282,14 +280,21 @@ function ResultComponent(data) {
           ) : (
             <></>
           )}
-          <div className="col">
+          <div className="row">
+          <div className="col-md-6">
+            <Link to="/">
+              <button className="btn back-button text-left">Tillbaka</button>
+            </Link>
+          </div>
+          <div className="col-md-6">
             <button
               id="continueButton"
-              className="btn btn-success float-right"
+              className="btn confirm-button"
               onClick={nextPage}
             >
               Fortsätt
             </button>
+          </div>
           </div>
         </div>
       </div>

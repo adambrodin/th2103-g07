@@ -1,5 +1,5 @@
 nav {
-  background-color: rgb(22, 22, 22);
+  background-color: #1d2025;
 }
 
 .nav-container {
@@ -14,7 +14,7 @@ nav {
 .nav-links a {
   margin: 0 1rem;
   text-decoration: none;
-  color: white;
+  color: #e6eaec;
   font-size: larger;
   font-weight: 600;
 }
@@ -28,3 +28,4 @@ nav {
   margin: 1em;
   margin-right: 5em;
 }
+

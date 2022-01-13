@@ -35,7 +35,7 @@ function Payment() {
               {context.searchData.departure.location} -{' '}
               {context.searchData.arrival.location}
             </h3>
-            <h3>Tid: {context.SelectedTrain.Time}</h3>
+            <h4 className='text-center'>Tid: {context.SelectedTrain.Time}</h4>
           </div>
         </>
       );
@@ -72,11 +72,12 @@ function Payment() {
     for (let i = 0; i < numberOfForms - 1; i++) {
       formArray.push(
         <>
-          <h3>Resenär {i + 2}</h3>
-          <div className="c-form-row">
-            <label htmlFor="">
+          <h3 className='font-color'>Resenär {i + 1}</h3>
+          <div className='c-form-row font-color'>
+            <label htmlFor=''>
               <input
-                type="text"
+                type='text'
+                className='input-color'
                 required
                 onBlur={(e) => {
                   passengers[i] = { firstName: e.target.value };
@@ -88,6 +89,7 @@ function Payment() {
               <input
                 type="text"
                 required
+                className='input-color'
                 onBlur={(e) => {
                   passengers[i] = {
                     firstName: passengers[i].firstName,
@@ -239,7 +241,7 @@ function Payment() {
       body: JSON.stringify({
         items: items,
         outboundBookingId: parsedOutbound.data.booking.id,
-        returnBookingId: parsedReturn?.data?.booking?.id,
+        returnBookingId: parsedReturn != null ? parsedReturn?.data?.booking?.id : null
       }),
     })
       .then(async (res) => {
@@ -267,73 +269,83 @@ function Payment() {
   }
 
   return (
-    <div className="container">
-      <button className="btn btn-secondary m-4 shadow" onClick={returnPage}>
-        Tillbaka
-      </button>
-      <div className="summary-container">
-        {summary}
-        <div className="sum-info">
-          <h4>{'Antal biljetter: ' + numberOfForms}</h4>
-          <h4>{'Att betala: ' + totalPrice + ':-'}</h4>
+    <div className='container'>
+      <div className='row'>
+        <div className='card text-center card-width payment-card mt-5'>
+          <img
+            src='https://previews.123rf.com/images/denisbelitsky/denisbelitsky1707/denisbelitsky170700022/81440808-high-speed-commuter-train-in-motion-at-the-railway-station-at-sunset-in-europe-beautiful-red-modern-.jpg'
+            class='card-img-top img-width'
+            alt='...'
+          />
+          <div class='card-body'>
+            <h5 class='card-title mt-3'>{summary}</h5>
+            <p class='card-text lead'>{'Antal biljetter: ' + numberOfForms}</p>
+            <p class='card-text lead'>{'Att betala: ' + totalPrice + ':-'}</p>
+          </div>
         </div>
       </div>
-      <div className="customer-container">
-        <div className="information-container">
+      <div className='customer-container justify-content-center align-center'>
+        <div className='information-container mt-5'>
           <form
-            className="customer-form"
-            action="#"
-            id="customer-form"
-            name="paynow"
-          >
-            <h3>Resenär</h3>
-            <div className="c-form-row">
-              <label htmlFor="">
+            className='customer-form'
+            action='#'
+            id='customer-form'
+            name='paynow'>
+            <h3 className='font-color'>Resenär</h3>
+            <div className='c-form-row'>
+              <label htmlFor=''>
                 <input
-                  type="text"
+                  type='text'
+                  className='input-color'
                   required
                   onBlur={(e) => (customerFirst = e.target.value)}
                 />
-                <span>Förnamn</span>
+                <span className='font-color'>Förnamn</span>
               </label>
               <label htmlFor="">
                 <input
-                  type="text"
+                  type='text'
+                  className='input-color'
                   required
                   onBlur={(e) => (customerLast = e.target.value)}
                 />
-                <span>Efternamn</span>
+                <span className='font-color'>Efternamn</span>
               </label>
             </div>
             <div className="c-form-row">
               <label htmlFor="">
                 <input
-                  type="email"
+                  type='email'
+                  className='input-color'
                   required
                   onBlur={(e) => (customerEmail = e.target.value)}
                 />
-                <span>E-postadress</span>
+                <span className='font-color'>E-postadress</span>
               </label>
               <label htmlFor="">
                 <input
-                  type="tel"
+                  type='tel'
+                  className='input-color'
                   required
                   pattern="[0-9]{10}"
                   onBlur={(e) => (customerPhone = e.target.value)}
                 />
-                <span>Mobilnummer</span>
+                <span className='font-color'>Mobilnummer</span>
               </label>
             </div>
             {formArray}
-            <div className="btn-container">
-              <button
-                className="btn btn-success"
-                type="submit"
-                onClick={(e) => addBooking(e)}
-              >
-                {' '}
-                Till betalning
-              </button>
+            <div className='row'>
+              <div className='col-md-6'>
+                <button className='btn m-4 back-button' onClick={returnPage}>
+                  Tillbaka
+                </button>
+              </div>
+              <div className='col-md-6'>
+                <button className='btn confirm-button m-4' onClick={(e) => addBooking(e)} type='submit'>
+                  {' '}
+                  Till betalning
+                </button>
+              </div>
             </div>
           </form>
         </div>

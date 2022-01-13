@@ -1,5 +1,5 @@
 nav {
-  background-color: rgb(22, 22, 22);
+  background-color: #1d2025;
 }
 
 .nav-container {
@@ -10,11 +10,12 @@ nav {
 .nav-links {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 .nav-links a {
   margin: 0 1rem;
   text-decoration: none;
-  color: white;
+  color: #e6eaec;
   font-size: larger;
   font-weight: 600;
 }
@@ -27,4 +28,12 @@ nav {
   height: 50px;
   margin: 1em;
   margin-right: 5em;
+}
+@media (max-width: 600px) {
+  .nav-container {
+    margin: 0;
+  }
+  .nav-logo {
+    margin-right: -3em;
+  }
 }

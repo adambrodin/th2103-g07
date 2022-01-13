@@ -6,11 +6,16 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: black !important;
+  background-color: #1d2025 !important;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+h2 {
+  font-family: 'Arial';
 }
 
 #startForm label {
@@ -51,4 +56,47 @@ code {
 }
 .text-bold {
   font-weight: bold;
+}
+
+.confirm-button {
+  background-color: #aeee97;
+  color: #1d2025;
+}
+
+.back-button {
+  background-color: #102a43;
+  color: #aeee97;
+}
+
+.back-button:hover {
+  color: #fff;
+}
+
+.datePicker {
+  background-color: #aeee97;
+}
+
+input,
+textarea {
+  background-color: #2e445b;
+  color: #f00;
+  border: none;
+  padding: 6px;
+  border-radius: 5px;
+}
+
+.lead {
+  color: #aab2be;
+}
+.email-textfield-container label {
+  color: #c0c0c0;
+}
+.booking-reference-container label {
+  color: #c0c0c0;
+}
+.MuiBox-root textarea {
+  color: white;
+}
+.MuiOutlinedInput-root fieldset {
+  border-color: #b0eba2;
 }

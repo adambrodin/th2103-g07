@@ -9,7 +9,7 @@ interface Props {
 }
 const BookingComponent = ({ deleteFunction, receipt }: Props) => {
   return (
-    <Box sx={{ bgcolor: "background.paper" }}>
+    <Box sx={{ bgcolor: 'background.paper' }}>
       <Grid item xs>
         <Typography gutterBottom variant="h4" component="div">
           Din bokning
@@ -27,7 +27,7 @@ const BookingComponent = ({ deleteFunction, receipt }: Props) => {
       <Box sx={{ mt: 3, ml: 1, mb: 1 }}>
         <button
           id="delete-receipt-btn"
-          className="btn btn-secondary"
+          className="btn back-button"
           onClick={() => deleteFunction(receipt)}
         >
           Ta bort

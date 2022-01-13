@@ -3,6 +3,7 @@ import 'rsuite/dist/rsuite.min.css';
 import { useContext, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { BookingContext } from '../Contexts/BookingContext';
+import './ResultComponent.css';
 
 function ResultComponent(data) {
   let nav = useNavigate();
@@ -156,28 +157,25 @@ function ResultComponent(data) {
 
   return (
     <>
-      <Link to="/">
-        <button className="btn btn-secondary">Tillbaka</button>
-      </Link>
-      <div className="container text-center">
-        <div id="searchResults">
-          <h2>Utresa</h2>
-          <p>
+      <div className='container mt-5'>
+        <div id='searchResults'>
+          <h2 className='fromTo text-center'>Utresa</h2>
+          <p className='fromTo text-center'>
             {data.data.searchData.departure.location} -{' '}
             {data.data.searchData.arrival.location}
           </p>
-          <p>
+          <p className='fromTo text-center'>
             {moment(data.data.searchData.departure.time).format('Do MMMM YYYY')}
           </p>
-          <table id="departTrip" className="table">
-            <thead className="thead-dark">
+          <table id='departTrip' className='table'>
+            <thead className='thead-dark fromTo text-center'>
               <tr>
                 <th>Tid</th>
                 <th>1 klass</th>
                 <th>2 klass</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className='fromTo text-center'>
               {data.data.dbData.OutboundTrips.map((trip: any) => {
                 return (
                   <tr id={trip.train.id} key={trip.train.id}>
@@ -201,7 +199,8 @@ function ResultComponent(data) {
                         {trip.estimatedPrices[0].price + ' :-'}
                       </label>
                       <input
-                        type="radio"
+                        type='radio'
+
                         name={'FirstClass-' + trip.train.id}
                         id={'FirstClass-' + trip.train.id}
                         onChange={(e) => toggleRadio(e)}
@@ -212,7 +211,7 @@ function ResultComponent(data) {
                         {trip.estimatedPrices[1].price + ' :-'}
                       </label>
                       <input
-                        type="radio"
+                        type='radio'
                         name={'SecondClass-' + trip.train.id}
                         id={'SecondClass-' + trip.train.id}
                         onChange={(e) => toggleRadio(e)}
@@ -225,25 +224,25 @@ function ResultComponent(data) {
           </table>
           {data.data.searchData.returnTrip ? (
             <>
-              <h2>Återresa</h2>
-              <p>
+              <h2 className='fromTo text-center'>Återresa</h2>
+              <p className='fromTo text-center'>
                 {data.data.searchData.returnDeparture.location} -{' '}
                 {data.data.searchData.returnArrival.location}
               </p>
-              <p>
+              <p className='fromTo text-center'>
                 {moment(data.data.searchData.returnDeparture.time).format(
                   'Do MMMM YYYY'
                 )}
               </p>
-              <table id="returnTrip" className="table">
-                <thead className="thead-dark">
+              <table id='returnTrip' className='table'>
+                <thead className='thead-dark fromTo text-center'>
                   <tr>
                     <th>Tid</th>
                     <th>1 klass</th>
                     <th>2 klass</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className='fromTo text-center'>
                   {data.data.dbData.ReturnTrips.map((trip: any) => (
                     <tr id={'r-' + trip.train.id} key={trip.train.id}>
                       <td>
@@ -266,7 +265,7 @@ function ResultComponent(data) {
                           {trip.estimatedPrices[0].price + ' :-'}
                         </label>
                         <input
-                          type="radio"
+                          type='radio'
                           name={'FirstClass-' + trip.train.id}
                           id={'ReturnFirstClass-' + trip.train.id}
                           onChange={(e) => toggleReturnRadio(e)}
@@ -277,7 +276,7 @@ function ResultComponent(data) {
                           {trip.estimatedPrices[1].price + ' :-'}
                         </label>
                         <input
-                          type="radio"
+                          type='radio'
                           name={'SecondClass-' + trip.train.id}
                           id={'ReturnSecondClass-' + trip.train.id}
                           onChange={(e) => toggleReturnRadio(e)}
@@ -291,14 +290,20 @@ function ResultComponent(data) {
           ) : (
             <></>
           )}
-          <div className="col">
-            <button
-              id="continueButton"
-              className="btn btn-success float-right"
-              onClick={nextPage}
-            >
-              Fortsätt
-            </button>
+          <div className='row'>
+            <div className='col-md-6'>
+              <Link to='/'>
+                <button className='btn back-button text-left'>Tillbaka</button>
+              </Link>
+            </div>
+            <div className='col-md-6'>
+              <button
+                id='continueButton'
+                className='btn confirm-button'
+                onClick={nextPage}>
+                Fortsätt
+              </button>
+            </div>
           </div>
         </div>
       </div>

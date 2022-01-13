@@ -134,33 +134,36 @@ const AdditionalChoicesPage = () => {
 
   return (
     <div>
-      <div className="container text-center">
-        <h1>Tillval</h1>
+      <div className='container mt-5'>
+        <h2 className="font-color text-center">Tillval</h2>
       </div>
-      <Link to="/results">
-        <button id="back-to-results-btn" className="btn btn-secondary">
-          Tillbaka
-        </button>
-      </Link>
-      <div className="container" id="additional-choices-list">
+
+      <div className='container' id='additional-choices-list'>
         <Stack spacing={2}>
-          <Item>
-            <h4>Välj typ av vagn:</h4>
+          <Item className="mb-4">
+            <h4 className="mb-3">Välj typ av vagn:</h4>
             <ChoachPickerComponent options={options} handler={coachHandler} />
           </Item>
         </Stack>
-      </div>
-
-      <div className="col">
-        <Link to="/payment">
-          <button
-            id="continue-to-payment-btn"
-            className="btn btn-success float-right"
-            onClick={nextPage}
-          >
-            Fortsätt
-          </button>
-        </Link>
+        <div className="row">
+          <div className='col-md-6'>
+            <Link to='/results'>
+              <button id='back-to-results-btn' className='btn back-button'>
+                Tillbaka
+              </button>
+            </Link>
+          </div>
+          <div className="col-md-6">
+            <Link to='/payment'>
+              <button
+                id='continue-to-payment-btn'
+                className='btn confirm-button float-right'
+                onClick={nextPage}>
+                Fortsätt
+              </button>
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

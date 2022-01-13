@@ -46,16 +46,16 @@ const SearchBookingComponent = ({
   return (
     <>
       <span>
-        {" "}
+        {' '}
         Här kan du avsluta aktiva bokningar. Hitta dina bokningar genom att mata
         in dess bokningsnummer samt email-addressen du använde vid bokningen i
         fältet nedan:
       </span>
       <br />
       <Box
-        component="form"
+        component='form'
         sx={{
-          "& .MuiTextField-root": { m: 1, width: "32ch" },
+          '& .MuiTextField-root': { m: 1, width: '32ch' },
         }}
         noValidate
         autoComplete="off"
@@ -64,15 +64,15 @@ const SearchBookingComponent = ({
         <div className="email-textfield-container">
           <TextField
             error={emailError}
-            id="booking-search-email-input"
-            className="text-field-email-input"
-            label="Email"
+            id='booking-search-email-input'
+            className='text-field-email-input'
+            label='Email'
             helperText={emailErrorMessage}
             onChange={(e) => setEmail(e.target.value)}
             multiline={true}
-          />{" "}
+          />{' '}
         </div>
-        <div className="booking-reference-container">
+        <div className='booking-reference-container'>
           <TextField
             error={bookingIdError}
             id="booking-search-id-input"
@@ -85,11 +85,10 @@ const SearchBookingComponent = ({
         </div>
         <div>
           <button
-            id="search-booking-btn"
-            className="btn btn-success"
-            type="button"
-            onClick={search}
-          >
+            id='search-booking-btn'
+            className='btn confirm-button'
+            type='button'
+            onClick={search}>
             Sök
           </button>
         </div>

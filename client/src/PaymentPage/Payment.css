@@ -56,3 +56,32 @@ label > input[placeholder=' ']:not(:focus):placeholder-shown + span {
   display: flex;
   flex-direction: row;
 }
+
+.card-width {
+  width: 1000px;
+}
+
+.payment-card {
+  background-color: #364c61;
+  color: #aab1bc;
+}
+
+.img-width {
+  height: 400px;
+  margin-top: 10px;
+}
+
+.card {
+  margin: 0 auto;
+}
+
+.font-color {
+  color: #b0eba2;
+}
+.input-color {
+  color: #c0c0c0;
+}
+
+.information-container {
+  margin: 0 auto;
+}

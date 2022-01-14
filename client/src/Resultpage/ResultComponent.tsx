@@ -94,7 +94,7 @@ function ResultComponent(data) {
           class: 'Second Class',
           trainID: Id[1],
           stops: returnTrip[0].stops ?? null,
-          Time: lastSelectedReturnTrip?.textContent?.slice(0,13),
+          Time: currentReturnTrip?.textContent?.slice(0,13),
           TotalTicketPrice:
             bookingContext.dbData.ReturnTrips[0].estimatedPrices[1].price,
         },

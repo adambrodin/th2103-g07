@@ -3,6 +3,19 @@ import './SuccessPaymentPage.css';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
 import 'moment/locale/sv';
+
+const translatedTypes: { [englishType: string]: string } = {
+  // Seat Types
+  'First Class': 'Första Klass',
+  'Second Class': 'Andra Klass',
+  'Quiet Cart': 'Tystvagn',
+  'Animal Friendly': 'Djurvagn',
+  // Ticket Types
+  Adult: 'Vuxen',
+  Child: 'Barn',
+  Student: 'Ungdom/Student',
+  Senior: 'Pensionär',
+};
 function SuccessPage() {
   moment.locale('sv');
 
@@ -130,7 +143,7 @@ function SuccessPage() {
                   (ticket, key) => {
                     return (
                       <div
-                        className="col-lg-5 mt-3"
+                        className="col-lg-6 mt-3"
                         key={'ticket-' + ticket.id}
                       >
                         <div className="card dark-bg shadow">
@@ -151,9 +164,11 @@ function SuccessPage() {
                                 </p>
                               </div>
                               <div className="col-lg-3">
-                                <p className="sec-font-color">{ticket.type}</p>
                                 <p className="sec-font-color">
-                                  {ticket.seatType}
+                                  {translatedTypes[ticket.type]}
+                                </p>
+                                <p className="sec-font-color">
+                                  {translatedTypes[ticket.seatType]}
                                 </p>
                                 <p className="sec-font-color">
                                   {ticket.price} kr

@@ -13,7 +13,7 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'center',
-  color: theme.palette.text.secondary,
+  backgroundColor: "#2e445b",
 }));
 
 const AdditionalChoicesPage = () => {
@@ -139,7 +139,7 @@ const AdditionalChoicesPage = () => {
       <div className="container" id="additional-choices-list">
         <Stack spacing={2}>
           <Item className="mb-4">
-            <h4 className="mb-3">Välj typ av vagn:</h4>
+            <h4 className="mb-3 input-color">Välj typ av vagn:</h4>
             <ChoachPickerComponent options={options} handler={coachHandler} />
           </Item>
         </Stack>

@@ -231,7 +231,7 @@ function Payment() {
     }
 
     const parsedOutbound = await outboundBooking.json();
-    const parsedReturn = await returnBooking.json();
+    const parsedReturn = await returnBooking?.json();
     fetch(API_URL + '/booking/create-checkout-session', {
       method: 'POST',
       headers: {

@@ -13,12 +13,15 @@ function ResultComponent(data) {
   const [radioValidation, setRadioValidation] = useState(0);
 
   function toggleRadio(e: any) {
+    if(!bookingContext.searchData.returnTrip) {
+      setRadioValidation(1);
+    }
     const Id = e.target.id.split('-');
     const lastSelectedId = lastSelectedTripId.split('-');
     let currentDepartTrip = document.getElementById(Id[1]);
     let lastSelectedDepartTrip = document.getElementById(lastSelectedId[1]);
 
-    setRadioValidation(1);
+    
     const outBoundTrip = (
       bookingContext?.dbData?.OutboundTrips as any[]
     ).filter((trip) => trip.train.id === Id[1]);
@@ -72,18 +75,18 @@ function ResultComponent(data) {
     setLastSelectedTripId(e.target.id);
   }
   function toggleReturnRadio(e: any) {
+    setRadioValidation(2);
     const Id = e.target.id.split('-');
     const lastSelectedId = lastSelectedReturnTripId.split('-');
     let currentReturnTrip = document.getElementById('r-' + Id[1]);
     let lastSelectedReturnTrip = document.getElementById(
       'r-' + lastSelectedId[1]
     );
-    setRadioValidation(2);
 
     const returnTrip = (bookingContext?.dbData?.ReturnTrips as any[]).filter(
       (trip) => trip.train.id === Id[1]
     );
-
+    
     if (Id[0] === 'ReturnSecondClass') {
       updateContext({
         ...bookingContext,
@@ -91,7 +94,7 @@ function ResultComponent(data) {
           class: 'Second Class',
           trainID: Id[1],
           stops: returnTrip[0].stops ?? null,
-          Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
+          Time: lastSelectedReturnTrip?.textContent?.slice(0,13),
           TotalTicketPrice:
             bookingContext.dbData.ReturnTrips[0].estimatedPrices[1].price,
         },
@@ -103,12 +106,13 @@ function ResultComponent(data) {
           class: 'First Class',
           trainID: Id[1],
           stops: returnTrip[0].stops ?? null,
-          Time: document.getElementById(Id[1])?.textContent?.slice(0, 13),
+          Time: currentReturnTrip?.textContent?.slice(0,13),
           TotalTicketPrice:
             bookingContext.dbData.ReturnTrips[0].estimatedPrices[0].price,
         },
       });
     }
+
 
     if (e.target.id !== 'ReturnSecondClass-' + Id[1]) {
       let esh: any = document.getElementById('ReturnSecondClass-' + Id[1]);
